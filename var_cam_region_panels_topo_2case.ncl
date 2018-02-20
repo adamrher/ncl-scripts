@@ -39,7 +39,7 @@ begin
 
   topolay = False ;;overlay topography
 	ktopo = (/29,29,29/)
-  seover = True ;;overlay panel boundaries
+  seover = False ;;overlay panel boundaries
   transect = True ;;overlay transect
   streams = False ;;overlay streamline contours
 
