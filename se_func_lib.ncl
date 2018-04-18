@@ -421,5 +421,80 @@ begin
 
 end
 
+;;; find wgt_path from ncol
+function wgt_path(ncol)
+;;;
 
+local ncol,wgtpath,root
+
+begin
+
+  root = "/glade/p/work/aherring/grids/grid_files/"
+
+  if (ncol.eq.13826) then
+    wgtpath = root + "ne16_2_latlon.nc"
+  else if (ncol.eq.48602) then
+    wgtpath = root + "ne30_2_latlon.nc"
+  else if (ncol.eq.194402) then
+    wgtpath = root + "ne60_2_latlon.nc"
+  else if (ncol.eq.777602) then
+    wgtpath = root + "ne120_2_latlon.nc"
+  else if (ncol.eq.21600) then
+    wgtpath = root + "ne30pg2_2_latlon.nc"
+  else if (ncol.eq.48600) then
+    wgtpath = root + "ne30pg3_2_latlon.nc"
+  else if (ncol.eq.86400) then
+    wgtpath = root + "ne30pg4_2_latlon.nc"
+  end if
+  end if
+  end if
+  end if
+  end if
+  end if
+  end if
+
+  return(wgtpath)
+
+end
+
+;;; find wgt_path from one nlat to nlat0
+function wgt_res_path(nlat0,nlat)
+;;;
+
+local nlat0,nlat,wgtpath,root
+
+begin
+
+  root = "/glade/p/work/aherring/grids/grid_files/"
+
+  if (nlat.eq.257 .and. nlat0.eq.128) then
+    wgtpath = root + "ne30latlon_2_ne16latlon_cnsrv.nc"
+  else if (nlat.eq.513 .and. nlat0.eq.128) then
+    wgtpath = root + "ne60latlon_2_ne16latlon_cnsrv.nc"
+  else if (nlat.eq.1026 .and. nlat0.eq.128) then
+    wgtpath = root + "ne120latlon_2_ne16latlon_cnsrv.nc"
+  else if (nlat.eq.2052 .and. nlat0.eq.128) then
+    wgtpath = root + "ne240latlon_2_ne16latlon_cnsrv.nc"
+  else if (nlat.eq.513 .and. nlat0.eq.257) then
+    wgtpath = root + "ne60latlon_2_ne30latlon_cnsrv.nc"
+  else if (nlat.eq.1026 .and. nlat0.eq.257) then
+    wgtpath = root + "ne120latlon_2_ne30latlon_cnsrv.nc"
+  else if (nlat.eq.1026 .and. nlat0.eq.513) then
+    wgtpath = root + "ne120latlon_2_ne60latlon_cnsrv.nc"
+  else if (nlat.eq.2052 .and. nlat0.eq.1026) then
+    wgtpath = root + "ne240latlon_2_ne120latlon_cnsrv.nc"
+  else
+    wgtpath = "none"
+  end if
+  end if
+  end if
+  end if
+  end if
+  end if
+  end if
+  end if
+
+  return(wgtpath)
+
+end
 
