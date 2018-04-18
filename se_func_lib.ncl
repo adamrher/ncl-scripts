@@ -352,8 +352,8 @@ begin
 
   pi = 3.14159265358979
   res_p = True
-  f = addfile("/home/aherring/grids/uniform_30.g.nc","r")
-  ;;f = addfile("/home/aherring/grids/uniform_1.g.nc","r")
+  ;;f = addfile("/glade/p/work/aherring/grids/grid_files/uniform_30.g.nc","r")
+  f = addfile("/glade/p/work/aherring/grids/grid_files/uniform_1.g.nc","r")
   fvars = getvardims(f)
   fdims = getfiledimsizes(f)
   num_el_blk = fdims(ind(fvars.eq."num_el_blk"))
@@ -393,8 +393,8 @@ begin
   xlon = new ( (/5/), "double")
   xlat = new ( (/5/), "double")
 
-  res_p@gsLineThicknessF = 0.75
-  res_p@gsLineColor   = "grey43"
+  res_p@gsLineThicknessF = 2.
+  res_p@gsLineColor   = "black";;"grey43"
 
   do i=0,nelem-1
     if ( mod(i,500).eq.0) then
