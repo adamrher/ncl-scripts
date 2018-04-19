@@ -87,11 +87,13 @@ begin
       precl = PRECL(:,indx)
       pblh  = PBLH(:,indx)
       tmq   = TMQ(:,indx)
+      ;;;frqzm   = FREQZM(:,indx)
    else
       precc = PRECC(:,indx,:)
       precl = PRECL(:,indx,:)
       pblh  = PBLH(:,indx,:)
       tmq   = TMQ(:,indx,:)
+      ;;;frqzm   = FREQZM(:,indx,:)
    end if
    tmp = AREA(indx)
    wgt = conform(precc,tmp,1)
@@ -116,6 +118,8 @@ begin
      gpblh  = gpblh/garea
      gtmq  = dim_sum(dim_sum(dim_sum(tmq*wgt)))
      gtmq  = gtmq/garea
+     ;;;gfrqzm  = dim_sum(dim_sum(dim_sum(frqzm*wgt)))
+     ;;;gfrqzm  = gfrqzm/garea
    else
      gprecc  = dim_sum(dim_sum(precc*wgt))
      gprecc  = gprecc/garea
@@ -125,6 +129,8 @@ begin
      gpblh  = gpblh/garea
      gtmq  = dim_sum(dim_sum(tmq*wgt))
      gtmq  = gtmq/garea
+     gfrqzm  = dim_sum(dim_sum(frqzm*wgt))
+     gfrqzm  = gfrqzm/garea
    end if
 
    if (writencdf) then
@@ -151,7 +157,7 @@ begin
   print("  Mean PBLH	       " + gpblh  + " (m)")
   print("  Mean TMQ            " + gtmq  + " (mm water)")
   print("  ")
-  delete([/precc,precl,pblh,tmq,wgt,indx/])
+  delete([/precc,precl,pblh,tmq,wgt,indx/]);;;,frqzm/])
 
 end do 
 
