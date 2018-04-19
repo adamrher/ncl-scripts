@@ -6,7 +6,7 @@ Get this package through executing the command: git clone https://github.com/ada
 
 Instructions
 #---------------------------------------
-Modify all three .sh files through setting the variables 'data_dir' to the directory where you keep all your runs (usually a scratch directory) and set 'ncl_dir' to the path where the ncl scripts live ("<path-to-adams-git-scripts>/ncl/"). It is assumed that the directory structures follows the CESM standard (i.e., your data is assumed to live at "data_dir/<case-name>/run/"). These scripts will work whether history fields are on the native CAM-SE grid, or a lat-lon grid. They also work regardless of grid resolution. By default, all scripts will dump out a netcdf with the variables computed in the scripts.
+Modify all three .sh files through setting the variables 'data_dir' to the directory where you keep all your runs (usually a scratch directory) and set 'ncl_dir' to the path where the ncl scripts live ("<path-to-adams-git-scripts>/ncl/"). The scripts exploit CESM's standard directory structures (i.e., your data is assumed to live at "data_dir/<case-name>/run/") and case naming convention (e.g., the ".cam.h2.0001-06.nc" added to the end of a case name). These scripts will work whether history fields are on the native CAM-SE grid, or a lat-lon grid. They also work regardless of grid resolution. By default, all scripts will dump out a netcdf with the variables computed in the scripts.
 
 Note this package only works on NCAR machines. Their are currently four ncl scripts that may be executed. It is recommended (but not required) that you adjust the line at the top of the ncl-scripts: load "/glade/p/work/aherring/se_func_lib.ncl", with load "<path-to-adams-git-scripts>/ncl/se_func_lib.ncl. 
 
@@ -30,10 +30,10 @@ e.g., "source $work/CESM2/git-ncl-scripts/glob-diags.sh camtrunk_180328_QPC6_ne3
 
 #---------------------------------------
 (3) dzonal_prec_diff2case.ncl
-Computes zonal average PRECT for two cases, as well as their difference. 95% significance is shaded. Requires variables PRECC and PRECL. It is recommened (thought not required) that the history fields are monthly means, and already on a lat-lon grid.
+Computes zonal average PRECT for two cases, as well as their difference. 95% significance is shaded. Requires variables PRECC and PRECL. It is recommened (though not required) that the history fields are monthly means, and already on a lat-lon grid. The two cases do not have to be the same grid resolution.
 
 (4) dzonal_hgt_diff2case.ncl
-Copmutes a time-mean zonal-height profile of the relative humidity, with the meridional mass stream function overlain. Also plotted are the differences. The wmo-tropopause is also overlain. Required fields: T,Q,V,PS. It is recommended that the history fields are monthly means (this is strongly recommended), and already on a lat-lon grid.
+Computes a time-mean zonal-height profile of the relative humidity, with the meridional mass stream function overlain. Also plotted are the differences. The wmo-tropopause is overlain. Required fields: T,Q,V,PS. It is recommended that the history fields are monthly means (this is strongly recommended), and already on a lat-lon grid. The two cases do not have to be the same grid resolution.
 
 These two scripts are executed together with the command: 
 "source <path-to-adams-git-scritps>/diff-2-case.sh <case1-name> <fincl-number> <case2-name> <fincl-number>" 
