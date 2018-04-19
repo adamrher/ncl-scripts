@@ -21,12 +21,11 @@ begin
   labels(0:nfiles-1) = fname
   labels(nfiles) = "Anomaly"
 
-  onemnth = True
+  onemnth = False
   nstart = 1
 
   writencdf = True
   fname_out = fname(0)+"-2-"+fname(1)+".dzonal-hgt.nc"
-print(fname_out)
   PSI   = (/  "PSI1",  "PSI2"/)
   ZRH   = (/  "ZRH1",  "ZRH2"/)
   PTROP = (/"PTROP1","PTROP2"/)
@@ -369,8 +368,8 @@ if (n.eq.0) then
 	        int_eta_c = int2p_n(pm,int_eta,pm0,2,1)
 	end if
 
-	dint = int_eta0 - int_eta_c
-	drh = rh0 - rh_c
+	dint = int_eta_c - int_eta0
+	drh = rh_c - rh0
 	delete(int_eta_c)
 	delete(rh_c)
  end if
@@ -487,7 +486,7 @@ if (n.eq.0) then
 
 	lnres@gsLineColor = colors(0)
 	lstr = unique_string("dum")
-	plot@$lstr$ = gsn_add_polyline(wks,plot(2),sin(lat*pi/180.),ptrop0/100.,lnres)
+	plot@$lstr$ = gsn_add_polyline(wks,plot(2),sin(lat0*pi/180.),ptrop0/100.,lnres)
         lnres@gsLineColor = colors(1)
         lstr = unique_string("dum")
         plot@$lstr$ = gsn_add_polyline(wks,plot(2),sin(lat*pi/180.),ptrop/100.,lnres)
