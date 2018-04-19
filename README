@@ -23,7 +23,7 @@ e.g., "source $work/CESM2/git-ncl-scripts/glob-diags.sh camtrunk_180328_QPC6_ne3
 
 #---------------------------------------
 (2) omg-diags.ncl
-Computes globla integrals (and Tropics) for omega statistics. It computes the components of the global mean omega = omg-up*frac-up + omg-dw*frac_dw. Calculation requires instantaneous output (not averages).
+Computes global time-mean integrals (also does the deep Tropics) of omega statistics. It computes the components of the global mean omega = omg-up*frac-up + omg-dw*frac_dw. Calculation requires instantaneous output (not averages).
 
 to execute, type: "source <path-to-adams-git-scritps>/glob-omg-diags-inst.sh <case-name> <fincl-number>"
 e.g., "source $work/CESM2/git-ncl-scripts/glob-diags.sh camtrunk_180328_QPC6_ne30_180330 h1"
