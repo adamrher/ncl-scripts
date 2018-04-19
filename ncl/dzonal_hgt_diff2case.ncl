@@ -25,7 +25,7 @@ begin
   nstart = 1
 
   writencdf = True
-  fname_out = fname(0)+"."+fname(1)+".dzonal-hgt.nc"
+  fname_out = fname(0)+"-2-"+fname(1)+".dzonal-hgt.nc"
 print(fname_out)
   PSI   = (/  "PSI1",  "PSI2"/)
   ZRH   = (/  "ZRH1",  "ZRH2"/)
@@ -68,7 +68,7 @@ print(fname_out)
 ;*************************************************************
 ; Start graphics
 ;*************************************************************
-  wks = gsn_open_wks("eps",pltnam)
+  wks = gsn_open_wks("pdf",pltnam)
   gsn_define_colormap(wks,"MPL_jet")
   gsn_reverse_colormap(wks)
 
@@ -359,17 +359,15 @@ if (n.eq.0) then
 		int_etatmp = ESMF_regrid_with_weights(int_eta,wgtpath,False)
 		rhtmp = ESMF_regrid_with_weights(rh,wgtpath,False)
 
-		;;delete([/rh,pm,int_eta/])
-		;;pm = pmtmp
-		;;rh = rhtmp
-		;;int_eta = int_etatmp
-		;;delete([/pmtmp,rhtmp,int_etatmp/])
+        	rh_c = int2p_n(pmtmp,rhtmp,pm0,linlog,1)
+	        int_eta_c = int2p_n(pmtmp,int_etatmp,pm0,2,1)
+                delete([/rhtmp,int_etatmp/])
+	else
+	        ;;; get vars on control grid
+        	;;; FOR ANOMALIES ONLY!!!
+        	rh_c = int2p_n(pm,rh,pm0,linlog,1)
+	        int_eta_c = int2p_n(pm,int_eta,pm0,2,1)
 	end if
-
-	;;; get vars on control grid
-	;;; FOR ANOMALIES ONLY!!!
-        rh_c = int2p_n(pmtmp,rhtmp,pm0,linlog,1)
-	int_eta_c = int2p_n(pmtmp,int_etatmp,pm0,2,1)
 
 	dint = int_eta0 - int_eta_c
 	drh = rh0 - rh_c
@@ -416,8 +414,14 @@ if (n.eq.0) then
 
   ;;; anomaly for case n=1
   if (n.eq.1) then
-	rh_levp = int2p_n(pmtmp,drh,lev_p,linlog,1)
-        int_levp = int2p_n(pmtmp,dint,lev_p,linlog,1)
+	if (wgtpath.ne."none") then 
+		rh_levp = int2p_n(pmtmp,drh,lev_p,linlog,1)
+        	int_levp = int2p_n(pmtmp,dint,lev_p,linlog,1)
+		delete(pmtmp)
+	else
+                rh_levp = int2p_n(pm,drh,lev_p,linlog,1)
+                int_levp = int2p_n(pm,dint,lev_p,linlog,1)
+	end if
         delete(drh)
         delete(dint)
 
@@ -495,14 +499,19 @@ if (n.eq.0) then
      ncdf = addfile(fname_out,"c")
    end if
 
+   if (n.eq.nfiles-1) then
+	;;;rename dimension
+	psi!1 = "lat1"
+	zrh!1 = "lat1"
+	ptrop!0 = "lat1"
+        ncdf->DZRH = dzrh
+	ncdf->DPSI = dpsi
+   end if
+
    ncdf->$PSI(n)$ = psi
    ncdf->$ZRH(n)$ = zrh
    ncdf->$PTROP(n)$ = ptrop
 
-   if (n.eq.nfiles-1) then
-     ncdf->DZRH = uarea
-     ncdf->DPSI = dpsi
-   end if
  end if
  
  if (n.eq.0) then
@@ -517,7 +526,7 @@ if (n.eq.0) then
  delete(lat)
  delete(lon)
 
- print("Done with case " + n)
+ print("  done with case " + n)
 
 end do ;nfiles
 

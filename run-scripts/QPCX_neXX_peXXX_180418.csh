@@ -40,6 +40,7 @@ echo "zmconv_num_cin = 5">> user_nl_cam
 echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne60np4_L32_c170908.nc'">>user_nl_cam
 #echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne120np4_L32_c170908.nc'">>user_nl_cam
 
+#mental note - U850 causes a weird error (removed)
 #--------------------------------------history----------------------------------------------
 echo "inithist          = 'NONE'                                             ">> user_nl_cam
 echo "se_statefreq      = 144                                                ">> user_nl_cam
@@ -47,7 +48,7 @@ echo "empty_htapes      = .true.                                             ">>
 echo "fincl1 =   'PS','T','Q','Z3','U','V','OMEGA','PRECL','PRECC','FREQZM', ">> user_nl_cam
 echo "		 'FREQI','FREQL','CLDLIQ','CLDICE','CLOUD','CLDTOT','TMQ',   ">> user_nl_cam
 echo "		 'FLNT','FLNS','FSNT','FSNS','LHFLX','SHFLX','RELHUM','TS',  ">> user_nl_cam
-echo "           'SL','U850','PBLH','PSDRY'				     ">> user_nl_cam
+echo "           'SL','PBLH','PSDRY'					     ">> user_nl_cam
 echo "fincl2 =   'PSDRY','PS','T','Q','Z3','U','V','OMEGA','PRECL','PRECC'           ">> user_nl_cam
 echo "avgflag_pertape(1) = 'A'"                                               >> user_nl_cam
 echo "avgflag_pertape(2) = 'I'"                                               >> user_nl_cam
