@@ -1,5 +1,5 @@
 #!/bin/tcsh
-setenv proj "P03010039"
+setenv proj "P93300642"
 setenv src "camtrunk_180328" #"physgrid_180401"
 setenv res "ne60_ne60_mg16"
 setenv comp "QPC6"
@@ -23,7 +23,7 @@ cd /glade/scratch/$USER/$caze
 echo "se_nsplit = 2">>user_nl_cam
 echo "se_rsplit = 3">>user_nl_cam
 
-echo "zmconv_num_cin = 5">> user_nl_cam
+#echo "zmconv_num_cin = 5">> user_nl_cam
 #echo "cld_macmic_num_steps = 1">> user_nl_cam
 
 #------dependent on resolution-------
@@ -49,7 +49,7 @@ echo "fincl1 =   'PS','T','Q','Z3','U','V','OMEGA','PRECL','PRECC','FREQZM', ">>
 echo "		 'FREQI','FREQL','CLDLIQ','CLDICE','CLOUD','CLDTOT','TMQ',   ">> user_nl_cam
 echo "		 'FLNT','FLNS','FSNT','FSNS','LHFLX','SHFLX','RELHUM','TS',  ">> user_nl_cam
 echo "           'SL','PBLH','PSDRY'					     ">> user_nl_cam
-echo "fincl2 =   'PSDRY','PS','T','Q','Z3','U','V','OMEGA','PRECL','PRECC'           ">> user_nl_cam
+echo "fincl2 =   'PSDRY','PS','T','Q','Z3','U','V','OMEGA','PRECL','PRECC'   ">> user_nl_cam
 echo "avgflag_pertape(1) = 'A'"                                               >> user_nl_cam
 echo "avgflag_pertape(2) = 'I'"                                               >> user_nl_cam
 echo "nhtfrq             = 0,-6"                                              >> user_nl_cam

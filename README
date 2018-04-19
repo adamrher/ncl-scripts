@@ -1,0 +1,42 @@
+Adam Herrington's CAM-SE Diagnostic Package
+April 2018
+*email bugs to adamrhster@gmail.com
+
+Get this package through executing the command: git clone https://github.com/adamrher/ncl-scripts.git adams-git-scripts
+
+Instructions
+#---------------------------------------
+Modify all 3 .sh files through setting the variables 'data_dir' to the directory where you keep all your runs (usually a scratch directory) and set 'ncl_dir' to the path where the ncl scripts live ("<path-to-adams-git-scripts>/ncl/"). It is assumed that the directory structures follows the CESM standard (i.e., your data is assumed to lives at "data_dir/<case-name>/run/"). These scripts will work whether history fields are on the native CAM-SE grid, or a lat-lon grid. They also work regardless of grid resolution. By default, all scripts will dump out a netcdf with the variables computed in the scripts.
+
+Note this package only works on NCAR machines. Their are currently four ncl scripts that may be executed. It is recommended (but not required) that you adjust the line at the top of the ncl-scripts: load "/glade/p/work/aherring/se_func_lib.ncl", with load "<path-to-adams-git-scripts>/ncl/se_func_lib.ncl. 
+
+#---------------------------------------
+(1) all-diags.ncl
+Computes global time-mean integrals (also does it for the tropics) of relevant quantaties. Required fields: PRECC, PRECL, TMQ, PBLH (FREQZM is easy to toggle on, if you have it).
+
+To execute, first go into the directory you wish to output the plots. 
+Then execute the command: "source <path-to-adams-git-scritps>/glob-diags.sh <case-name> <fincl-number>"
+<case-name> is the name of your case
+<fincl-number> requires an 'h' followed by a number, indicating which history files have the data required by the script.
+
+e.g., "source $work/CESM2/git-ncl-scripts/glob-diags.sh camtrunk_180328_QPC6_ne30_180330 h0"
+
+#---------------------------------------
+(2) omg-diags.ncl
+Computes globla integrals (and Tropics) for omega statistics. It computes the components of the global mean omega = omg-up*frac-up + omg-dw*frac_dw. Calculation requires instantaneous output (not averages).
+
+to execute, type: "source <path-to-adams-git-scritps>/glob-omg-diags-inst.sh <case-name> <fincl-number>"
+e.g., "source $work/CESM2/git-ncl-scripts/glob-diags.sh camtrunk_180328_QPC6_ne30_180330 h1"
+
+#---------------------------------------
+(3) dzonal_prec_diff2case.ncl
+Computes zonal average PRECT for two cases, as well as their difference. 95% significance is shaded. Requires variables PRECC and PRECL. It is recommened (thought not required) that the history fields are monthly means, and already on a lat-lon grid.
+
+(4) dzonal_hgt_diff2case.ncl
+Copmutes a time-mean zonal-height profile of the relative humidity, with the meridional mass stream function overlain. Also plotted are the differences. The wmo-tropopause is also overlain. Required fields: T,Q,V,PS. It is recommended that the history fields are monthly means (this is strongly recommended), and already on a lat-lon grid.
+
+These two scripts are executed together with the command: 
+"source <path-to-adams-git-scritps>/diff-2-case.sh <case1-name> <fincl-number> <case2-name> <fincl-number>" 
+e.g.,"source $work/CESM2/git-ncl-scripts/diff-2-case.sh camtrunk_180328_QPC5_ne30_180330 h0 camtrunk_180328_QPC5_ne60_180330 h0"
+
+

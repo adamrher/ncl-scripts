@@ -17,10 +17,6 @@ begin
   ;;;Choose Variable to plot - RELHUM,U,OMEGA
   var = "RELHUM"
 
-  labels = new( (/nfiles+1/), "string" ) 
-  labels(0:nfiles-1) = fname
-  labels(nfiles) = "Anomaly"
-
   onemnth = False
   nstart = 1
 
@@ -29,6 +25,15 @@ begin
   PSI   = (/  "PSI1",  "PSI2"/)
   ZRH   = (/  "ZRH1",  "ZRH2"/)
   PTROP = (/"PTROP1","PTROP2"/)
+
+ ;;;labels and titles
+ labels = new( (/nfiles+1/), "string" )
+ do i = 0,nfiles
+   labels(i) = var
+ end do
+ titles = labels
+ titles(0:nfiles-1) = fname
+ titles(nfiles) = "Middle-minus-Top"
 
  ;;;tropopause colors
  colors = (/"gray28","dodgerblue3"/)
@@ -161,6 +166,10 @@ begin
 
    lnres             = True
 
+   txres = True
+   txres@txFontHeightF = 0.013
+   ytitle = (/0.955,0.655,0.355/)
+
 ;****************************************
 ; Begin Loop
 ;************************************************
@@ -168,7 +177,6 @@ do n = 0,nfiles-1
   print("Begin Case " + n)
 
   files = systemfunc ("ls " + dir + fname(n) + rdir(n) + fname(n) + fdate(n))
-  print(files)
 
   nf = dimsizes(files)
   if (onemnth) then
@@ -178,6 +186,7 @@ do n = 0,nfiles-1
   end if
   in  = addfiles (files(nstart:nfinish),"r")
   ListSetType(in,"cat")
+  print(files(nstart:nfinish))
   delete(files)
 
   print("  grabbing vars...")
@@ -204,16 +213,15 @@ do n = 0,nfiles-1
 
   time = in[:]->time
 
-  ;;;are we on a lat-lon grid?
   if (isfilevardim(in[0],"OMEGA","ncol")) then
-    print("  NETCDF on native grid")
+    print("  *history fields are on native grid")
     latlon = False
     dims = getfilevardimsizes(in[0],"OMEGA")
     ncol = dims(2)
-    wgtpath = wgt_path(ncol)
+    wgtpath = get_wgt_path(ncol)
     delete(dims)
   else
-    print("  NETCDF on lat-lon grid")
+    print("  *history fields are on lat-lon grid")
     latlon = True
   end if 
 
@@ -238,8 +246,6 @@ do n = 0,nfiles-1
         delete(q)
 
   else 
-	print("  regridding...")
-
 	ps = in[:]->PS
 	T = in[:]->T
 	q = in[:]->$var$
@@ -254,6 +260,7 @@ do n = 0,nfiles-1
         end if
         delete(q)
 
+        print("  regridding...")
 	pstmp = ESMF_regrid_with_weights(ps,wgtpath,False)
 	Ttmp = ESMF_regrid_with_weights(T,wgtpath,False)
 	rhtmp = ESMF_regrid_with_weights(rh,wgtpath,False)
@@ -351,7 +358,7 @@ if (n.eq.0) then
 	nlat0 = nlat
 	lat0 = lat
  else
-        wgtpath = wgt_res_path(nlat0,nlat)
+        wgtpath = get_wgt_path_res(nlat0,nlat)
 	if (wgtpath.ne."none") then
 		print("  regridding to CNTL")
 		pmtmp = ESMF_regrid_with_weights(pm,wgtpath,False)
@@ -500,11 +507,15 @@ if (n.eq.0) then
 
    if (n.eq.nfiles-1) then
 	;;;rename dimension
+	;;dzrh!1 = "lat"
+	;;dpsi!1 = "lat"
 	psi!1 = "lat1"
 	zrh!1 = "lat1"
 	ptrop!0 = "lat1"
         ncdf->DZRH = dzrh
 	ncdf->DPSI = dpsi
+   else
+	ptrop!0 = "lat"
    end if
 
    ncdf->$PSI(n)$ = psi
@@ -525,6 +536,13 @@ if (n.eq.0) then
  delete(lat)
  delete(lon)
 
+ ;;add titles
+ gsn_text_ndc(wks,titles(n),0.5,ytitle(n),txres)
+ ;;;drawNDCGrid(wks)
+ if (n.eq.nfiles-1) then
+   gsn_text_ndc(wks,titles(nfiles),0.5,ytitle(nfiles),txres)
+ end if
+
  print("  done with case " + n)
 
 end do ;nfiles
@@ -537,13 +555,14 @@ end do ;nfiles
   resP@gsnMaximize = False;True
   resP@gsnPaperOrientation = "portrait"
   ;resP@gsnPanelLabelBar = True                   ; add common colorbar
+  resP@gsnPanelTop   = 0.95
   resP@gsnPanelBottom   = 0.05
 
-  ;;resP@gsnPanelFigureStrings = labels
-  ;;resP@gsnPanelFigureStringsFontHeightF = 0.012
-  ;;resP@gsnPanelFigureStringsPerimOn     = True
-  ;;resP@gsnPanelFigureStringsBackgroundFillColor = "white"
-  ;;resP@amJust           = "TopRight"
+  resP@gsnPanelFigureStrings = labels
+  resP@gsnPanelFigureStringsFontHeightF = 0.012
+  resP@gsnPanelFigureStringsPerimOn     = True
+  resP@gsnPanelFigureStringsBackgroundFillColor = "white"
+  resP@amJust           = "TopRight"
 
   gsn_panel(wks,plot,(/3,1/),resP)               ; now draw as one plot
   frame(wks)

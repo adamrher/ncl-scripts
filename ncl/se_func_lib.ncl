@@ -422,7 +422,7 @@ begin
 end
 
 ;;; find wgt_path from ncol
-function wgt_path(ncol)
+function get_wgt_path(ncol)
 ;;;
 
 local ncol,wgtpath,root
@@ -458,7 +458,7 @@ begin
 end
 
 ;;; find wgt_path from one nlat to nlat0
-function wgt_res_path(nlat0,nlat)
+function get_wgt_path_res(nlat0,nlat)
 ;;;
 
 local nlat0,nlat,wgtpath,root
