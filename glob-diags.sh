@@ -19,7 +19,7 @@ if (`hostname` == "hobart.cgd.ucar.edu") then
   echo "NCL directory is "$ncl_dir
 else
   set data_dir = "/glade2/scratch2/$USER/"
-  set ncl_dir = "/glade/u/home/$USER/2017-physres/ncl-scripts"
+  set ncl_dir = "/glade/u/home/$USER/2017-physres/ncl-scripts/ncl/"
   echo "You are on Glade"
   echo "NCL directory is "$ncl_dir
 endif
