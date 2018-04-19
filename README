@@ -6,7 +6,7 @@ Get this package through executing the command: git clone https://github.com/ada
 
 Instructions
 #---------------------------------------
-Modify all 3 .sh files through setting the variables 'data_dir' to the directory where you keep all your runs (usually a scratch directory) and set 'ncl_dir' to the path where the ncl scripts live ("<path-to-adams-git-scripts>/ncl/"). It is assumed that the directory structures follows the CESM standard (i.e., your data is assumed to lives at "data_dir/<case-name>/run/"). These scripts will work whether history fields are on the native CAM-SE grid, or a lat-lon grid. They also work regardless of grid resolution. By default, all scripts will dump out a netcdf with the variables computed in the scripts.
+Modify all three .sh files through setting the variables 'data_dir' to the directory where you keep all your runs (usually a scratch directory) and set 'ncl_dir' to the path where the ncl scripts live ("<path-to-adams-git-scripts>/ncl/"). It is assumed that the directory structures follows the CESM standard (i.e., your data is assumed to live at "data_dir/<case-name>/run/"). These scripts will work whether history fields are on the native CAM-SE grid, or a lat-lon grid. They also work regardless of grid resolution. By default, all scripts will dump out a netcdf with the variables computed in the scripts.
 
 Note this package only works on NCAR machines. Their are currently four ncl scripts that may be executed. It is recommended (but not required) that you adjust the line at the top of the ncl-scripts: load "/glade/p/work/aherring/se_func_lib.ncl", with load "<path-to-adams-git-scripts>/ncl/se_func_lib.ncl. 
 
