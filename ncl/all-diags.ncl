@@ -39,6 +39,7 @@ begin
   gTS   =  (/    "TStr",    "TSgl"/)
   gTL   =  (/    "TLtr",    "TLgl"/)
   gU10  =  (/   "U10tr",   "U10gl"/)
+  gUL   =  (/    "ULtr",    "ULgl"/)
 
 ;************
 ;main
@@ -84,8 +85,10 @@ begin
  nlevs = dims(1)
  if (latlon) then
    TL  = f[:]->T(:,nlevs-1,:,:)
+   UL  = f[:]->U(:,nlevs-1,:,:)
  else
    TL  = f[:]->T(:,nlevs-1,:)
+   UL  = f[:]->U(:,nlevs-1,:)
  end if
 
  lat   = f[0]->lat
@@ -112,6 +115,7 @@ begin
       ts    = TS(:,indx)
       tl    = TL(:,indx)
       u10   = U10(:,indx)
+      ul    = UL(:,indx)
    else
       precc = PRECC(:,indx,:)
       precl = PRECL(:,indx,:)
@@ -123,6 +127,7 @@ begin
       ts    = TS(:,indx,:)
       tl    = TL(:,indx,:)
       u10   = U10(:,indx,:)
+      ul    = UL(:,indx,:)
    end if
    tmp = AREA(indx)
    wgt = conform(precc,tmp,1)
@@ -159,6 +164,8 @@ begin
      gtl  = gtl/garea
      gu10 = dim_sum(dim_sum(dim_sum(u10*wgt)))
      gu10 = gu10/garea
+     gul  = dim_sum(dim_sum(dim_sum(ul*wgt)))
+     gul  = gul/garea
    else
      gprecc  = dim_sum(dim_sum(precc*wgt))
      gprecc  = gprecc/garea
@@ -180,6 +187,8 @@ begin
      gtl  = gtl/garea
      gu10 = dim_sum(dim_sum(u10*wgt))
      gu10 = gu10/garea
+     gul  = dim_sum(dim_sum(ul*wgt))
+     gul  = gul/garea
    end if
 
    if (writencdf) then
@@ -197,6 +206,7 @@ begin
      ncdf->$gTS(n)$     = gts
      ncdf->$gTL(n)$     = gtl
      ncdf->$gU10(n)$    = gu10
+     ncdf->$gUL(n)$     = gul
    end if
 
   gprect = gprecc + gprecl
@@ -215,9 +225,9 @@ begin
   print("  Mean TS	       " + gts  + " (K)")
   print("  Mean T(nlev)        " + gtl  + " (K)")
   print("  Mean U10            " + gu10  + " (m/s)")
-
+  print("  Mean U(nlev)        " + gul  + " (m/s)")
   print("  ")
-  delete([/precc,precl,pblh,tmq,cldtot,ps,ts,tl,u10,wgt,indx/]);;;,frqzm/])
+  delete([/precc,precl,pblh,tmq,cldtot,ps,ts,tl,u10,ul,wgt,indx/]);;;,frqzm/])
 
 end do 
 
