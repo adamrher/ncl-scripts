@@ -5,7 +5,7 @@ setenv res "ne60_ne60_mg16"
 setenv comp "QPC6"
 setenv wall "04:30:00"
 setenv pes "3840"
-setenv caze ${src}_${comp}_ne60_`date '+%y%m%d'`_zmconv_num_cin5
+setenv caze ${src}_${comp}_ne60_`date '+%y%m%d'`_flux_max_iter2
 
 ## ne30 - pe1800 - QPC6 (1.09 hrs/sy)
 ## ne60pg3 - pe3840 - QPC6 (4.07 hrs/sy)
@@ -23,6 +23,7 @@ cd /glade/scratch/$USER/$caze
 echo "se_nsplit = 2">>user_nl_cam
 echo "se_rsplit = 3">>user_nl_cam
 
+echo "flux_max_iteration = 2">>user_nl_cam
 #echo "zmconv_num_cin = 5">> user_nl_cam
 #echo "cld_macmic_num_steps = 1">> user_nl_cam
 
