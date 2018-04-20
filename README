@@ -1,6 +1,6 @@
 Adam Herrington's Flexible CAM-SE Diagnostic Package
 April 2018
-*email bugs to adamrhster@gmail.com
+*email bugs and/or requested modifications to adamrhster@gmail.com
 
 Install this package through executing the command: git clone https://github.com/adamrher/ncl-scripts.git adams-git-scripts
 
@@ -8,9 +8,9 @@ Instructions
 #---------------------------------------
 Modify all three .sh files through setting the variables 'data_dir' to the directory where you keep all your runs (usually a scratch directory) and set 'ncl_dir' to the path where the ncl scripts live ("<path-to-adams-git-scripts>/ncl/"). The scripts exploit CESM's standard directory structures (i.e., your data is assumed to live at "data_dir/<case-name>/run/") and case naming convention (e.g., the ".cam.h2.0001-06.nc" added to the end of a case name). These scripts will work whether history fields are on the native CAM-SE grid, or a lat-lon grid. They also work regardless of grid resolution. By default, all scripts will dump out a netcdf with the variables computed in the scripts.
 
-Note this package only works on NCAR machines. Their are currently four ncl scripts that may be executed. It is recommended (but not required) that you adjust the line at the top of the ncl-scripts: load "/glade/p/work/aherring/se_func_lib.ncl", with load "<path-to-adams-git-scripts>/ncl/se_func_lib.ncl. 
+Note this package only works on NCAR machines. Their are currently four ncl scripts that may be executed. It is recommended (but not required) that you adjust the line at the top of the ncl-scripts: load "/glade/p/work/aherring/se_func_lib.ncl", with load "<path-to-adams-git-scripts>/ncl/se_func_lib.ncl". 
 
-*Note* if by executing these scripts, you get booted off of NCAR's login nodes, then run an interactive job on a geyser node. Enter "execgy -a $ACCOUNT -t 01:00:00 -n 1 -m 200G" where $ACCOUNT refers to a project number. You may request up to 1000 GB of memory (!).
+*Note* if by executing these scripts, you get booted off of NCAR's login nodes, then run an interactive job on a geyser node. Enter "execgy -a $ACCOUNT -t 01:00:00 -n 1 -m 100G" where $ACCOUNT refers to a project number. You may request up to 1000 GB of memory (!).
 
 #---------------------------------------
 (1) all-diags.ncl
