@@ -36,6 +36,9 @@ begin
   gTMQ   = (/   "TMQtr",  "TMQHgl"/)
   gCLDTOT= (/"CLDTOTtr","CLDTOTgl"/)
   gPS   =  (/    "PStr",    "PSgl"/)
+  gTS   =  (/    "TStr",    "TSgl"/)
+  gTL   =  (/    "TLtr",    "TLgl"/)
+  gU10  =  (/   "U10tr",   "U10gl"/)
 
 ;************
 ;main
@@ -74,6 +77,16 @@ begin
  TMQ   = f[:]->TMQ
  CLDTOT= f[:]->CLDTOT
  PS    = f[:]->PS
+ TS    = f[:]->TS
+ U10   = f[:]->U10
+
+ dims = getfilevardimsizes(f[0],"T")
+ nlevs = dims(1)
+ if (latlon) then
+   TL  = f[:]->T(:,nlevs-1,:,:)
+ else
+   TL  = f[:]->T(:,nlevs-1,:)
+ end if
 
  lat   = f[0]->lat
 
@@ -96,6 +109,9 @@ begin
       ;;;frqzm   = FREQZM(:,indx)
       cldtot= CLDTOT(:,indx)
       ps    = PS(:,indx)
+      ts    = TS(:,indx)
+      tl    = TL(:,indx)
+      u10   = U10(:,indx)
    else
       precc = PRECC(:,indx,:)
       precl = PRECL(:,indx,:)
@@ -104,6 +120,9 @@ begin
       ;;;frqzm   = FREQZM(:,indx,:)
       cldtot= CLDTOT(:,indx,:)
       ps    = PS(:,indx,:)
+      ts    = TS(:,indx,:)
+      tl    = TL(:,indx,:)
+      u10   = U10(:,indx,:)
    end if
    tmp = AREA(indx)
    wgt = conform(precc,tmp,1)
@@ -134,6 +153,12 @@ begin
      gcldtot  = gcldtot/garea
      gps  = dim_sum(dim_sum(dim_sum(ps*wgt)))
      gps  = gps/garea
+     gts  = dim_sum(dim_sum(dim_sum(ts*wgt)))
+     gts  = gts/garea
+     gtl  = dim_sum(dim_sum(dim_sum(tl*wgt)))
+     gtl  = gtl/garea
+     gu10 = dim_sum(dim_sum(dim_sum(u10*wgt)))
+     gu10 = gu10/garea
    else
      gprecc  = dim_sum(dim_sum(precc*wgt))
      gprecc  = gprecc/garea
@@ -149,6 +174,12 @@ begin
      gcldtot  = gcldtot/garea
      gps  = dim_sum(dim_sum(ps*wgt))
      gps  = gps/garea
+     gts  = dim_sum(dim_sum(ts*wgt))
+     gts  = gts/garea
+     gtl  = dim_sum(dim_sum(tl*wgt))
+     gtl  = gtl/garea
+     gu10 = dim_sum(dim_sum(u10*wgt))
+     gu10 = gu10/garea
    end if
 
    if (writencdf) then
@@ -163,6 +194,9 @@ begin
      ncdf->$gTMQ(n)$    = gtmq
      ncdf->$gCLDTOT(n)$ = gcldtot
      ncdf->$gPS(n)$     = gps
+     ncdf->$gTS(n)$     = gts
+     ncdf->$gTL(n)$     = gtl
+     ncdf->$gU10(n)$    = gu10
    end if
 
   gprect = gprecc + gprecl
@@ -178,8 +212,12 @@ begin
   print("  Mean TMQ            " + gtmq  + " (mm water)")
   print("  Mean CLDTOT         " + gcldtot  + " (fraction)")
   print("  Mean PS             " + gps  + " (Pa)")
+  print("  Mean TS	       " + gts  + " (K)")
+  print("  Mean T(nlev)        " + gtl  + " (K)")
+  print("  Mean U10            " + gu10  + " (m/s)")
+
   print("  ")
-  delete([/precc,precl,pblh,tmq,cldtot,ps,wgt,indx/]);;;,frqzm/])
+  delete([/precc,precl,pblh,tmq,cldtot,ps,ts,tl,u10,wgt,indx/]);;;,frqzm/])
 
 end do 
 
