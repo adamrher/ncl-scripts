@@ -33,7 +33,10 @@ begin
   gPRECL = (/ "PRECLtr", "PRECLgl"/)
   gFREQZM= (/"FREQZMtr","FREQZMgl"/)
   gPBLH  = (/  "PBLHtr",  "PBLHgl"/)
-  gTMQ   = (/  "TMQtr",   "TMQHgl"/)
+  gTMQ   = (/   "TMQtr",  "TMQHgl"/)
+  gCLDTOT= (/"CLDTOTtr","CLDTOTgl"/)
+  gPS   =  (/    "PStr",    "PSgl"/)
+
 ;************
 ;main
 ;************
@@ -69,6 +72,9 @@ begin
  ;;;FREQZM = f[:]->FREQZM
  PBLH  = f[:]->PBLH
  TMQ   = f[:]->TMQ
+ CLDTOT= f[:]->CLDTOT
+ PS    = f[:]->PS
+
  lat   = f[0]->lat
 
  if (latlon) then
@@ -88,12 +94,16 @@ begin
       pblh  = PBLH(:,indx)
       tmq   = TMQ(:,indx)
       ;;;frqzm   = FREQZM(:,indx)
+      cldtot= CLDTOT(:,indx)
+      ps    = PS(:,indx)
    else
       precc = PRECC(:,indx,:)
       precl = PRECL(:,indx,:)
       pblh  = PBLH(:,indx,:)
       tmq   = TMQ(:,indx,:)
       ;;;frqzm   = FREQZM(:,indx,:)
+      cldtot= CLDTOT(:,indx,:)
+      ps    = PS(:,indx,:)
    end if
    tmp = AREA(indx)
    wgt = conform(precc,tmp,1)
@@ -120,6 +130,10 @@ begin
      gtmq  = gtmq/garea
      ;;;gfrqzm  = dim_sum(dim_sum(dim_sum(frqzm*wgt)))
      ;;;gfrqzm  = gfrqzm/garea
+     gcldtot  = dim_sum(dim_sum(dim_sum(cldtot*wgt)))
+     gcldtot  = gcldtot/garea
+     gps  = dim_sum(dim_sum(dim_sum(ps*wgt)))
+     gps  = gps/garea
    else
      gprecc  = dim_sum(dim_sum(precc*wgt))
      gprecc  = gprecc/garea
@@ -129,8 +143,12 @@ begin
      gpblh  = gpblh/garea
      gtmq  = dim_sum(dim_sum(tmq*wgt))
      gtmq  = gtmq/garea
-     gfrqzm  = dim_sum(dim_sum(frqzm*wgt))
-     gfrqzm  = gfrqzm/garea
+     ;;;gfrqzm  = dim_sum(dim_sum(frqzm*wgt))
+     ;;;gfrqzm  = gfrqzm/garea
+     gcldtot  = dim_sum(dim_sum(cldtot*wgt))
+     gcldtot  = gcldtot/garea
+     gps  = dim_sum(dim_sum(ps*wgt))
+     gps  = gps/garea
    end if
 
    if (writencdf) then
@@ -143,6 +161,8 @@ begin
      ;;;ncdf->$gFREQZM(n)$ = gfrqzm
      ncdf->$gPBLH(n)$   = gpblh
      ncdf->$gTMQ(n)$    = gtmq
+     ncdf->$gCLDTOT(n)$ = gcldtot
+     ncdf->$gPS(n)$     = gps
    end if
 
   gprect = gprecc + gprecl
@@ -156,8 +176,10 @@ begin
   ;;;print("  Mean FREQZM         " + gfrqzm + " (fraction)")
   print("  Mean PBLH	       " + gpblh  + " (m)")
   print("  Mean TMQ            " + gtmq  + " (mm water)")
+  print("  Mean CLDTOT         " + gcldtot  + " (fraction)")
+  print("  Mean PS             " + gps  + " (Pa)")
   print("  ")
-  delete([/precc,precl,pblh,tmq,wgt,indx/]);;;,frqzm/])
+  delete([/precc,precl,pblh,tmq,cldtot,ps,wgt,indx/]);;;,frqzm/])
 
 end do 
 

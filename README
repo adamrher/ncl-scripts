@@ -14,7 +14,7 @@ Note this package only works on NCAR machines. Their are currently four ncl scri
 
 #---------------------------------------
 (1) all-diags.ncl
-Computes global time-mean integrals (also does it for the tropics) of relevant quantaties. Required fields: PRECC, PRECL, TMQ, PBLH (FREQZM is easy to toggle on, if you have it).
+Computes global time-mean integrals (also does it for the tropics) of relevant quantaties. Required fields: PRECC, PRECL, TMQ, PBLH, CLDTOT, PS (FREQZM is easy to toggle on, if you have it).
 
 To execute, first go into the directory you wish to output the plots. 
 Then execute the command: "source <path-to-adams-git-scritps>/glob-diags.sh <case-name> <fincl-number>"
