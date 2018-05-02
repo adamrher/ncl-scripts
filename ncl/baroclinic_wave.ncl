@@ -1,5 +1,6 @@
 ;**************************************
-;eof_cam.ncl
+;FKESSLER contour plots
+;requires data on native se-grid
 ;**************************************
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_code.ncl"   
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_csm.ncl"
@@ -22,12 +23,12 @@ begin
   fdate = (/".cam.h1*",".cam.h1*"/) ;data must be on native-grid
   nfiles = dimsizes(fname)
 
-  onemnth = False
   cellfill = True
 
-  t0 = 40 ;6-hourly indices: 36 = day9, 40 = day10, 60 = day15
+  t0 = 60 ;6-hourly indices: 36 = day9, 40 = day10, 60 = day15
+  onemnth = False
 
-  VAR = (/"PTTEND","PTTEND"/)
+  VAR = (/"CL2","CL2"/)
   LAT = (/"lat","lat"/)
   LON = (/"lon","lon"/)
 
@@ -50,6 +51,12 @@ begin
     cspc = 0.25e-6
     factor = 1.
     varNam = (/"iCL (kg/kg)"/)
+  else if (VAR(0).eq."iCL2") then
+    cmin = 0.
+    cmax = 2.e-6
+    cspc = 0.1e-6
+    factor = 1.
+    varNam = (/"iCL2 (kg/kg)"/)
   else if (VAR(0).eq."iCLy") then
     cmin = 2.7e-6
     cmax = 4.8e-6
@@ -70,16 +77,52 @@ begin
     cspc = 4.
     factor = secpday
     varNam = (/"PTTEND(lev="+varlev+") (K/day)"/)
+  else if (VAR(0).eq."CLDLIQ") then
+    var3d = True
+    varlev = 25
+    cmin = 0.
+    cmax = 0.0003
+    cspc = 0.00001
+    factor = 1.
+    varNam = (/"CLDLIQ(lev="+varlev+") (kg/kg)"/)
+  else if (VAR(0).eq."Q") then
+    var3d = True
+    varlev = 25
+    cmin = 0.
+    cmax = 0.015
+    cspc = 0.0005
+    factor = 1.
+    varNam = (/"Q(lev="+varlev+") (kg/kg)"/)
+  else if (VAR(0).eq."CL") then
+    var3d = True
+    varlev = 25
+    cmin = 0.
+    cmax = 4.e-6
+    cspc = 0.25e-6
+    factor = 1.
+    varNam = (/"CL(lev="+varlev+") (kg/kg)"/)
+  else if (VAR(0).eq."CL2") then
+    var3d = True
+    varlev = 25
+    cmin = 0.
+    cmax = 2.e-6
+    cspc = 0.1e-6
+    factor = 1.
+    varNam = (/"CL2(lev="+varlev+") (kg/kg)"/)
   else
     manlevs = False
-    factor = secpday;1.
+    factor = 1.
     varNam = VAR(0)
   end if
   end if
   end if
   end if
   end if
-
+  end if
+  end if
+  end if
+  end if
+  end if
 ;************** 
 ;graphics stuff
 ;**************
