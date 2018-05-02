@@ -33,7 +33,7 @@ begin
   LON = (/"lon","lon"/)
 
   plabels = True
-  labels = (/"day10","day10"/)
+  labels = (/"day15","day15"/)
 
   plotName = "temp"
 
