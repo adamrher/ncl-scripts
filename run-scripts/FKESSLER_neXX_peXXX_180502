@@ -1,6 +1,6 @@
 #!/bin/tcsh
 setenv src "physgrid_180502"
-setenv res "ne30pg2_ne30pg2_mg17"
+setenv res "ne30_ne30_mg17"
 setenv comp "FKESSLER"
 setenv wall "00:30:00"
 setenv pes "384" # note that pes=192 crashes on hobart

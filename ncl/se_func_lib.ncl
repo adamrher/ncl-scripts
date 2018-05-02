@@ -352,8 +352,9 @@ begin
 
   pi = 3.14159265358979
   res_p = True
-  ;;f = addfile("/glade/p/work/aherring/grids/grid_files/uniform_30.g.nc","r")
-  f = addfile("/glade/p/work/aherring/grids/grid_files/uniform_1.g.nc","r")
+  dir = "/home/aherring/grids/" ;;"/glade/p/work/aherring/grids/grid_files/
+  ;;f = addfile(dir+"uniform_30.g.nc","r")
+  f = addfile(dir+"uniform_1.g.nc","r")
   fvars = getvardims(f)
   fdims = getfiledimsizes(f)
   num_el_blk = fdims(ind(fvars.eq."num_el_blk"))
@@ -429,7 +430,7 @@ local ncol,wgtpath,root
 
 begin
 
-  root = "/glade/p/work/aherring/grids/grid_files/"
+  root = "/home/aherring/grids/" ;;"/glade/p/work/aherring/grids/grid_files/
 
   if (ncol.eq.13826) then
     wgtpath = root + "ne16_2_latlon.nc"
@@ -465,7 +466,7 @@ local nlat0,nlat,wgtpath,root
 
 begin
 
-  root = "/glade/p/work/aherring/grids/grid_files/"
+  root = "/home/aherring/grids/" ;;"/glade/p/work/aherring/grids/grid_files/
 
   if (nlat.eq.257 .and. nlat0.eq.128) then
     wgtpath = root + "ne30latlon_2_ne16latlon_cnsrv.nc"
@@ -495,6 +496,39 @@ begin
   end if
 
   return(wgtpath)
+
+end
+
+;;; find vertex file
+function get_vertices(ncol)
+;;;
+
+local ncol,root,vpath
+
+begin
+
+  root = "/home/aherring/grids/" ;;"/glade/p/work/aherring/grids/grid_files/
+
+  if (ncol.eq.21600) then
+    vpath = root + "ne30pg2_scrip_170608.nc" 
+  else if (ncol.eq.48600) then
+    vpath = root + "ne30pg3_scrip_170611.nc"
+  else if (ncol.eq.48602) then
+    vpath = root + "ne30np4_091226_pentagons.nc"
+  else if (ncol.eq.194402) then
+    vpath = root + "ne60np4_pentagons_100408.nc"
+  else if (ncol.eq.86400) then
+    vpath = root + "ne60pg2_scrip_170612.nc"
+  else if (ncol.eq.194400) then
+    vpath = root + "ne60pg3_scrip_170611.nc"
+  end if
+  end if
+  end if
+  end if
+  end if
+  end if
+
+  return(vpath)
 
 end
 
