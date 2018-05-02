@@ -3,7 +3,7 @@ setenv src "physgrid_180502"
 setenv res "ne30pg2_ne30pg2_mg17"
 setenv comp "FKESSLER"
 setenv wall "00:30:00"
-setenv pes "384"
+setenv pes "384" # note that pes=192 crashes on hobart
 setenv caze ${src}_${comp}_${res}_pe${pes}_`date '+%y%m%d'`
 
 /home/aherring/src/$src/cime/scripts/create_newcase --case /scratch/cluster/aherring/$caze --compset $comp --res $res --walltime $wall --mach hobart --pecount $pes --compiler intel --queue verylong --run-unsupported
@@ -75,16 +75,16 @@ cd /scratch/cluster/aherring/$caze
 #echo "ndens              = 2,1,2                                                          ">>user_nl_cam
 #echo "interpolate_output = .true.,.false.,.true."                                          >> user_nl_cam
 
-echo "se_statediag_numtrac	= 99">>user_nl_cam
-echo "se_statefreq		= 244">>user_nl_cam
-echo "interpolate_output = .true.,.true.,.false.">>user_nl_cam
+echo "se_statediag_numtrac	= 99     ">>user_nl_cam
+echo "se_statefreq		= 244    ">>user_nl_cam
+echo "empty_htapes       = .true.        ">>user_nl_cam
+echo "fincl1         = 'Q','CLDLIQ','RAINQM','T','U','V','iCLy','iCL','iCL2','OMEGA','CL','CL2','PTTEND','PS','PRECL'">>user_nl_cam
 echo "fincl2         = 'Q','CLDLIQ','RAINQM','T','U','V','iCLy','iCL','iCL2','OMEGA','CL','CL2','PTTEND','PS','PRECL'">>user_nl_cam
-echo "fincl3         = 'Q','CLDLIQ','RAINQM','T','U','V','iCLy','iCL','iCL2','OMEGA','CL','CL2','PTTEND','PS','PRECL'">>user_nl_cam
-echo "nhtfrq         = -6,-6,-6                                               ">> user_nl_cam
-
-## add omega_gll field 
-#cp /home/aherring/src/$src/usr_src/dyn_comp.F90 /scratch/cluster/$USER/$caze/SourceMods/src.cam/
-#cp /home/aherring/src/$src/usr_src/stepon.F90 /scratch/cluster/$USER/$caze/SourceMods/src.cam/
+echo "nhtfrq         = -6,-6                                                      ">> user_nl_cam
+echo "mfilt          = 61,61                                                      ">> user_nl_cam
+echo "avgflag_pertape(1) = 'I'"                                                    >> user_nl_cam
+echo "avgflag_pertape(2) = 'I'"                                                    >> user_nl_cam
+echo "interpolate_output = .true.,.false."					   >> user_nl_cam
 
 # iwidth
 #cp /home/aherring/src/$src/components/cam/usr_src/iwidth/fvm_mapping.F90 /scratch/cluster/$USER/$caze/SourceMods/src.cam/
