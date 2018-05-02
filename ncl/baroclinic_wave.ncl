@@ -287,7 +287,7 @@ end do ;nfiles
   resP@gsnPanelBottom     = 0.1
   ;resP@gsnPanelRight     = 0.9007;
   ;resP@gsnPanelLeft     = 0.40        ; position of left most plot
-  gsn_panel(wks,plot,(/1,2/),resP)      
+  gsn_panel(wks,plot,(/1,nfiles/),resP)      
 
 frame(wks)
 
