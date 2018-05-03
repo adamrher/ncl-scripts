@@ -30,7 +30,7 @@ begin
   t0 = 40 ;6-hourly indices: 36 = day9, 40 = day10, 60 = day15
   labels = (/"day10","day10"/)
 
-  VAR = (/"Q","Q"/)
+  VAR = (/"CLDLIQ","CLDLIQ"/)
   LAT = (/"lat","lat"/)
   LON = (/"lon","lon"/)
 
@@ -78,9 +78,9 @@ begin
     varNam = (/"PTTEND(lev="+varlev+") (K/day)"/)
   else if (VAR(0).eq."CLDLIQ") then
     var3d = True
-    varlev = 25
+    varlev = 20
     cmin = 0.
-    cmax = 0.0003
+    cmax = 0.00035
     cspc = 0.00001
     factor = 1.
     varNam = (/"CLDLIQ(lev="+varlev+") (kg/kg)"/)
@@ -122,6 +122,7 @@ begin
   end if
   end if
   end if
+
 ;************** 
 ;graphics stuff
 ;**************
