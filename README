@@ -6,9 +6,9 @@ Install this package through executing the command: git clone https://github.com
 
 Instructions
 #---------------------------------------
-Modify all three .sh files through setting the variables 'data_dir' to the directory where you keep all your runs (usually a scratch directory) and set 'ncl_dir' to the path where the ncl scripts live ("<path-to-adams-git-scripts>/ncl/"). The scripts exploit CESM's standard directory structures (i.e., your data is assumed to live at "data_dir/<case-name>/run/") and history file naming convention (e.g., the ".cam.h2.0001-06.nc" modifier added to the end of the case name). These scripts will work whether history fields are on the native CAM-SE grid, or a lat-lon grid. They also work regardless of grid resolution. By default, all scripts will dump out a netcdf with the variables computed in the scripts.
+Modify all .sh files through setting the variables 'data_dir' to the directory where you keep all your runs (usually a scratch directory) and set 'ncl_dir' to the path where the ncl scripts live ("<path-to-adams-git-scripts>/ncl/"). The scripts exploit CESM's standard directory structures (i.e., your data is assumed to live at "data_dir/<case-name>/run/") and history file naming convention (e.g., the ".cam.h2.0001-06.nc" modifier added to the end of the case name). These scripts will work whether history fields are on the native CAM-SE grid, or a lat-lon grid. They also work regardless of grid resolution. By default, all scripts will dump out a netcdf with the variables computed in the scripts.
 
-*Note* this package only works on NCAR machines. There are currently four ncl scripts that may be executed. It is recommended (but not required) that you adjust the line at the top of the ncl-scripts: load "/glade/p/work/aherring/se_func_lib.ncl", with load "<path-to-adams-git-scripts>/ncl/se_func_lib.ncl".
+*Note* this package only works on NCAR machines. There are currently six ncl scripts that may be executed. It is recommended (but not required) that you adjust the line at the top of the ncl-scripts: load "/glade/p/work/aherring/se_func_lib.ncl", with load "<path-to-adams-git-scripts>/ncl/se_func_lib.ncl".
 
 *Note* if by executing these scripts, you get booted off of NCAR's login nodes, then run an interactive job on a geyser node. Enter "execgy -a $ACCOUNT -t 01:00:00 -n 1 -m 100G" where $ACCOUNT refers to a project number. You may request up to 1000 GB of memory (!).
 
@@ -28,7 +28,7 @@ e.g., "source $work/CESM2/git-ncl-scripts/glob-diags.sh camtrunk_180328_QPC6_ne3
 Computes global time-mean integrals (also does the deep Tropics) of omega statistics. It computes the components of the global-mean-omega = omg-up*frac-up + omg-dw*frac_dw. Calculation requires instantaneous output (not averages).
 
 to execute, type: "source <path-to-adams-git-scritps>/glob-omg-diags-inst.sh <case-name> <fincl-number>"
-e.g., "source $work/CESM2/git-ncl-scripts/glob-diags.sh camtrunk_180328_QPC6_ne30_180330 h1"
+e.g., "source $work/CESM2/git-ncl-scripts/glob-omg-diags-inst.sh camtrunk_180328_QPC6_ne30_180330 h1"
 
 #---------------------------------------
 (3) dzonal_prec_diff2case.ncl
@@ -41,4 +41,13 @@ These two scripts are executed together with the command:
 "source <path-to-adams-git-scritps>/diff-2-case.sh <case1-name> <fincl-number> <case2-name> <fincl-number>" 
 e.g.,"source $work/CESM2/git-ncl-scripts/diff-2-case.sh camtrunk_180328_QPC5_ne30_180330 h0 camtrunk_180328_QPC5_ne60_180330 h0"
 
+#---------------------------------------
+(5) tropD-diags.ncl
+Estimates the latitude where the Haldey Cell terminates using various metrics, through translating the MATLAB scripts developed by Kevin Grise and Ori Adams, to NCL. The relevant citation is:
 
+Adam O., K. M. Grise, P. State, I. Simpson, S. M. Davis, N. A. Davis, D. W. Waugh, and T. Birner, 2018: The TropD software package: standardized methods for calculating Tropical Width Diagnostics. Geoscientific Model Development. 
+
+Required fields are U,V and PS (PRECT and LHFLUX will be required soon). The script may be executed through the command:
+
+to execute, type: "source <path-to-adams-git-scritps>/tropD-diags.sh <case-name> <fincl-number>"
+e.g., "source $work/CESM2/git-ncl-scripts/tropD-diags.sh camtrunk_180328_QPC6_ne30_180330 h1"
