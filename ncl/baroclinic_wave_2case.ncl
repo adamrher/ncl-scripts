@@ -17,12 +17,9 @@ begin
   cp = 1004.
   Rd = 287.
 
-  dir   = "/scratch/cluster/aherring/"
-  fname = (/"physgrid_180502_FKESSLER_ne30pg2_ne30pg2_mg17_pe384_180502_energydiags", \
-	    "physgrid_180503_FKESSLER_ne30pg2_ne30pg2_mg17_pe384_180502_energydiags", \
-	    "physgrid_180503_FKESSLER_ne30pg2_ne30pg2_mg17_pe384_180502_energydiags-1way"/)
-  fdate = (/".cam.h0*",".cam.h0*",".cam.h0*"/) ;data must be on native-grid
-  tname = fname ;;;(/"dT-no-cslam-leg","dT-cslam-both-legs","dT-cslam-phys2fvm2dyn-only"/)
+  fname = (/fname1,fname2/)
+  fdate = (/".cam."+fincl1+"*",".cam."+fincl2+"*"/)
+  tname = fname
   nfiles = dimsizes(fname)
 
   cellfill = True
@@ -32,7 +29,7 @@ begin
   t0 = 40 ;6-hourly indices: 36 = day9, 40 = day10, 60 = day15
   labels = (/"day10","day10","day10"/)
 
-  VAR = (/"PS","PS","PS"/)
+  VAR = (/plotvar,plotvar,plotvar/)
   LAT = (/"lat","lat","lat"/)
   LON = (/"lon","lon","lon"/)
 

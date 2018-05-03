@@ -78,7 +78,7 @@ begin
 do n = 0,nfiles-1
 print("Begin case " +n)
 
-  files = systemfunc ("ls /glade/scratch/aherring/"+fname(n) + rdir(n) + fname(n) + fdate(n))
+  files = systemfunc ("ls " + dir + fname(n) + rdir(n) + fname(n) + fdate(n))
   nhist = dimsizes(files)
 
   if (onemnth) then
