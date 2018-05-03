@@ -38,7 +38,6 @@ begin
   gPS   =  (/    "PStr",    "PSgl"/)
   gTS   =  (/    "TStr",    "TSgl"/)
   gTL   =  (/    "TLtr",    "TLgl"/)
-  gU10  =  (/   "U10tr",   "U10gl"/)
   gUL   =  (/    "ULtr",    "ULgl"/)
 
 ;************
@@ -79,7 +78,6 @@ begin
  CLDTOT= f[:]->CLDTOT
  PS    = f[:]->PS
  TS    = f[:]->TS
- U10   = f[:]->U10
 
  dims = getfilevardimsizes(f[0],"T")
  nlevs = dims(1)
@@ -114,7 +112,6 @@ begin
       ps    = PS(:,indx)
       ts    = TS(:,indx)
       tl    = TL(:,indx)
-      u10   = U10(:,indx)
       ul    = UL(:,indx)
    else
       precc = PRECC(:,indx,:)
@@ -126,7 +123,6 @@ begin
       ps    = PS(:,indx,:)
       ts    = TS(:,indx,:)
       tl    = TL(:,indx,:)
-      u10   = U10(:,indx,:)
       ul    = UL(:,indx,:)
    end if
    tmp = AREA(indx)
@@ -162,8 +158,6 @@ begin
      gts  = gts/garea
      gtl  = dim_sum(dim_sum(dim_sum(tl*wgt)))
      gtl  = gtl/garea
-     gu10 = dim_sum(dim_sum(dim_sum(u10*wgt)))
-     gu10 = gu10/garea
      gul  = dim_sum(dim_sum(dim_sum(ul*wgt)))
      gul  = gul/garea
    else
@@ -185,8 +179,6 @@ begin
      gts  = gts/garea
      gtl  = dim_sum(dim_sum(tl*wgt))
      gtl  = gtl/garea
-     gu10 = dim_sum(dim_sum(u10*wgt))
-     gu10 = gu10/garea
      gul  = dim_sum(dim_sum(ul*wgt))
      gul  = gul/garea
    end if
@@ -205,7 +197,6 @@ begin
      ncdf->$gPS(n)$     = gps
      ncdf->$gTS(n)$     = gts
      ncdf->$gTL(n)$     = gtl
-     ncdf->$gU10(n)$    = gu10
      ncdf->$gUL(n)$     = gul
    end if
 
@@ -224,10 +215,9 @@ begin
   print("  Mean PS             " + gps  + " (Pa)")
   print("  Mean TS	       " + gts  + " (K)")
   print("  Mean T(nlev)        " + gtl  + " (K)")
-  print("  Mean U10            " + gu10  + " (m/s)")
   print("  Mean U(nlev)        " + gul  + " (m/s)")
   print("  ")
-  delete([/precc,precl,pblh,tmq,cldtot,ps,ts,tl,u10,ul,wgt,indx/]);;;,frqzm/])
+  delete([/precc,precl,pblh,tmq,cldtot,ps,ts,tl,ul,wgt,indx/]);;;,frqzm/])
 
 end do 
 
