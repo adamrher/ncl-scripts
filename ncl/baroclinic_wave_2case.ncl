@@ -27,13 +27,13 @@ begin
   onemnth = False
 
   t0 = 40 ;6-hourly indices: 36 = day9, 40 = day10, 60 = day15
-  labels = (/"day10","day10","day10"/)
+  labels = (/"day10","day10"/)
 
   VAR = (/plotvar,plotvar,plotvar/)
   LAT = (/"lat","lat","lat"/)
   LON = (/"lon","lon","lon"/)
 
-  plotName = "temp"
+  plotNam = "temp_" + plotvar
   var3d = False
   manlevs = True
   if (VAR(0).eq."PS") then
@@ -108,7 +108,7 @@ begin
     varlev = 25
     cmin = 0.
     cmax = 2.e-6
-    cspc = 0.1e-6
+    cspc = 0.05e-6;;;;0.1e-6
     factor = 1.
     varNam = (/"CL2(lev="+varlev+") (kg/kg)"/)
   else
@@ -130,7 +130,7 @@ begin
 ;graphics stuff
 ;**************
   wkstype = "pdf"
-  wks = gsn_open_wks(wkstype,plotName)
+  wks = gsn_open_wks(wkstype,plotNam)
   gsn_define_colormap(wks,"gui_default");;"gui_default");;"MPL_gist_rainbow")
   plot = new( (/nfiles/), graphic)
   ;wkstype@wkBackgroundOpacityF    = 0.
