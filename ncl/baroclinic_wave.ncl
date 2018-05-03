@@ -22,16 +22,17 @@ begin
 	    "physgrid_180503_FKESSLER_ne30pg2_ne30pg2_mg17_pe384_180502_energydiags", \
 	    "physgrid_180503_FKESSLER_ne30pg2_ne30pg2_mg17_pe384_180502_energydiags-1way"/)
   fdate = (/".cam.h0*",".cam.h0*",".cam.h0*"/) ;data must be on native-grid
+  tname = fname ;;;(/"dT-no-cslam-leg","dT-cslam-both-legs","dT-cslam-phys2fvm2dyn-only"/)
   nfiles = dimsizes(fname)
 
   cellfill = True
-  plotglobal = False
+  doglobal = False
   onemnth = False
 
-  t0 = 40 ;6-hourly indices: 36 = day9, 40 = day10, 60 = day15
+  t0 = 60 ;6-hourly indices: 36 = day9, 40 = day10, 60 = day15
   labels = (/"day10","day10","day10"/)
 
-  VAR = (/"CLDLIQ","CLDLIQ","CLDLIQ"/)
+  VAR = (/"iCLy","iCLy","iCLy"/)
   LAT = (/"lat","lat","lat"/)
   LON = (/"lon","lon","lon"/)
 
@@ -123,8 +124,6 @@ begin
   end if
   end if
 
-  tname = (/"dT-no-cslam-leg","dT-cslam-both-legs","dT-cslam-phys2fvm2dyn-only"/)
-
 ;************** 
 ;graphics stuff
 ;**************
@@ -163,7 +162,7 @@ begin
      res@cnFillMode = "CellFill"
    end if
 
-   if (.not.plotglobal) then
+   if (.not.doglobal) then
      res@mpMaxLatF = 70.
      res@mpMinLatF = 20.
      res@mpMaxLonF = 210.
