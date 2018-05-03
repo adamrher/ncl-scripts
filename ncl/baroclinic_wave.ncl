@@ -24,16 +24,15 @@ begin
   nfiles = dimsizes(fname)
 
   cellfill = True
-
-  t0 = 60 ;6-hourly indices: 36 = day9, 40 = day10, 60 = day15
+  plotglobal = False
   onemnth = False
 
-  VAR = (/"CL2","CL2"/)
+  t0 = 40 ;6-hourly indices: 36 = day9, 40 = day10, 60 = day15
+  labels = (/"day10","day10"/)
+
+  VAR = (/"Q","Q"/)
   LAT = (/"lat","lat"/)
   LON = (/"lon","lon"/)
-
-  plabels = True
-  labels = (/"day15","day15"/)
 
   plotName = "temp"
 
@@ -71,7 +70,7 @@ begin
     varNam = (/"PRECL (mm/day)"/)
   else if (VAR(0).eq."PTTEND") then
     var3d = True
-    varlev = 25
+    varlev = 23
     cmin = -50.
     cmax = 30.
     cspc = 4.
@@ -159,6 +158,13 @@ begin
 
    if (cellfill) then
      res@cnFillMode = "CellFill"
+   end if
+
+   if (.not.plotglobal) then
+     res@mpMaxLatF = 70.
+     res@mpMinLatF = 20.
+     res@mpMaxLonF = 210.
+     res@mpMinLonF = 30.
    end if
 
 ;Set Position and Sizes
