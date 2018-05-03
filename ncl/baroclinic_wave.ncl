@@ -46,18 +46,21 @@ begin
     factor = 1.e-2
     varNam = (/"PS (hPa)"/)
   else if (VAR(0).eq."iCL") then
+    doglobal = True
     cmin = 0.
     cmax = 4.e-6
     cspc = 0.25e-6
     factor = 1.
     varNam = (/"iCL (kg/kg)"/)
   else if (VAR(0).eq."iCL2") then
+    doglobal = True
     cmin = 0.
     cmax = 2.e-6
     cspc = 0.1e-6
     factor = 1.
     varNam = (/"iCL2 (kg/kg)"/)
   else if (VAR(0).eq."iCLy") then
+    doglobal = True
     cmin = 2.7e-6
     cmax = 4.8e-6
     cspc = 0.1e-6
@@ -94,6 +97,7 @@ begin
     factor = 1.
     varNam = (/"Q(lev="+varlev+") (kg/kg)"/)
   else if (VAR(0).eq."CL") then
+    doglobal = True
     var3d = True
     varlev = 25
     cmin = 0.
@@ -102,6 +106,7 @@ begin
     factor = 1.
     varNam = (/"CL(lev="+varlev+") (kg/kg)"/)
   else if (VAR(0).eq."CL2") then
+    doglobal = True
     var3d = True
     varlev = 25
     cmin = 0.
