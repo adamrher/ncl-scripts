@@ -22,10 +22,10 @@ begin
   fname = fname1
   fdate = ".cam."+fincl1+"*"
 
-  onemnth = True
+  onemnth = False
   nstart = 1
 
-  writencdf = False
+  writencdf = True
   fname_out = fname+".tropD-diags.nc"
 
   hilat = (/ 90.d,  0.d/)
