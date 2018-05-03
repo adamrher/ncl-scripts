@@ -72,23 +72,46 @@ begin
   pi = 3.14159265358979
 
   dims = dimsizes(v)
-  ntime = dims(0)
-  nlevs = dims(1)
-  nlat = dims(2)
+  if (topt.eq.0) then
+    ntime = dims(0)
+    nlevs = dims(1)
+    nlat = dims(2)
+  else
+    nlevs = dims(0)
+    nlat = dims(1)
+  end if
 
-  psi = new((/ntime,nlev,nlat/),double)
+ if (topt.eq.0) then
+
+  psi = new((/ntime,nlevs,nlat/),double)
   do j = 0,nlat-1
     	const = 2*pi*re*cos(lat(j)*pi/180.)/g ;;;*(1.e-10)
-    	do m = 0,nlev-1
+    	do m = 0,nlevs-1
      		dum = 0.d
-     		do n = m,nlev-1
-      			dum = vzon(:,n,j)*dp(:,n) + dum
+     		do n = m,nlevs-1
+      			dum = v(:,n,j)*dp(:,n,j) + dum
      		end do
      		psi(:,m,j) = const*dum
     	end do
   end do
 
-  return(tofloat(psi))
+ else ;;topt
+
+  psi = new((/nlevs,nlat/),double)
+  do j = 0,nlat-1
+        const = 2*pi*re*cos(lat(j)*pi/180.)/g ;;;*(1.e-10)
+        do m = 0,nlevs-1
+                dum = 0.d
+                do n = m,nlevs-1
+                        dum = v(n,j)*dp(n,j) + dum
+                end do
+                psi(m,j) = const*dum
+        end do
+  end do
+
+ end if ;;topt
+
+ return(tofloat(psi))
 
 end
 
@@ -346,15 +369,23 @@ procedure overlay_se_grid(wks,plot)
 ;;;
 
 local coordx,coordy,coordz,xlon,xlat,lat,lon,map,f,fvars,fdims,num_el_blk, \ 
-	pi,dimnames,dimsz,nelem,count,fcnt,j1,j2,n,i,j 
+	pi,dimnames,dimsz,nelem,count,fcnt,j1,j2,n,i,j,host 
 
 begin
 
   pi = 3.14159265358979
   res_p = True
-  dir = "/home/aherring/grids/" ;;"/glade/p/work/aherring/grids/grid_files/
+
+  host = getenv("HOST")
+  if (host.eq."hobart.cgd.ucar.edu") then
+    dir = "/home/aherring/grids/"
+  else
+    dir = "/glade/p/work/aherring/grids/grid_files/"
+  end if
+
   ;;f = addfile(dir+"uniform_30.g.nc","r")
   f = addfile(dir+"uniform_1.g.nc","r")
+
   fvars = getvardims(f)
   fdims = getfiledimsizes(f)
   num_el_blk = fdims(ind(fvars.eq."num_el_blk"))
@@ -426,11 +457,16 @@ end
 function get_wgt_path(ncol)
 ;;;
 
-local ncol,wgtpath,root
+local ncol,wgtpath,root,host
 
 begin
 
-  root = "/home/aherring/grids/" ;;"/glade/p/work/aherring/grids/grid_files/
+  host = getenv("HOST")
+  if (host.eq."hobart.cgd.ucar.edu") then
+    root = "/home/aherring/grids/"
+  else
+    root = "/glade/p/work/aherring/grids/grid_files/"
+  end if
 
   if (ncol.eq.13826) then
     wgtpath = root + "ne16_2_latlon.nc"
@@ -462,11 +498,16 @@ end
 function get_wgt_path_res(nlat0,nlat)
 ;;;
 
-local nlat0,nlat,wgtpath,root
+local nlat0,nlat,wgtpath,root,host
 
 begin
 
-  root = "/home/aherring/grids/" ;;"/glade/p/work/aherring/grids/grid_files/
+  host = getenv("HOST")
+  if (host.eq."hobart.cgd.ucar.edu") then
+    root = "/home/aherring/grids/"
+  else
+    root = "/glade/p/work/aherring/grids/grid_files/"
+  end if
 
   if (nlat.eq.257 .and. nlat0.eq.128) then
     wgtpath = root + "ne30latlon_2_ne16latlon_cnsrv.nc"
@@ -503,11 +544,16 @@ end
 function get_vertices(ncol)
 ;;;
 
-local ncol,root,vpath
+local ncol,root,vpath,host
 
 begin
 
-  root = "/home/aherring/grids/" ;;"/glade/p/work/aherring/grids/grid_files/
+  host = getenv("HOST")
+  if (host.eq."hobart.cgd.ucar.edu") then
+    root = "/home/aherring/grids/"
+  else
+    root = "/glade/p/work/aherring/grids/grid_files/"
+  end if
 
   if (ncol.eq.21600) then
     vpath = root + "ne30pg2_scrip_170608.nc" 
