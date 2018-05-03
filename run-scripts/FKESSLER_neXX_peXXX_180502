@@ -1,10 +1,10 @@
 #!/bin/tcsh
-setenv src "physgrid_180502"
+setenv src "physgrid_180503"
 setenv res "ne30pg2_ne30pg2_mg17"
 setenv comp "FKESSLER"
 setenv wall "00:30:00"
 setenv pes "384" # note that pes=192 crashes on hobart
-setenv caze ${src}_${comp}_${res}_pe${pes}_`date '+%y%m%d'`_energydiags
+setenv caze ${src}_${comp}_${res}_pe${pes}_`date '+%y%m%d'`_energydiags-1way
 
 /home/aherring/src/$src/cime/scripts/create_newcase --case /scratch/cluster/aherring/$caze --compset $comp --res $res --walltime $wall --mach hobart --pecount $pes --compiler intel --queue overnight --run-unsupported
 cd /scratch/cluster/aherring/$caze

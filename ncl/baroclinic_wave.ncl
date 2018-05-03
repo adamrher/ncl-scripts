@@ -18,9 +18,10 @@ begin
   Rd = 287.
 
   dir   = "/scratch/cluster/aherring/"
-  fname = (/"physgrid_180502_FKESSLER_ne30_ne30_mg17_pe384_180502", \
-	    "physgrid_180502_FKESSLER_ne30pg2_ne30pg2_mg17_pe384_180502"/)
-  fdate = (/".cam.h1*",".cam.h1*"/) ;data must be on native-grid
+  fname = (/"physgrid_180502_FKESSLER_ne30pg2_ne30pg2_mg17_pe384_180502_energydiags", \
+	    "physgrid_180503_FKESSLER_ne30pg2_ne30pg2_mg17_pe384_180502_energydiags", \
+	    "physgrid_180503_FKESSLER_ne30pg2_ne30pg2_mg17_pe384_180502_energydiags-1way"/)
+  fdate = (/".cam.h0*",".cam.h0*",".cam.h0*"/) ;data must be on native-grid
   nfiles = dimsizes(fname)
 
   cellfill = True
@@ -28,14 +29,13 @@ begin
   onemnth = False
 
   t0 = 40 ;6-hourly indices: 36 = day9, 40 = day10, 60 = day15
-  labels = (/"day10","day10"/)
+  labels = (/"day10","day10","day10"/)
 
-  VAR = (/"CLDLIQ","CLDLIQ"/)
-  LAT = (/"lat","lat"/)
-  LON = (/"lon","lon"/)
+  VAR = (/"CLDLIQ","CLDLIQ","CLDLIQ"/)
+  LAT = (/"lat","lat","lat"/)
+  LON = (/"lon","lon","lon"/)
 
   plotName = "temp"
-
   var3d = False
   manlevs = True
   if (VAR(0).eq."PS") then
@@ -122,6 +122,8 @@ begin
   end if
   end if
   end if
+
+  tname = (/"dT-no-cslam-leg","dT-cslam-both-legs","dT-cslam-phys2fvm2dyn-only"/)
 
 ;************** 
 ;graphics stuff
@@ -234,7 +236,7 @@ begin
  end if
 
  delete(var@units)
- var@long_name = fname(n)
+ var@long_name = tname(n)
  res@sfXArray = lon1d
  res@sfYArray = lat1d
 
@@ -294,7 +296,7 @@ end do ;nfiles
   resP@gsnPanelBottom     = 0.1
   ;resP@gsnPanelRight     = 0.9007;
   ;resP@gsnPanelLeft     = 0.40        ; position of left most plot
-  gsn_panel(wks,plot,(/1,nfiles/),resP)      
+  gsn_panel(wks,plot,(/nfiles,1/),resP)      
 
 frame(wks)
 
