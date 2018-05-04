@@ -38,18 +38,21 @@ begin
         return(phi)
 end
 
-;;; get lat of zero crossing on lat-lon grid
+;;; get lat of zero crossing on array of increasing lat
 function get_zerocrossing(var,lat)
 ;;;
 
-local var,lat,nlat,dvar,dlat,indphi,phi
+local var,lat,sign,nlat,i,phi
 
 begin
-	nlat = dimsizes(lat)
-	dvar = var(2:nlat-1) - var(0:nlat-3)
-	dlat = lat(1:nlat-2)
-	indphi = maxind(dvar)
-	phi = dlat(indphi)
-
+	;;;the procedure is to scan for the first sign change
+	sign = var/abs(var)
+        nlat = dimsizes(lat)
+	i = 0
+	do while (sign(i).eq.sign(i+1))
+	  i = i + 1
+	end do
+        phi = (lat(i-1) + lat(i))/2
         return(phi)
 end
+
