@@ -191,17 +191,11 @@ begin
  files = systemfunc ("ls " + dir + fname(n) + "/run/" + fname(n) + fdate(n))
  nf = dimsizes(files)
  if (onemnth) then
-   nstart = nf-2
-   nfinish = nf-2
+   nstart = 0
+   nfinish = 0
  else
    nstart = 0
    nfinish = nf-1
- end if
-
- if (isfilevardim(f[0],"PS","lat")) then
-   print("NETCDF must be on native grid")
-   print("exiting")
-   exit
  end if
 
  print("load files...")
@@ -209,6 +203,12 @@ begin
  f  = addfiles (files(nstart:nfinish),"r")
  ListSetType(f,"cat")
  delete(files)
+
+ if (isfilevardim(f[0],"PS","lat")) then
+   print("NETCDF must be on native grid")
+   print("exiting")
+   exit
+ end if
 
  print("Grab var...")
 

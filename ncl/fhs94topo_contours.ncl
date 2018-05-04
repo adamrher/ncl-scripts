@@ -22,7 +22,7 @@ begin
   titles = fname
 
   onemnth = True
-  nstart = 1
+  nstart = 0
 
   VAR = (/"OMEGA","OMEGA"/)
   varlev = (/22,19/) ;;23-1 And, 20-1 Him
@@ -132,11 +132,10 @@ begin
  ListSetType(f,"cat")
  delete(files)
 
- if (isfilevardim(f[0],"OMEGA","ncol")) then
-   print("*history fields are on native se-grid*")
- else
+ if (isfilevardim(f[0],"OMEGA","lon")) then
    print("*history fields must be on native se-grid*")
    print("exiting...")
+   exit
  end if
 
  print("Grab var...")
