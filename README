@@ -51,12 +51,12 @@ to execute, type: "source <path-to-adams-git-scritps>/tropD-diags.sh <case-name>
 e.g., "source $work/CESM2/git-ncl-scripts/tropD-diags.sh camtrunk_180328_QPC6_ne30_180330 h1"
 
 #---------------------------------------
-(5) baroclinic_wave_2case.ncl
+(6) baroclinic_wave_2case.ncl
 Contour plot of a single time-slice, for two different cases, of a variable of your choosing and the FKESSLER compset in CESM2. This compset refers to a moist version of the Jablonowski baroclinic wave, and includes a Terminator test case. Supported variables: PS, PRECL, PTTEND, CLDLIQ, Q, CL, CL2, iCL, iCL2, iCLy. Relevant citations:
 
 Ullrich, P. A., T. Melvin, C. Jablonowski, and A. Staniforth (2014), A proposed baroclinic wave test case for deep and shallow-atmosphere dynamical cores, Quart. J. Royal Meteor. Soc., 140(682), 1590–1602.
 
-Lauritzen, P. H., A. J. Conley, J.-F. Lamarque, F. Vitt, and M. A. Taylor, 2015: The terminator ‘‘toy’’ chemistry test: A simple tool to assess errors in transport schemes. Geosci. Model Dev., 8, 1299–1313.
+Lauritzen, P. H., A. J. Conley, J.-F. Lamarque, F. Vitt, and M. A. Taylor, 2015: The terminator "toy" chemistry test: A simple tool to assess errors in transport schemes. Geosci. Model Dev., 8, 1299–1313.
 
 to execute, type: "source <path-to-adams-git-scritps>/fkessler-2case.sh <case-name1> <fincl-number1> <case-name2> <fincl-number2> <VAR>"
 e.g., "source $work/CESM2/git-ncl-scripts/fkessler-2case.sh camtrunk_180328_FKESSLER_ne30_180330 h1 camtrunk_180328_FKESSLER_ne30_180330 h1 PRECL"
