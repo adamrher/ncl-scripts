@@ -52,7 +52,7 @@ begin
 	do while (sign(i).eq.sign(i+1))
 	  i = i + 1
 	end do
-        phi = (lat(i-1) + lat(i))/2
+        phi = (lat(i) + lat(i+1))/2
         return(phi)
 end
 
