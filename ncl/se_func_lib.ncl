@@ -578,3 +578,87 @@ begin
 
 end
 
+;;; find omega bin-bounds for pdfx_lowmem
+function get_binmin_omg(ncol)
+;;;
+;;; binmin in Pa/s
+
+local ncol,binmin
+
+begin
+
+  if (ncol.eq.13826) then
+    binmin = -2.
+  else if (ncol.eq.48602) then
+    binmin = -4.
+  else if (ncol.eq.194402) then
+    binmin = -8.
+  else if (ncol.eq.777602) then
+    binmin = -15.
+  else if (ncol.eq.21600) then
+    binmin = -4.
+  else if (ncol.eq.48600) then
+    binmin = -4.
+  else if (ncol.eq.86400) then
+    binmin = -4.
+  else if (ncol.eq.86400) then
+    binmin = -8.
+  else if (ncol.eq.194400) then
+    binmin = -8.
+  end if
+  end if
+  end if
+  end if
+  end if
+  end if
+  end if
+  end if
+  end if
+
+  return(binmin)
+
+end
+
+;;; find prect bin-bounds for pdfx_lowmem
+function get_binmax_prect(ncol)
+;;;
+;;; binmax in mm/day
+
+local ncol,binmax
+
+begin
+
+  if (ncol.eq.13826) then
+    binmax = 200.
+  else if (ncol.eq.48602) then
+    binmax = 400.
+  else if (ncol.eq.194402) then
+    binmax = 800.
+  else if (ncol.eq.777602) then
+    binmax = 1500.
+  else if (ncol.eq.21600) then
+    binmax = 400.
+  else if (ncol.eq.48600) then
+    binmax = 400.
+  else if (ncol.eq.86400) then
+    binmax = 400.
+  else if (ncol.eq.86400) then
+    binmax = 800.
+  else if (ncol.eq.194400) then
+    binmax = 800.
+  end if
+  end if
+  end if
+  end if
+  end if
+  end if
+  end if
+  end if
+  end if
+
+  return(binmax)
+
+end
+
+
+
