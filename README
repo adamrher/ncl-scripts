@@ -47,7 +47,7 @@ e.g.,"source $work/CESM2/git-ncl-scripts/diff-2-case.sh camtrunk_180328_QPC5_ne3
 
 #---------------------------------------
 (5) tropD-diags.ncl
-Estimates the latitude where the Hadley Cell terminates using various metrics, through translating the MATLAB scripts developed by Kevin Grise and Ori Adams, to NCL. Required fields are U,V and PS (PRECT and LHFLX will be required soon). The relevant citation is:
+Estimates the latitude where the Hadley Cell terminates using various metrics, through translating the MATLAB scripts developed by Ori Adam to NCL. Required fields are U,V and PS (PRECT and LHFLX will be required soon). The relevant citation is:
 
 Adam O., K. M. Grise, P. State, I. Simpson, S. M. Davis, N. A. Davis, D. W. Waugh, and T. Birner, 2018: The TropD software package: standardized methods for calculating Tropical Width Diagnostics. Geoscientific Model Development. 
 
