@@ -2,11 +2,15 @@ Adam's Flexible CAM-SE Diagnostic Package
 April 2018
 *email bugs and/or requested modifications to adamrhster@gmail.com
 
-Install this package through executing the command: git clone https://github.com/adamrher/ncl-scripts.git adams-git-scripts
+Overview
+#---------------------------------------
+A collection of user-friendly, flexible scripts, supporting the 'simple models' compsets in the upcoming release of CESM2. These scripts will work whether history fields are on the native CAM-SE grid (time,lev,ncol), or a lat-lon grid (time,lev,lat,lon). They also work regardless of grid resolution (currently only for CAM-SE). By default, all scripts will dump out a netcdf with the variables computed in the scripts. 
 
 Instructions
 #---------------------------------------
-Modify all .sh files through setting the variables 'data_dir' to the directory where you keep all your runs (usually a scratch directory) and set 'ncl_dir' to the path where the ncl scripts live ("<path-to-adams-git-scripts>/ncl/"). The scripts exploit CESM's standard directory structures (i.e., your data is assumed to live at "data_dir/<case-name>/run/") and history file naming convention (e.g., the ".cam.h2.0001-06.nc" modifier added to the end of the case name). These scripts will work whether history fields are on the native CAM-SE grid, or a lat-lon grid. They also work regardless of grid resolution. By default, all scripts will dump out a netcdf with the variables computed in the scripts.
+Install this package through executing the command: git clone https://github.com/adamrher/ncl-scripts.git adams-git-scripts
+
+Modify all .sh files through setting the variables 'data_dir' to the directory where you keep all your runs (usually a scratch directory) and set 'ncl_dir' to the path where the ncl scripts live ("<path-to-adams-git-scripts>/ncl/"). The scripts exploit CESM's standard directory structures (i.e., your data is assumed to live at "data_dir/<case-name>/run/") and history file naming convention (e.g., the ".cam.h2.0001-06.nc" modifier added to the end of the case name).
 
 *Note* this package only works on NCAR machines. There are currently six ncl scripts that may be executed. It is recommended (but not required) that you adjust the line at the top of the ncl-scripts: load "/glade/p/work/aherring/se_func_lib.ncl", with load "<path-to-adams-git-scripts>/ncl/se_func_lib.ncl".
 
