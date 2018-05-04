@@ -59,4 +59,4 @@ Ullrich, P. A., T. Melvin, C. Jablonowski, and A. Staniforth (2014), A proposed 
 Lauritzen, P. H., A. J. Conley, J.-F. Lamarque, F. Vitt, and M. A. Taylor, 2015: The terminator "toy" chemistry test: A simple tool to assess errors in transport schemes. Geosci. Model Dev., 8, 1299–1313.
 
 to execute, type: "source <path-to-adams-git-scritps>/fkessler-2case.sh <case-name1> <fincl-number1> <case-name2> <fincl-number2> <VAR>"
-e.g., "source $work/CESM2/git-ncl-scripts/fkessler-2case.sh camtrunk_180328_FKESSLER_ne30_180330 h1 camtrunk_180328_FKESSLER_ne30_180330 h1 PRECL"
+e.g., "source $work/CESM2/git-ncl-scripts/fkessler-2case.sh camtrunk_180328_FKESSLER_ne30_180330 h1 camtrunk_180328_FKESSLER_ne60_180330 h1 PRECL"
