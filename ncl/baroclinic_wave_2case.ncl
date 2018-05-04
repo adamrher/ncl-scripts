@@ -198,6 +198,12 @@ begin
    nfinish = nf-1
  end if
 
+ if (isfilevardim(f[0],"PS","lat")) then
+   print("NETCDF must be on native grid")
+   print("exiting")
+   exit
+ end if
+
  print("load files...")
 
  f  = addfiles (files(nstart:nfinish),"r")
