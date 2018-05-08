@@ -1,23 +1,23 @@
 #!/bin/tcsh
 setenv src "physgrid_180503"
-setenv res "ne120pg2_ne120pg2_mg17"
+setenv res "ne60pg2_ne60pg2_mg17"
 setenv comp "FKESSLER"
-setenv wall "07:00:00"
-setenv pes "960" # note that pes=192 crashes on hobart
-setenv caze ${src}_${comp}_${res}_pe${pes}_`date '+%y%m%d'`
+setenv wall "02:00:00"
+setenv pes "384" # note that pes=192 crashes on hobart
+setenv caze ${src}_${comp}_${res}_pe${pes}_`date '+%y%m%d'`_noifdefs
 
-/home/aherring/src/$src/cime/scripts/create_newcase --case /scratch/cluster/aherring/$caze --compset $comp --res $res --walltime $wall --mach hobart --pecount $pes --compiler intel --queue monster --run-unsupported
+/home/aherring/src/$src/cime/scripts/create_newcase --case /scratch/cluster/aherring/$caze --compset $comp --res $res --walltime $wall --mach hobart --pecount $pes --compiler nag --queue monster --run-unsupported
 cd /scratch/cluster/aherring/$caze
 
 # no threading
 ./xmlchange NTHRDS=1
 ./xmlchange STOP_OPTION=ndays,STOP_N=15
 ./xmlchange DOUT_S=FALSE
-./xmlchange ATM_NCPL=192
+
+./xmlchange ATM_NCPL=96
 echo "se_nsplit = 2">>user_nl_cam
 echo "se_rsplit = 3">>user_nl_cam
 
-#./xmlchange ATM_NCPL=96
 ## ne30 E15, ne60 E14, ne120 E13
 #echo "se_nu              =   0.2e14  ">> user_nl_cam
 #echo "se_nu_div          =   1.0e14  ">> user_nl_cam
