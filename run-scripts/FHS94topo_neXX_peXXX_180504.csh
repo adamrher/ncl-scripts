@@ -2,15 +2,15 @@
 setenv src "physgrid_180503"
 setenv res "ne30pg2_ne30pg2_mg17"
 setenv comp "FHS94"
-setenv wall "00:10:00"
+setenv wall "03:00:00"
 setenv pes "384" # note that pes=192 crashes on hobart
-setenv caze ${src}_${comp}topo_${res}_pe${pes}_`date '+%y%m%d'`_nag
+setenv caze ${src}_${comp}topo_${res}_pe${pes}_`date '+%y%m%d'`
 
 # Hobart - 48 proc/node, 32 nodes
 /home/$USER/src/$src/cime/scripts/create_newcase --case /scratch/cluster/$USER/$caze --compset $comp --res $res --walltime $wall --mach hobart --compiler nag --queue monster --pecount $pes --run-unsupported
 cd /scratch/cluster/$USER/$caze
 
-./xmlchange STOP_OPTION=ndays,STOP_N=1
+./xmlchange STOP_OPTION=nyears,STOP_N=1
 ./xmlchange DOUT_S=FALSE
 ./xmlchange NTHRDS=1
 ./xmlchange CAM_CONFIG_OPTS="-phys held_suarez"

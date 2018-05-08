@@ -23,7 +23,7 @@ begin
   nfiles = dimsizes(fname)
 
   cellfill = True
-  seover = True
+  seover = False
   doglobal = False
   onemnth = False
 
@@ -162,7 +162,14 @@ begin
    res@mpOutlineBoundarySets     = "NoBoundaries"
 
    ;;for seover
-   res@mpGreatCircleLinesOn=True
+   if (seover) then
+     res@mpGreatCircleLinesOn=True
+     if (cellfill .and. doglobal) then
+       print("Cannot overlay se-grid when cellfill and doglobal are True")
+       print("Setting seover=False")
+       seover = False 
+     end if
+   end if
 
    if (.not.doglobal) then
      res@mpMaxLatF = 70.
@@ -208,12 +215,10 @@ begin
    print("NETCDF is on lat-lon grid")
    latlon = True
    cellfill = False
-   ;;print("exiting")
-   ;;exit
  else
    print("NETCDF is on native se-grid")
    latlon = False
-   cellfill = True
+   ;;cellfill = True
  end if
 
  print("Grab var...")
@@ -230,7 +235,7 @@ begin
    end if
  else
    if (latlon) then
-     var = f[:]->$VAR(n)$(t0,:)
+     var = f[:]->$VAR(n)$(t0,:,:)
    else
      var = f[:]->$VAR(n)$(t0,:)
    end if
