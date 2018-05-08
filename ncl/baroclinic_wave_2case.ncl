@@ -23,6 +23,7 @@ begin
   nfiles = dimsizes(fname)
 
   cellfill = True
+  seover = True
   doglobal = False
   onemnth = False
 
@@ -160,9 +161,8 @@ begin
    res@mpFillOn         = False
    res@mpOutlineBoundarySets     = "NoBoundaries"
 
-   if (cellfill) then
-     res@cnFillMode = "CellFill"
-   end if
+   ;;for seover
+   res@mpGreatCircleLinesOn=True
 
    if (.not.doglobal) then
      res@mpMaxLatF = 70.
@@ -205,21 +205,35 @@ begin
  delete(files)
 
  if (isfilevardim(f[0],"PS","lat")) then
-   print("NETCDF must be on native grid")
-   print("exiting")
-   exit
+   print("NETCDF is on lat-lon grid")
+   latlon = True
+   cellfill = False
+   ;;print("exiting")
+   ;;exit
+ else
+   print("NETCDF is on native se-grid")
+   latlon = False
+   cellfill = True
  end if
 
  print("Grab var...")
 
  if (var3d) then
-   var = f[:]->$VAR(n)$(t0,varlev,:)
+   if (latlon) then
+     var = f[:]->$VAR(n)$(t0,varlev,:,:)
+   else
+     var = f[:]->$VAR(n)$(t0,varlev,:)
+   end if
    if (n.eq.0) then
      hyam = f[0]->hyam
      hybm = f[0]->hybm
    end if
  else
-   var = f[:]->$VAR(n)$(t0,:)
+   if (latlon) then
+     var = f[:]->$VAR(n)$(t0,:)
+   else
+     var = f[:]->$VAR(n)$(t0,:)
+   end if
  end if
 
  var = factor*var
@@ -231,6 +245,7 @@ begin
  print("Plotting...")
 
  if (cellfill) then
+   res@cnFillMode = "CellFill"
    print("CellFill on")
    ncol = dimsizes(lat1d)
    vpath = get_vertices(ncol)
@@ -240,12 +255,16 @@ begin
    res@sfXCellBounds = lonvert
    res@sfYCellBounds = latvert
    delete([/sf,latvert,lonvert/])
+ else
+   res@cnFillMode = "AreaFill"
  end if
 
  delete(var@units)
  var@long_name = tname(n)
- res@sfXArray = lon1d
- res@sfYArray = lat1d
+ if (.not.latlon) then
+   res@sfXArray = lon1d
+   res@sfYArray = lat1d
+ end if
 
  if (manlevs) then
    res@cnLevelSelectionMode = "ManualLevels"
@@ -262,11 +281,18 @@ begin
 
  plot(n) = gsn_csm_contour_map(wks,var,res)
 
+if (seover) then
+  overlay_se_grid(wks,plot(n))
+end if
+
 delete(var)
 delete(lat1d)
 delete(lon1d)
-delete(res@sfXArray)
-delete(res@sfYArray)
+
+if (.not.latlon) then
+  delete(res@sfXArray)
+  delete(res@sfYArray)
+end if
 
 if (cellfill) then
    delete([/res@sfXCellBounds,res@sfYCellBounds/])

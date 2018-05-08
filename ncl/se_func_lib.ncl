@@ -378,13 +378,13 @@ begin
 
   host = getenv("HOST")
   if (host.eq."hobart.cgd.ucar.edu") then
-    dir = "/home/aherring/grids/"
+    dirn = "/home/aherring/grids/"
   else
-    dir = "/glade/p/work/aherring/grids/grid_files/"
+    dirn = "/glade/p/work/aherring/grids/grid_files/"
   end if
 
-  ;;f = addfile(dir+"uniform_30.g.nc","r")
-  f = addfile(dir+"uniform_1.g.nc","r")
+  f = addfile(dirn+"uniform_30.g.nc","r")
+  ;;f = addfile(dirn+"uniform_1.g.nc","r")
 
   fvars = getvardims(f)
   fdims = getfiledimsizes(f)
@@ -425,8 +425,8 @@ begin
   xlon = new ( (/5/), "double")
   xlat = new ( (/5/), "double")
 
-  res_p@gsLineThicknessF = 2.
-  res_p@gsLineColor   = "black";;"grey43"
+  res_p@gsLineThicknessF = 1.;2.
+  res_p@gsLineColor   = "grey43"
 
   do i=0,nelem-1
     if ( mod(i,500).eq.0) then
