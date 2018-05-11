@@ -15,7 +15,7 @@ begin
   g = 9.80616 ;m/s2
   Re = 6371.22
 
-  rdir  = (/"/run/","/run/"/)
+  rdir  = (/".partial/run/","/run/"/)
   fname = (/fname1,fname2/)
   fdate = (/".cam."+fincl1+"*",".cam."+fincl2+"*"/)
   nfiles = dimsizes(fname)
@@ -36,7 +36,7 @@ begin
   cmax = (/ 150. /)*mag
   cspc = (/   4. /)*mag
 
-  cellfill = True
+  cellfill = False
 
   labels = new( (/2*nfiles/), string)
   do i = 0,nfiles-1

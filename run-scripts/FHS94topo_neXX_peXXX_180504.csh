@@ -2,15 +2,15 @@
 setenv src "physgrid_180503"
 setenv res "ne30pg2_ne30pg2_mg17"
 setenv comp "FHS94"
-setenv wall "03:00:00"
+setenv wall "00:10:00"
 setenv pes "384" # note that pes=192 crashes on hobart
-setenv caze ${src}_${comp}topo_${res}_pe${pes}_`date '+%y%m%d'`
+setenv caze ${src}_${comp}topo_${res}_pe${pes}_`date '+%y%m%d'`_consistent_qT_phys2fvm2dyn
 
 # Hobart - 48 proc/node, 32 nodes
 /home/$USER/src/$src/cime/scripts/create_newcase --case /scratch/cluster/$USER/$caze --compset $comp --res $res --walltime $wall --mach hobart --compiler nag --queue monster --pecount $pes --run-unsupported
 cd /scratch/cluster/$USER/$caze
 
-./xmlchange STOP_OPTION=nyears,STOP_N=1
+./xmlchange STOP_OPTION=ndays,STOP_N=1
 ./xmlchange DOUT_S=FALSE
 ./xmlchange NTHRDS=1
 ./xmlchange CAM_CONFIG_OPTS="-phys held_suarez"
@@ -33,26 +33,25 @@ echo "ncdata = '/fs/cgd/csm/inputdata/atm/cam/inic/se/ape_topo_cam4_ne30np4_L30_
 #echo "ncdata = '/fs/cgd/csm/inputdata/atm/cam/inic/fv/cami-mam3_0000-01-01_0.9x1.25_L30_c100618.nc'" >>user_nl_cam
 
 ##history
-#echo "inithist          = 'NONE'                                                 ">> user_nl_cam
-#echo "se_statefreq      = 144                                                    ">> user_nl_cam
-#echo "se_statediag_numtrac = 99							 ">> user_nl_cam
-#echo "empty_htapes      = .true.                                                 ">> user_nl_cam
-#echo "fincl1            = 'PS','T','Z3','U','V','OMEGA','OMEGA_gll','PHIS' ">> user_nl_cam
-#echo "fincl2            = 'PS','T','Z3','U','V','OMEGA','OMEGA_gll','PHIS' ">> user_nl_cam
-#echo "fincl3            = 'PS','T','Z3','U','V','OMEGA','OMEGA_gll','PHIS' ">> user_nl_cam
-#echo "fincl4            = 'PS','T','Z3','U','V','OMEGA','OMEGA_gll','PHIS' ">> user_nl_cam
-#echo "avgflag_pertape(1) = 'A'"                                                   >> user_nl_cam
-#echo "avgflag_pertape(2) = 'A'"                                                   >> user_nl_cam
-#echo "avgflag_pertape(3) = 'I'"                                                   >> user_nl_cam
-#echo "nhtfrq             = 0,0,-6                                                ">> user_nl_cam
-#echo "mfilt              = 1,1,120                                         	 ">> user_nl_cam
-### 0 = use GLL bassis, 1 = bi-linear
-#echo "interpolate_type = 1                                                       ">> user_nl_cam
-#echo "interpolate_output = .true.,.false.,.false."	                          >> user_nl_cam
+echo "inithist          = 'NONE'                                                 ">> user_nl_cam
+echo "se_statefreq      = 144                                                    ">> user_nl_cam
+echo "se_statediag_numtrac = 99							 ">> user_nl_cam
+echo "empty_htapes      = .true.                                                 ">> user_nl_cam
+echo "fincl1            = 'PS','T','Z3','U','V','OMEGA','OMEGA_gll','PHIS' ">> user_nl_cam
+echo "fincl2            = 'PS','T','Z3','U','V','OMEGA','OMEGA_gll','PHIS' ">> user_nl_cam
+echo "fincl3            = 'PS','T','Z3','U','V','OMEGA','OMEGA_gll','PHIS' ">> user_nl_cam
+echo "avgflag_pertape(1) = 'A'"                                                   >> user_nl_cam
+echo "avgflag_pertape(2) = 'A'"                                                   >> user_nl_cam
+echo "avgflag_pertape(3) = 'I'"                                                   >> user_nl_cam
+echo "nhtfrq             = 0,0,-6                                                ">> user_nl_cam
+echo "mfilt              = 1,1,120                                         	 ">> user_nl_cam
+## 0 = use GLL bassis, 1 = bi-linear
+echo "interpolate_type = 1                                                       ">> user_nl_cam
+echo "interpolate_output = .true.,.false.,.false."	                          >> user_nl_cam
 
 
 #omega_gll
-#cp /home/aherring/src/$src/components/cam/usr_src/omega_gll/stepon.F90 /scratch/cluster/$USER/$caze/SourceMods/src.cam/
+cp /home/aherring/src/$src/components/cam/usr_src/omega_gll/stepon.F90 /scratch/cluster/$USER/$caze/SourceMods/src.cam/
 
 ./case.setup
 ./case.build

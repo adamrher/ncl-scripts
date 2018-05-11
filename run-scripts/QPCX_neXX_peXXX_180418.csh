@@ -1,6 +1,6 @@
 #!/bin/tcsh
 setenv proj "P93300642"
-setenv src "camtrunk_180328" #"physgrid_180401"
+setenv src "physgrid_180511"
 setenv res "ne60_ne60_mg16"
 setenv comp "QPC6"
 setenv wall "04:30:00"
@@ -49,7 +49,7 @@ echo "empty_htapes      = .true.                                             ">>
 echo "fincl1 =   'PS','T','Q','Z3','U','V','OMEGA','PRECL','PRECC','FREQZM', ">> user_nl_cam
 echo "		 'FREQI','FREQL','CLDLIQ','CLDICE','CLOUD','CLDTOT','TMQ',   ">> user_nl_cam
 echo "		 'FLNT','FLNS','FSNT','FSNS','LHFLX','SHFLX','RELHUM','TS',  ">> user_nl_cam
-echo "           'SL','PBLH','PSDRY'					     ">> user_nl_cam
+echo "           'SL','PBLH','PSDRY','PSDRY_gll'			     ">> user_nl_cam
 echo "fincl2 =   'PSDRY','PS','T','Q','Z3','U','V','OMEGA','PRECL','PRECC',  ">> user_nl_cam
 echo "	  	 'Q850','OMEGA850'					     ">> user_nl_cam
 echo "avgflag_pertape(1) = 'A'"                                               >> user_nl_cam
