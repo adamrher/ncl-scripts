@@ -1,5 +1,5 @@
 #!/bin/tcsh
-setenv src "physgrid_180503"
+setenv src "physgrid_180511"
 setenv res "ne30pg2_ne30pg2_mg17"
 setenv comp "FHS94"
 setenv wall "00:10:00"

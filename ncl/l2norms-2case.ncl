@@ -140,7 +140,14 @@ print("grabbing vars...")
     res@trYMaxF                = ymax
     res@trYMinF                = ymin
     res@xyYStyle ="Log"
+
     vals = ind(l2norm.ne.0.)
+    if (all(ismissing(vals))) then
+      print("NO NON-ZERO L2 VALS")
+      print("exiting...")
+      exit
+    end if
+
     plot  = gsn_csm_xy(wks,time(vals),l2norm(vals),res)
     delete([/vals,l2norm/])
   end if
