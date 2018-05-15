@@ -1,11 +1,11 @@
 #!/bin/tcsh
 setenv proj "P93300642"
-setenv src "physgrid_180511"
-setenv res "ne60_ne60_mg16"
+setenv src "physgrid_180514"
+setenv res "ne30pg2_ne30pg2_mg17"
 setenv comp "QPC6"
-setenv wall "04:30:00"
-setenv pes "3840"
-setenv caze ${src}_${comp}_ne60_`date '+%y%m%d'`_flux_max_iter2
+setenv wall "02:00:00"
+setenv pes "1800"
+setenv caze ${src}_${comp}_${res}_`date '+%y%m%d'`_PCoM
 
 ## ne30 - pe1800 - QPC6 (1.09 hrs/sy)
 ## ne60pg3 - pe3840 - QPC6 (4.07 hrs/sy)
@@ -23,22 +23,22 @@ cd /glade/scratch/$USER/$caze
 echo "se_nsplit = 2">>user_nl_cam
 echo "se_rsplit = 3">>user_nl_cam
 
-echo "flux_max_iteration = 2">>user_nl_cam
+#echo "flux_max_iteration = 2">>user_nl_cam
 #echo "zmconv_num_cin = 5">> user_nl_cam
 #echo "cld_macmic_num_steps = 1">> user_nl_cam
 
 #------dependent on resolution-------
 
 ## ne30=48, ne60=96, ne120=192
-./xmlchange ATM_NCPL=96
+./xmlchange ATM_NCPL=48
 
 ## ne30 E15, ne60 E14, ne120 E13
 #echo "se_nu              =   0.2e15  ">> user_nl_cam
 #echo "se_nu_div          =   1.0e15  ">> user_nl_cam
 #echo "se_nu_p            =   1.0e15  ">> user_nl_cam
 
-#echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne30np4_L32_c170509.nc'">>user_nl_cam
-echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne60np4_L32_c170908.nc'">>user_nl_cam
+echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne30np4_L32_c170509.nc'">>user_nl_cam
+#echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne60np4_L32_c170908.nc'">>user_nl_cam
 #echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne120np4_L32_c170908.nc'">>user_nl_cam
 
 #mental note - U850 causes a weird error (removed)
