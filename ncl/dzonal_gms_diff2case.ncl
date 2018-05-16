@@ -252,7 +252,7 @@ end if
 
   ;;multiply by cnst to get psi
   do k = 0,nlevs-1
-    psi_zon(k,:) = 2*pi*Re*cos(lat)*psi_zon(k,:)/g 
+    psi_zon(k,:) = 2*pi*Re*cos(lat*pi/180.)*psi_zon(k,:)/g 
   end do
   psi_zon = abs(psi_zon)
 
