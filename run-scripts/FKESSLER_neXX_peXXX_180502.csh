@@ -1,10 +1,10 @@
 #!/bin/tcsh
-setenv src "physgrid_180511"
-setenv res "ne60pg3_ne60pg3_mg17"
+setenv src "physgrid_180516"
+setenv res "ne60pg4_ne60pg4_mg17"
 setenv comp "FKESSLER"
-setenv wall "02:00:00"
+setenv wall "02:30:00"
 setenv pes "384" # note that pes=192 crashes on hobart
-setenv caze ${src}_${comp}_${res}_pe${pes}_`date '+%y%m%d'`
+setenv caze ${src}_${comp}_${res}_pe${pes}_`date '+%y%m%d'`_skip_high_order_fq_map
 
 /home/aherring/src/$src/cime/scripts/create_newcase --case /scratch/cluster/aherring/$caze --compset $comp --res $res --walltime $wall --mach hobart --pecount $pes --compiler nag --queue monster --run-unsupported
 cd /scratch/cluster/aherring/$caze

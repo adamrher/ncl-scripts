@@ -567,6 +567,9 @@ begin
     vpath = root + "ne60pg2_scrip_170612.nc"
   else if (ncol.eq.194400) then
     vpath = root + "ne60pg3_scrip_170611.nc"
+  else if (ncol.eq.345600) then
+    vpath = root + "ne60pg4_scrip_170611.nc"
+  end if
   end if
   end if
   end if
