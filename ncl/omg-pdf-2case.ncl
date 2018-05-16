@@ -23,12 +23,12 @@ begin
   nfiles = dimsizes(fname)
 
   VAR = "OMEGA"
-  onemnth = True
+  onemnth = False
   factor = 1.;;;secpday/100.
 
   nbins  = 100
   optpdf = True  ;;;If False, do pdfx w/ automatic bins
-  xmin = -10.     ;;;x-axis range
+  xmin = -4.     ;;;x-axis range
   ymin =  1.e-10 ;;;y-axis range
 
   writencdf = True

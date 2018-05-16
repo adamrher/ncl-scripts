@@ -29,11 +29,11 @@ begin
 
   nbins  = 200
   optpdf = True  ;;;If False, do pdfx w/ automatic bins
-  xmax = 800.     ;;;x-axis range
+  xmax = 400.     ;;;x-axis range
   ymin = 1.e-9 ;;;y-axis range
 
-  writencdf = False
-  loadncdf = True
+  writencdf = True
+  loadncdf = False
   fname_out = "case_pdflowmem_prect.nc"
   varnams = (/"pdfvar1","pdfvar2"/)
   fname_in  = "case_pdflowmem_prect.nc"

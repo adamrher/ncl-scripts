@@ -1,11 +1,11 @@
 #!/bin/tcsh
 setenv proj "P93300642"
-setenv src "physgrid_180514"
-setenv res "ne30pg2_ne30pg2_mg17"
+setenv src "physgrid_180515"
+setenv res "ne30pg3_ne30pg3_mg17"
 setenv comp "QPC6"
 setenv wall "02:00:00"
 setenv pes "1800"
-setenv caze ${src}_${comp}_${res}_`date '+%y%m%d'`_PCoM
+setenv caze ${src}_${comp}_${res}_`date '+%y%m%d'`
 
 ## ne30 - pe1800 - QPC6 (1.09 hrs/sy)
 ## ne60pg3 - pe3840 - QPC6 (4.07 hrs/sy)
@@ -51,7 +51,7 @@ echo "		 'FREQI','FREQL','CLDLIQ','CLDICE','CLOUD','CLDTOT','TMQ',   ">> user_nl
 echo "		 'FLNT','FLNS','FSNT','FSNS','LHFLX','SHFLX','RELHUM','TS',  ">> user_nl_cam
 echo "           'SL','PBLH','PSDRY','PSDRY_gll'			     ">> user_nl_cam
 echo "fincl2 =   'PSDRY','PS','T','Q','Z3','U','V','OMEGA','PRECL','PRECC',  ">> user_nl_cam
-echo "	  	 'Q850','OMEGA850'					     ">> user_nl_cam
+echo "	  	 'Q850','OMEGA850','FLNT','TMQ'				     ">> user_nl_cam
 echo "avgflag_pertape(1) = 'A'"                                               >> user_nl_cam
 echo "avgflag_pertape(2) = 'I'"                                               >> user_nl_cam
 echo "nhtfrq             = 0,-6"                                              >> user_nl_cam
