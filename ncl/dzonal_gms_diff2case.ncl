@@ -120,6 +120,7 @@ print("Begin case " +n)
         ;;;compute dA and dB
         dA = hyai(1:ilevs-1) - hyai(0:ilevs-2)
         dB = hybi(1:ilevs-1) - hybi(0:ilevs-2)
+  end if
   delete(f)
 
   MSE = cpd*T + g*Z + Lv*Q + Lf*CLDICE
