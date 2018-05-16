@@ -15,7 +15,7 @@ begin
   nfiles = dimsizes(fname)
 
   ;;;Choose Variable to plot - RELHUM,U,OMEGA
-  var = "RELHUM"
+  var = "OMEGA"
 
   onemnth = False
   nstart = 1
