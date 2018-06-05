@@ -10,6 +10,8 @@ load "/glade/p/work/aherring/CESM2/arh-git-scripts/ncl/se_func_lib.ncl"
 begin
 ;****************************************
 ;****************************************
+wcStrt     = systemfunc("date")
+
   Re = 6.37122e3 ;km
   secpday = 60.*60.*24
   pi = 3.14159265358979
@@ -23,24 +25,24 @@ begin
   nfiles = dimsizes(fname)
 
   VAR = "OMEGA"
-  onemnth = False
+  onemnth = True
   factor = 1.;;;secpday/100.
 
-  nbins  = 100
+  nbins  = 200
   optpdf = True  ;;;If False, do pdfx w/ automatic bins
-  xmin = -4.     ;;;x-axis range
+  xmin = -20.     ;;;x-axis range (override by binmin)
   ymin =  1.e-10 ;;;y-axis range
 
   writencdf = True
   loadncdf = False
-  fname_out = "case_pdflowmem_omg.nc"
+  fname_out = fname(0)+"-2-"+fname(1)+".pdf-omg-1mnth.nc"
   varnams = (/"pdfvar1","pdfvar2"/)
-  fname_in  = "case_pdflowmem_omg.nc"
+  fname_in  = fname_out
 
   xaxis = "~F33~w~F21~ (Pa/s)"
 
-  pltNam = "temp_pdf_omg"
-  colors = (/"green","magenta"/)
+  pltNam = "temp_pdf-omg"
+  colors = (/"darkorchid4","magenta"/)
 
 ;******************************************************
 ; plot options
@@ -101,6 +103,8 @@ begin
 
 do n = 0,nfiles-1
 
+wcStrtVar = systemfunc("date")
+
 print("Begin case "+n)
 
 if (.not.loadncdf) then
@@ -109,8 +113,8 @@ if (.not.loadncdf) then
   nhist = dimsizes(files)
 
   if (onemnth) then
-   nstart = 0
-   nfinish = 0
+   nstart = 1
+   nfinish = 1
   else
    nstart = 0
    nfinish = nhist-1
@@ -127,7 +131,10 @@ if (.not.loadncdf) then
     exit
   else
     dims = getfilevardimsizes(f[0],"OMEGA")
+printVarSummary(dims)
     ncol = dims(2)
+print(ncol)
+    delete(dims)
   end if
 
   var = f[:]->$VAR$
@@ -136,13 +143,24 @@ if (.not.loadncdf) then
   delete(f)
   print("minimum omg " + min(var))
 
+  wcStrtPdf = systemfunc("date")
+  wallClockElapseTime(wcStrtVar, "Loading Vars", 0)
+
   print("Starting pdf")
 
   var@_FillValue = default_fillvalue("float")
   var = where(var.lt.0.,var,var@_FillValue)
   if (optpdf) then
     print("do pdfx_lowmem with specified bins")
-    optpdf@bin_min  = get_binmin_omg(ncol)
+
+    if (n.eq.0) then 
+      optpdf@bin_min  = -12.
+    else
+      optpdf@bin_min  = -20.
+    end if
+
+    ;;;optpdf@bin_min  = get_binmin_omg(ncol)
+
     optpdf@bin_max  = 0.
     print("bin_min set to " + optpdf@bin_min)
     optpdf@bin_spacing = (optpdf@bin_max-optpdf@bin_min)/nbins
@@ -154,6 +172,13 @@ if (.not.loadncdf) then
     print("min bin " + pdfvar@bin_bound_min)
    end if
    delete(var)
+
+;;;
+delete(ncol)
+;;;
+
+   wallClockElapseTime(wcStrtPdf, "Compute PDF", 0)
+
 else
 
    print("Loading pdfvars from " + fname_in)
@@ -165,7 +190,7 @@ else
 end if
 
    print("Plotting...")
-
+   res@trXMinF = xmin;;;optpdf@bin_min
    res@xyLineColors       = colors(n)
    pvals = ind(pdfvar.gt.0.d0)
    xvals = pdfvar@bin_bounds(0:nbins-1)
@@ -214,6 +239,8 @@ end do ;nfiles
   resP@gsnPanelYWhiteSpacePercent = 5.
   gsn_panel(wks,plot,(/1,1/),resP)               ; now draw as one plot
   frame(wks)
+
+wallClockElapseTime(wcStrt, "Script time", 0)
 
 end
 

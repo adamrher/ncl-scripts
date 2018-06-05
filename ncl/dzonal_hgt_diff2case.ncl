@@ -15,7 +15,7 @@ begin
   nfiles = dimsizes(fname)
 
   ;;;Choose Variable to plot - RELHUM,U,OMEGA
-  var = "OMEGA"
+  var = "T"
 
   onemnth = False
   nstart = 1
@@ -25,6 +25,9 @@ begin
   PSI   = (/  "PSI1",  "PSI2"/)
   ZRH   = (/  "ZRH1",  "ZRH2"/)
   PTROP = (/"PTROP1","PTROP2"/)
+
+  loadncdf = False
+  fname_in = fname_out
 
  ;;;labels and titles
  labels = new( (/nfiles+1/), "string" )
@@ -52,9 +55,19 @@ begin
 	 vmax = (/60.,60.,5./)
 	 vspace = (/2.5,2.5,0.5/)
  else if (var.eq."OMEGA") then
-         vmin = (/-80.,-60.,-20./)
-         vmax = (/20.,30.,20./)
+         vmin = (/-90.,-90.,-30./)
+         vmax = (/30.,30.,30./)
          vspace = (/5.,5.,2./)
+ else if (var.eq."VU") then
+         vmin = (/-70.,-70.,-40./)
+         vmax = (/ 70., 70., 40./)
+         vspace =(/10., 10.,  4./)
+ else if (var.eq."T") then
+         vmin = (/200.,200.,-2./)
+         vmax = (/320.,320., 2./)
+         vspace =(/ 5.,  5., 0.2/)
+ end if
+ end if
  end if
  end if
  end if
@@ -74,7 +87,10 @@ begin
 ;*************************************************************
   wks = gsn_open_wks("pdf",pltnam)
   gsn_define_colormap(wks,"MPL_jet")
-  gsn_reverse_colormap(wks)
+
+  if (var.ne."T") then
+    gsn_reverse_colormap(wks)
+  end if
 
   plot = new(3,graphic)                          ; create a plot array
 
@@ -176,13 +192,15 @@ begin
 do n = 0,nfiles-1
   print("Begin Case " + n)
 
+if (.not.loadncdf) then
+
   files = systemfunc ("ls " + dir + fname(n) + rdir(n) + fname(n) + fdate(n))
 
   nf = dimsizes(files)
   if (onemnth) then
     nfinish = nstart
   else
-    nfinish = nf-1
+    nfinish = nf-2
   end if
   in  = addfiles (files(nstart:nfinish),"r")
   ListSetType(in,"cat")
@@ -213,12 +231,13 @@ do n = 0,nfiles-1
 
   time = in[:]->time
 
-  if (isfilevardim(in[0],"OMEGA","ncol")) then
+  if (isfilevardim(in[0],"U","ncol")) then
     print("  *history fields are on native grid")
     latlon = False
-    dims = getfilevardimsizes(in[0],"OMEGA")
+    dims = getfilevardimsizes(in[0],"U")
     ncol = dims(2)
-    wgtpath = get_wgt_path(ncol)
+    wgtpath = get_wgt_path(ncol,1)
+    print("wgt path " + wgtpath)
     delete(dims)
   else
     print("  *history fields are on lat-lon grid")
@@ -255,8 +274,13 @@ do n = 0,nfiles-1
 	        pm = se_pressure(ps,p0,hyam,hybm,0)
 	        rh = relhum(T,q/(1-q),pm)
 	        delete(pm)
+	else if (var.eq."VU") then
+  	        u = in[:]->U
+		rh = q - (u*v)
+		delete(u)
         else
                 rh = q
+	end if
         end if
         delete(q)
 
@@ -361,14 +385,18 @@ if (n.eq.0) then
         wgtpath = get_wgt_path_res(nlat0,nlat)
 	if (wgtpath.ne."none") then
 		print("  regridding to CNTL")
+                print("  wgt path " + wgtpath)
 		pmtmp = ESMF_regrid_with_weights(pm,wgtpath,False)
 		int_etatmp = ESMF_regrid_with_weights(int_eta,wgtpath,False)
 		rhtmp = ESMF_regrid_with_weights(rh,wgtpath,False)
-
+printVarSummary(pmtmp)
+printVarSummary(rhtmp)
+printVarSummary(pm0)
         	rh_c = int2p_n(pmtmp,rhtmp,pm0,linlog,1)
 	        int_eta_c = int2p_n(pmtmp,int_etatmp,pm0,2,1)
                 delete([/rhtmp,int_etatmp/])
 	else
+		print("warning wgtpath = 'none'")
 	        ;;; get vars on control grid
         	;;; FOR ANOMALIES ONLY!!!
         	rh_c = int2p_n(pm,rh,pm0,linlog,1)
@@ -446,6 +474,21 @@ if (n.eq.0) then
 	copy_VarMeta(psi0,dpsi)
   end if
   delete(pm)
+
+else ;loadncdf
+
+   if (n.eq.0) then
+     ncdf = addfile(fname_in,"r")
+     lat = ncdf->lat
+   else
+     lat = ncdf->lat1
+   end if
+
+   psi = ncdf->$PSI(n)$
+   zrh = ncdf->$ZRH(n)$
+   ptrop = ncdf->$PTROP(n)$
+
+end if
 
  print("  plotting...")
 
@@ -532,9 +575,11 @@ if (n.eq.0) then
  delete(psi)
  delete(zrh)
  delete(ptrop)
- delete(time)
  delete(lat)
- delete(lon)
+ if (.not.loadncdf) then
+   delete(time)
+   delete(lon)
+ end if
 
  ;;add titles
  gsn_text_ndc(wks,titles(n),0.5,ytitle(n),txres)

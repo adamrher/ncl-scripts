@@ -1,20 +1,21 @@
 #!/bin/tcsh
-setenv src "physgrid_180516"
-setenv res "ne60pg4_ne60pg4_mg17"
+setenv proj "P93300642"
+setenv src "cesm2_0_alpha10f" #"physgrid_180515"
+setenv res "ne20pg3_ne20pg3_mg17"
 setenv comp "FKESSLER"
-setenv wall "02:30:00"
-setenv pes "384" # note that pes=192 crashes on hobart
-setenv caze ${src}_${comp}_${res}_pe${pes}_`date '+%y%m%d'`_skip_high_order_fq_map
+setenv wall "00:30:00"
+setenv pes "1800" # note that pes=192 crashes on hobart
+setenv caze ${src}_${comp}_${res}_pe${pes}_`date '+%y%m%d'`
 
-/home/aherring/src/$src/cime/scripts/create_newcase --case /scratch/cluster/aherring/$caze --compset $comp --res $res --walltime $wall --mach hobart --pecount $pes --compiler nag --queue monster --run-unsupported
-cd /scratch/cluster/aherring/$caze
+/glade/u/home/$USER/$src/cime/scripts/create_newcase --case /glade/scratch/$USER/$caze --compset $comp --res $res --walltime $wall --mach cheyenne --pecount $pes --compiler intel --queue regular --project $proj --run-unsupported
+cd /glade/scratch/$USER/$caze
 
 # no threading
 ./xmlchange NTHRDS=1
 ./xmlchange STOP_OPTION=ndays,STOP_N=15
 ./xmlchange DOUT_S=FALSE
 
-./xmlchange ATM_NCPL=96
+./xmlchange ATM_NCPL=48
 echo "se_nsplit = 2">>user_nl_cam
 echo "se_rsplit = 3">>user_nl_cam
 
@@ -26,6 +27,11 @@ echo "se_rsplit = 3">>user_nl_cam
 ./xmlchange --append CAM_CONFIG_OPTS="-analytic_ic"
 
 # grids still need to be hacked
+./xmlchange --append CAM_CONFIG_OPTS="-hgrid ne20np4.pg3"
+./xmlchange ATM_DOMAIN_FILE="domain.lnd.ne20np4.pg3_gx1v7.180605.nc"
+./xmlchange OCN_DOMAIN_FILE="domain.ocn.ne20np4.pg3_gx1v7.180605.nc"
+./xmlchange ICE_DOMAIN_FILE="domain.ocn.ne20np4.pg3_gx1v7.180605.nc"
+
 #./xmlchange --append CAM_CONFIG_OPTS="-hgrid ne30np4.pg2"
 #./xmlchange ATM_DOMAIN_FILE="domain.lnd.ne30np4.pg2_gx1v7.170628.nc"
 #./xmlchange OCN_DOMAIN_FILE="domain.ocn.ne30np4.pg2_gx1v7.170628.nc"
@@ -104,6 +110,9 @@ echo "interpolate_output = .true.,.false."					   >> user_nl_cam
 # cpdry
 #cp /home/aherring/src/$src/components/cam/usr_src/cpdry/dyn_comp.F90 /scratch/cluster/$USER/$caze/SourceMods/src.cam/
 
+#ifdefs
+#cp /glade/u/home/aherring/$src/components/cam/usr_src/ifdefs/fvm_mapping.F90 /glade/scratch/$USER/$caze/SourceMods/src.cam/
+
 ./case.setup
-./case.build
+qcmd -- ./case.build --skip-provenance-check
 ./case.submit

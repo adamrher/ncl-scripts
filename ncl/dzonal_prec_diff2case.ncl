@@ -96,7 +96,7 @@ print("Begin case " +n)
     latlon = False
     dims = getfilevardimsizes(f[0],"PRECC")
     ncol = dims(1)
-    wgtpath = get_wgt_path(ncol)
+    wgtpath = get_wgt_path(ncol,1)
     delete(dims)
   else
     print("*history fields are on lat-lon grid")
@@ -174,6 +174,7 @@ print("Begin case " +n)
   else if (n.eq.1) then
     nlat = dimsizes(lat)
     wgtpath = get_wgt_path_res(nlat0,nlat)
+    print("wgt path is " + wgtpath)
     if (wgtpath.ne."none") then
 	    print("regridding to CNTL...")
 	    var_bar2d = conform(var(0,:,:),var_bar,0)

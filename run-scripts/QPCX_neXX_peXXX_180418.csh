@@ -1,11 +1,11 @@
 #!/bin/tcsh
 setenv proj "P93300642"
-setenv src "physgrid_180515"
+setenv src "cesm2_0_alpha10f" #"physgrid_180515" "cesm2_alpha10c"
 setenv res "ne30pg3_ne30pg3_mg17"
 setenv comp "QPC6"
-setenv wall "02:00:00"
+setenv wall "01:00:00"
 setenv pes "1800"
-setenv caze ${src}_${comp}_${res}_`date '+%y%m%d'`
+setenv caze ${src}_${comp}_${res}_`date '+%y%m%d'`_pttend
 
 ## ne30 - pe1800 - QPC6 (1.09 hrs/sy)
 ## ne60pg3 - pe3840 - QPC6 (4.07 hrs/sy)
@@ -14,7 +14,7 @@ setenv caze ${src}_${comp}_${res}_`date '+%y%m%d'`
 /glade/u/home/$USER/$src/cime/scripts/create_newcase --case /glade/scratch/$USER/$caze --compset $comp --res $res --walltime $wall --pecount $pes --project $proj --compiler intel --queue regular --run-unsupported
 cd /glade/scratch/$USER/$caze
 
-./xmlchange STOP_OPTION=nyears,STOP_N=1
+./xmlchange STOP_OPTION=nmonths,STOP_N=6
 ./xmlchange NTHRDS=1
 ./xmlchange DOUT_S=FALSE
 
@@ -49,16 +49,28 @@ echo "empty_htapes      = .true.                                             ">>
 echo "fincl1 =   'PS','T','Q','Z3','U','V','OMEGA','PRECL','PRECC','FREQZM', ">> user_nl_cam
 echo "		 'FREQI','FREQL','CLDLIQ','CLDICE','CLOUD','CLDTOT','TMQ',   ">> user_nl_cam
 echo "		 'FLNT','FLNS','FSNT','FSNS','LHFLX','SHFLX','RELHUM','TS',  ">> user_nl_cam
-echo "           'SL','PBLH','PSDRY','PSDRY_gll'			     ">> user_nl_cam
-echo "fincl2 =   'PSDRY','PS','T','Q','Z3','U','V','OMEGA','PRECL','PRECC',  ">> user_nl_cam
-echo "	  	 'Q850','OMEGA850','FLNT','TMQ'				     ">> user_nl_cam
+echo "           'SL','PBLH','PSDRY','PSDRY_gll','PRECSC','PRECSL',	     ">> user_nl_cam
+echo "           'PTTEND','EFIX'                                             ">> user_nl_cam
+echo "fincl2 =   'PS','T','Q','Z3','U','V','OMEGA','PRECL','PRECC','FREQZM', ">> user_nl_cam
+echo "           'FREQI','FREQL','CLDLIQ','CLDICE','CLOUD','CLDTOT','TMQ',   ">> user_nl_cam
+echo "           'FLNT','FLNS','FSNT','FSNS','LHFLX','SHFLX','RELHUM','TS',  ">> user_nl_cam
+echo "           'SL','PBLH','PSDRY','PSDRY_gll','PRECSC','PRECSL',          ">> user_nl_cam
+echo "		 'PTTEND','EFIX'					     ">> user_nl_cam
+echo "fincl3 =   'PSDRY','PS','T','Q','Z3','U','V','OMEGA','OMEGA_gll',      ">> user_nl_cam
+echo "	  	 'CLDLIQ','CLDICE'				             ">> user_nl_cam
+echo "fincl4 =   'PRECL','PRECC','Q850','OMEGA850','TMQ','FLNT'		     ">> user_nl_cam
 echo "avgflag_pertape(1) = 'A'"                                               >> user_nl_cam
-echo "avgflag_pertape(2) = 'I'"                                               >> user_nl_cam
-echo "nhtfrq             = 0,-6"                                              >> user_nl_cam
-echo "mfilt              = 1,120"                                             >> user_nl_cam
-echo "ndens              = 2,2"                                               >> user_nl_cam
-echo "interpolate_output = .true.,.false."                                    >> user_nl_cam
+echo "avgflag_pertape(2) = 'A'"                                               >> user_nl_cam
+echo "avgflag_pertape(3) = 'I'"                                               >> user_nl_cam
+echo "avgflag_pertape(4) = 'I'"                                               >> user_nl_cam
+echo "nhtfrq             = 0,0,-6,-6"                                         >> user_nl_cam
+echo "mfilt              = 1,1,120,120"                                       >> user_nl_cam
+echo "ndens              = 2,2,2,2"                                           >> user_nl_cam
+echo "interpolate_output = .true.,.false.,.false.,.false."                    >> user_nl_cam
+
+#omega_gll
+cp /glade/u/home/aherring/$src/components/cam/usr_src/omega_gll/stepon.F90 /glade/scratch/$USER/$caze/SourceMods/src.cam/
 
 ./case.setup
-qcmd -- ./case.build
+qcmd -- ./case.build --skip-provenance-check
 ./case.submit

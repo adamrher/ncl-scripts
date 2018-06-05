@@ -152,7 +152,7 @@ print("grabbing vars...")
     delete([/vals,l2norm/])
   end if
 
-  delete([/ps,time/])
+  delete([/ps,time,wgt/])
 
   ;;add titles
   gsn_text_ndc(wks,titles(n),0.015,ytitle(n),txres)

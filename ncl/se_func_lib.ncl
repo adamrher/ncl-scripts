@@ -17,32 +17,33 @@ begin
 	nlevs = dimsizes(hya)
 	dims = dimsizes(PS)
 
+	
 	if (topt.eq.0) then
 		ntime = dims(0)
 		ncols = dims(1)  
-		p = new( (/ntime,nlevs,ncols/),"float")
-		p@_FillValue = default_fillvalue("float")
+		p = new( (/ntime,nlevs,ncols/),"double")
+		p@_FillValue = default_fillvalue("double")
 
 		hya3d = tofloat(conform(p,hya,1))
 		hyb3d = tofloat(conform(p,hyb,1))
 		ps3d = p
 		do k = 0,nlevs-1
-			ps3d(:,k,:) = PS
+			ps3d(:,k,:) = todouble(PS)
 		end do
-	        p00 = tofloat(P0)
+	        p00 = todouble(P0)
 		p(:,:,:) = p00*hya3d + ps3d*hyb3d
 
 	else if (topt.eq.1) then
 
 		ncols = dims(0)
-		p = new( (/nlevs,ncols/),"float")
-		p@_FillValue = default_fillvalue("float")
+		p = new( (/nlevs,ncols/),"double")
+		p@_FillValue = default_fillvalue("double")
 
 		hya3d = tofloat(conform(p,hya,0))
 		hyb3d = tofloat(conform(p,hyb,0))
 		ps3d = p
 		do k = 0,nlevs-1
-			ps3d(k,:) = PS
+			ps3d(k,:) = todouble(PS)
 		end do
 
                 p00 = tofloat(P0)
@@ -454,10 +455,10 @@ begin
 end
 
 ;;; find wgt_path from ncol
-function get_wgt_path(ncol)
+function get_wgt_path(ncol,opt)
 ;;;
 
-local ncol,wgtpath,root,host
+local ncol,wgtpath,root,host,opt
 
 begin
 
@@ -467,6 +468,8 @@ begin
   else
     root = "/glade/p/work/aherring/grids/grid_files/"
   end if
+
+if (opt.eq.0) then
 
   if (ncol.eq.13826) then
     wgtpath = root + "ne16_2_latlon.nc"
@@ -478,10 +481,13 @@ begin
     wgtpath = root + "ne120_2_latlon.nc"
   else if (ncol.eq.21600) then
     wgtpath = root + "ne30pg2_2_latlon.nc"
+    ;;;wgtpath = root + "ne20pg3_2_latlon.nc"
   else if (ncol.eq.48600) then
     wgtpath = root + "ne30pg3_2_latlon.nc"
   else if (ncol.eq.86400) then
     wgtpath = root + "ne30pg4_2_latlon.nc"
+  else if (ncol.eq.194400) then
+    wgtpath = root + "ne60pg3_2_latlon.nc"
   end if
   end if
   end if
@@ -489,6 +495,41 @@ begin
   end if
   end if
   end if
+  end if
+
+else if (opt.eq.1) then
+
+  if (ncol.eq.48602) then
+    wgtpath = root + "cnsrv/ne30np4_2_0703125deg_cnsrv.nc"
+  else if (ncol.eq.21600) then
+    wgtpath = root + "cnsrv/ne30pg2_2_0703125deg_cnsrv.nc"
+    ;wgtpath = root + "cnsrv/ne20pg3_2_0703125deg-cnsrv.nc"
+  else if (ncol.eq.48600) then
+    wgtpath = root + "cnsrv/ne30pg3_2_0703125deg_cnsrv.nc"
+  else if (ncol.eq.194402) then
+    wgtpath = root + "cnsrv/ne60np4_2_03515625deg_cnsrv.nc"
+  else if (ncol.eq.86400) then
+    wgtpath = root + "cnsrv/ne60pg2_2_03515625deg_cnsrv.nc"
+  else if (ncol.eq.194400) then
+    wgtpath = root + "cnsrv/ne60pg3_2_03515625deg_cnsrv.nc"
+  else if (ncol.eq.777602) then
+    wgtpath = root + "cnsrv/ne120np4_2_03515625deg_cnsrv.nc"
+  else if (ncol.eq.345600) then
+    wgtpath = root + "cnsrv/ne120pg2_2_017578125deg_cnsrv.nc"
+  else if (ncol.eq.777600) then
+    wgtpath = root + "cnsrv/ne120pg3_2_017578125deg_cnsrv.nc"
+  end if
+  end if
+  end if
+  end if
+  end if
+  end if
+  end if
+  end if
+  end if 
+
+end if 
+end if
 
   return(wgtpath)
 
@@ -518,15 +559,18 @@ begin
   else if (nlat.eq.2052 .and. nlat0.eq.128) then
     wgtpath = root + "ne240latlon_2_ne16latlon_cnsrv.nc"
   else if (nlat.eq.513 .and. nlat0.eq.257) then
-    wgtpath = root + "ne60latlon_2_ne30latlon_cnsrv.nc"
-  else if (nlat.eq.1026 .and. nlat0.eq.257) then
-    wgtpath = root + "ne120latlon_2_ne30latlon_cnsrv.nc"
+    wgtpath = root + "cnsrv/03515625deg_2_0703125deg_cnsrv.nc"
+  else if (nlat.eq.1025 .and. nlat0.eq.257) then
+    wgtpath = root + "cnsrv/017578125deg_2_0703125deg_cnsrv.nc"
+  else if (nlat.eq.1025 .and. nlat0.eq.513) then
+    wgtpath = root + "cnsrv/017578125deg_2_03515625deg_cnsrv.nc"
   else if (nlat.eq.1026 .and. nlat0.eq.513) then
     wgtpath = root + "ne120latlon_2_ne60latlon_cnsrv.nc"
   else if (nlat.eq.2052 .and. nlat0.eq.1026) then
     wgtpath = root + "ne240latlon_2_ne120latlon_cnsrv.nc"
   else
     wgtpath = "none"
+  end if
   end if
   end if
   end if
@@ -557,8 +601,11 @@ begin
 
   if (ncol.eq.21600) then
     vpath = root + "ne30pg2_scrip_170608.nc" 
+    ;;vpath = root + "ne20pg3_scrip_180605.nc"
   else if (ncol.eq.48600) then
     vpath = root + "ne30pg3_scrip_170611.nc"
+  else if (ncol.eq.86400) then  
+    vpath = root + "ne30pg4_scrip_170609.nc" 
   else if (ncol.eq.48602) then
     vpath = root + "ne30np4_091226_pentagons.nc"
   else if (ncol.eq.194402) then
@@ -569,6 +616,7 @@ begin
     vpath = root + "ne60pg3_scrip_170611.nc"
   else if (ncol.eq.345600) then
     vpath = root + "ne60pg4_scrip_170611.nc"
+  end if
   end if
   end if
   end if
@@ -591,23 +639,32 @@ local ncol,binmin
 begin
 
   if (ncol.eq.13826) then
+    ;;ne16np4
     binmin = -2.
   else if (ncol.eq.48602) then
-    binmin = -4.
+    ;;ne30np4
+    binmin = -5.
   else if (ncol.eq.194402) then
-    binmin = -8.
+    ;;ne60np4
+    binmin = -10.
   else if (ncol.eq.777602) then
+    ;;ne120np4??
     binmin = -15.
   else if (ncol.eq.21600) then
-    binmin = -4.
+    ;;ne30pg2
+    binmin = -5.
   else if (ncol.eq.48600) then
-    binmin = -4.
+    ;;ne30pg3
+    binmin = -5.
   else if (ncol.eq.86400) then
-    binmin = -4.
-  else if (ncol.eq.86400) then
-    binmin = -8.
+    ;;ne30pg4/ne60pg2, not unique!
+    binmin = -10.
   else if (ncol.eq.194400) then
-    binmin = -8.
+    ;;ne60pg3
+    binmin = -10.
+  else if (ncol.eq.777600) then
+    ;;ne120pg3
+    binmin = -15. ;;-20
   end if
   end if
   end if
@@ -632,24 +689,29 @@ local ncol,binmax
 begin
 
   if (ncol.eq.13826) then
+    ;;ne16np4
     binmax = 200.
   else if (ncol.eq.48602) then
+    ;;ne30np4
     binmax = 400.
   else if (ncol.eq.194402) then
+    ;;ne60np4
     binmax = 800.
   else if (ncol.eq.777602) then
+    ;;ne120np4??
     binmax = 1500.
   else if (ncol.eq.21600) then
+    ;;ne30pg2
     binmax = 400.
   else if (ncol.eq.48600) then
-    binmax = 400.
+    ;;ne30pg3
+    binmax = 404.
   else if (ncol.eq.86400) then
-    binmax = 400.
-  else if (ncol.eq.86400) then
+    ;;ne30pg4/ne60pg2, not unique!
     binmax = 800.
   else if (ncol.eq.194400) then
+    ;;ne60pg3
     binmax = 800.
-  end if
   end if
   end if
   end if

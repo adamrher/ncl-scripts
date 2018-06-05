@@ -32,6 +32,8 @@ begin
   gPRECC = (/ "PRECCtr", "PRECCgl"/)
   gPRECL = (/ "PRECLtr", "PRECLgl"/)
   gFREQZM= (/"FREQZMtr","FREQZMgl"/)
+;;  gFREQL = (/"FREQLtr","FREQLgl"/)
+;;  gFREQI = (/"FREQItr","FREQIgl"/)
   gPBLH  = (/  "PBLHtr",  "PBLHgl"/)
   gTMQ   = (/   "TMQtr",  "TMQHgl"/)
   gCLDTOT= (/"CLDTOTtr","CLDTOTgl"/)
@@ -72,7 +74,9 @@ begin
  PRECC = PRECC*secpday*1000.
  PRECL = f[:]->PRECL
  PRECL = PRECL*secpday*1000.
- ;;;FREQZM = f[:]->FREQZM
+ FREQZM = f[:]->PRECL;;;FREQZM
+;; FREQL = f[:]->FREQL
+;; FREQI = f[:]->FREQI
  PBLH  = f[:]->PBLH
  TMQ   = f[:]->TMQ
  CLDTOT= f[:]->CLDTOT
@@ -107,7 +111,9 @@ begin
       precl = PRECL(:,indx)
       pblh  = PBLH(:,indx)
       tmq   = TMQ(:,indx)
-      ;;;frqzm   = FREQZM(:,indx)
+      frqzm = FREQZM(:,indx)
+;;      frql  = FREQL(:,indx)
+;;      frqi  = FREQI(:,indx)
       cldtot= CLDTOT(:,indx)
       ps    = PS(:,indx)
       ts    = TS(:,indx)
@@ -118,7 +124,9 @@ begin
       precl = PRECL(:,indx,:)
       pblh  = PBLH(:,indx,:)
       tmq   = TMQ(:,indx,:)
-      ;;;frqzm   = FREQZM(:,indx,:)
+      frqzm = FREQZM(:,indx,:)
+;;      frql  = FREQL(:,indx,:)
+;;      frqi  = FREQI(:,indx,:)
       cldtot= CLDTOT(:,indx,:)
       ps    = PS(:,indx,:)
       ts    = TS(:,indx,:)
@@ -148,8 +156,12 @@ begin
      gpblh  = gpblh/garea
      gtmq  = dim_sum(dim_sum(dim_sum(tmq*wgt)))
      gtmq  = gtmq/garea
-     ;;;gfrqzm  = dim_sum(dim_sum(dim_sum(frqzm*wgt)))
-     ;;;gfrqzm  = gfrqzm/garea
+     gfrqzm  = dim_sum(dim_sum(dim_sum(frqzm*wgt)))
+     gfrqzm  = gfrqzm/garea
+;;     gfrql   = dim_sum(dim_sum(dim_sum(frql*wgt)))
+;;     gfrql   = gfrql/garea
+;;     gfrqi   = dim_sum(dim_sum(dim_sum(frqi*wgt)))
+;;     gfrqi   = gfrqi/garea
      gcldtot  = dim_sum(dim_sum(dim_sum(cldtot*wgt)))
      gcldtot  = gcldtot/garea
      gps  = dim_sum(dim_sum(dim_sum(ps*wgt)))
@@ -169,8 +181,12 @@ begin
      gpblh  = gpblh/garea
      gtmq  = dim_sum(dim_sum(tmq*wgt))
      gtmq  = gtmq/garea
-     ;;;gfrqzm  = dim_sum(dim_sum(frqzm*wgt))
-     ;;;gfrqzm  = gfrqzm/garea
+     gfrqzm  = dim_sum(dim_sum(frqzm*wgt))
+     gfrqzm  = gfrqzm/garea
+;;     gfrql   = dim_sum(dim_sum(frql*wgt))
+;;     gfrql   = gfrql/garea
+;;     gfrqi   = dim_sum(dim_sum(frqi*wgt))
+;;     gfrqi   = gfrqi/garea
      gcldtot  = dim_sum(dim_sum(cldtot*wgt))
      gcldtot  = gcldtot/garea
      gps  = dim_sum(dim_sum(ps*wgt))
@@ -190,7 +206,9 @@ begin
      end if
      ncdf->$gPRECC(n)$  = gprecc
      ncdf->$gPRECL(n)$  = gprecl
-     ;;;ncdf->$gFREQZM(n)$ = gfrqzm
+;     ncdf->$gFREQZM(n)$ = gfrqzm
+;;     ncdf->$gFREQL(n)$  = gfrql
+;;     ncdf->$gFREQI(n)$  = gfrqi
      ncdf->$gPBLH(n)$   = gpblh
      ncdf->$gTMQ(n)$    = gtmq
      ncdf->$gCLDTOT(n)$ = gcldtot
@@ -208,7 +226,9 @@ begin
   print("  Mean PRECL          " + gprecl + " (mm/day)")
   print("  Mean PRECT          " + gprect + " (mm/day)")
   print("  PRECL/PRECC         " + gprecl/gprecc + " (fraction)")
-  ;;;print("  Mean FREQZM         " + gfrqzm + " (fraction)")
+  print("  Mean FREQZM         " + gfrqzm + " (fraction)")
+;;  print("  Mean FREQL          " + gfrql + " (fraction)")
+;;  print("  Mean FREQL          " + gfrql + " (fraction)")
   print("  Mean PBLH	       " + gpblh  + " (m)")
   print("  Mean TMQ            " + gtmq  + " (mm water)")
   print("  Mean CLDTOT         " + gcldtot  + " (fraction)")
@@ -217,7 +237,7 @@ begin
   print("  Mean T(nlev)        " + gtl  + " (K)")
   print("  Mean U(nlev)        " + gul  + " (m/s)")
   print("  ")
-  delete([/precc,precl,pblh,tmq,cldtot,ps,ts,tl,ul,wgt,indx/]);;;,frqzm/])
+  delete([/precc,precl,pblh,tmq,cldtot,ps,ts,tl,ul,wgt,indx,frqzm/])
 
 end do 
 

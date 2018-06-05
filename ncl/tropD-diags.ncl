@@ -63,7 +63,7 @@ begin
    latlon = False
    dims = getfilevardimsizes(f[0],"U")
    ncol = dims(2)
-   wgtpath = get_wgt_path(ncol)
+   wgtpath = get_wgt_path(ncol,1)
    delete(dims)
  else
    print("NETCDF on lat-lon grid")
@@ -182,7 +182,7 @@ begin
    else
      lolim = -30.d
      hilim = 0.d
-     psi500 = -1.*psi500 ;;;this is confusing me, how does this fix the problem?
+     psi500 = -1.*psi500 ;;;this is confusing me, how does this fix the problem? (Duh, your correcting for earlier flip)
    end if
    maxlat = get_maxlat(psi500,latreg,lolim,hilim)
    ;

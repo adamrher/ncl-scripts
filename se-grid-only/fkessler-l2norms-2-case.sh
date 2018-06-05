@@ -28,5 +28,5 @@ else
   echo "NCL directory is "$ncl_dir
 endif
 
-ncl 'dir="'$data_dir'"' 'ncldir="'$ncl_dir'"' 'fname1="'$case1'"' 'fname2="'$case2'"' 'fincl1="'$fincl1'"' 'fincl2="'$fincl2'"' $ncl_dir/l2norms-2case.ncl
+ncl 'dir="'$data_dir'"' 'ncldir="'$ncl_dir'"' 'fname1="'$case1'"' 'fname2="'$case2'"' 'fincl1="'$fincl1'"' 'fincl2="'$fincl2'"' $ncl_dir/l2norms2-2case.ncl
 

@@ -29,18 +29,18 @@ begin
 
   nbins  = 200
   optpdf = True  ;;;If False, do pdfx w/ automatic bins
-  xmax = 400.     ;;;x-axis range
+  xmax = 400.    ;;;x-axis range (override by binmax)
   ymin = 1.e-9 ;;;y-axis range
 
   writencdf = True
   loadncdf = False
-  fname_out = "case_pdflowmem_prect.nc"
+  fname_out = fname(0)+"-2-"+fname(1)+".pdf-prect.nc"
   varnams = (/"pdfvar1","pdfvar2"/)
-  fname_in  = "case_pdflowmem_prect.nc"
+  fname_in  = fname_out
 
   xaxis = "Total Precipitation Rate (mm/day)"
 
-  pltNam = "temp_pdf_prect"
+  pltNam = "temp_pdf-prect"
   colors = (/"green","magenta"/)
 
 ;******************************************************
@@ -131,6 +131,8 @@ if (.not.loadncdf) then
     ncol = dims(1)
   end if
 
+  print("Grabbing Vars...")
+
   var = (f[:]->$VAR1$) + (f[:]->$VAR2$)
   var = var*factor
   ntime = dimsizes(f[:]->time)
@@ -165,7 +167,7 @@ else
 end if
 
    print("Plotting...")
-
+   res@trXMaxF = optpdf@bin_max
    res@xyLineColors       = colors(n)
    pvals = ind(pdfvar.gt.0.d0)
    xvals = pdfvar@bin_bounds(0:nbins-1)

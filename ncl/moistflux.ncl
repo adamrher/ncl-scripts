@@ -25,7 +25,7 @@ begin
   fdate = ".cam."+fincl0+"*"
   nfiles = dimsizes(fname)
 
-  onemnth = True
+  onemnth = False
 
   writenetcdf = True
   nbins = 300

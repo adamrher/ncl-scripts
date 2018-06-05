@@ -1,5 +1,8 @@
 #!/bin/tcsh
 
+#1 year of ne30 takes about 1 hour
+#1 year of ne60 takes about 4 hours
+
 if ( "$#argv" != 4) then
   echo "Wrong number of arguments specified:"
   echo "  -arg 1 case1 string"
@@ -28,7 +31,7 @@ else
   echo "NCL directory is "$ncl_dir
 endif
 
-ncl 'dir="'$data_dir'"' 'fname1="'$case1'"' 'fname2="'$case2'"' 'fincl1="'$fincl1'"' 'fincl2="'$fincl2'"' $ncl_dir/prect-pdf-2case.ncl
+#ncl 'dir="'$data_dir'"' 'fname1="'$case1'"' 'fname2="'$case2'"' 'fincl1="'$fincl1'"' 'fincl2="'$fincl2'"' $ncl_dir/prect-pdf-2case.ncl
 
 ncl 'dir="'$data_dir'"' 'fname1="'$case1'"' 'fname2="'$case2'"' 'fincl1="'$fincl1'"' 'fincl2="'$fincl2'"' $ncl_dir/omg-pdf-2case.ncl
 

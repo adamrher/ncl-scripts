@@ -6,7 +6,7 @@ load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_csm.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/contributed.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/esmf/ESMF_regridding.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/shea_util.ncl"
-load "/home/aherring/ncl-scripts/se_func_lib.ncl"
+load "/glade/p/work/aherring/CESM2/arh-git-scripts/ncl/se_func_lib.ncl"
 ;**************************************
 begin
 ;****************************************
@@ -15,7 +15,7 @@ begin
   g = 9.80616 ;m/s2
   Re = 6371.22
 
-  rdir  = (/".partial/run/","/run/"/)
+  rdir  = (/"/run/","/run/"/)
   fname = (/fname1,fname2/)
   fdate = (/".cam."+fincl1+"*",".cam."+fincl2+"*"/)
   nfiles = dimsizes(fname)
