@@ -6,7 +6,8 @@ load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_csm.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/contributed.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/esmf/ESMF_regridding.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/shea_util.ncl"
-load "/glade/p/work/aherring/CESM2/arh-git-scripts/ncl/se_func_lib.ncl"
+;;load "/glade/p/work/aherring/CESM2/arh-git-scripts/ncl/se_func_lib.ncl"
+load "/home/aherring/arh-git-scripts/ncl/se_func_lib.ncl"
 ;**************************************
 begin
 ;****************************************
@@ -21,7 +22,7 @@ begin
   nfiles = dimsizes(fname)
   titles = fname
 
-  onemnth = True
+  onemnth = False
   nstart = 0
 
   VAR = (/"OMEGA","OMEGA"/)
@@ -36,7 +37,7 @@ begin
   cmax = (/ 150. /)*mag
   cspc = (/   4. /)*mag
 
-  cellfill = False
+  cellfill = True
 
   labels = new( (/2*nfiles/), string)
   do i = 0,nfiles-1
@@ -122,7 +123,7 @@ begin
  if (onemnth) then
    nfinish = nstart
  else
-   nfinish = nf-1
+   nfinish = 10;;;nf-1
  end if
 
  print("load files...")
@@ -137,6 +138,15 @@ begin
    print("exiting...")
    exit
  end if
+
+ if (isfilevardim(f[0],"OMEGA_gll","ncol_d")) then
+   dims = getfilevardimsizes(f[0],"OMEGA_gll") 
+   ncol_d = dims(2)
+   delete(dims)
+ else
+   ncol_d = 0
+ end if
+ print("ncol_d " + ncol_d)
 
  print("Grab var...")
  ntime = dimsizes(f[:]->time)
@@ -164,7 +174,7 @@ begin
  if (cellfill) then
    print("CellFill on")
    ncol = dimsizes(lat1d)
-   vpath = get_vertices(ncol)
+   vpath = get_vertices(ncol,ncol_d)
    sf = addfile(vpath,"r")
    latvert = sf->grid_corner_lat 
    lonvert = sf->grid_corner_lon 

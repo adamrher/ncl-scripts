@@ -6,7 +6,8 @@ load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_code.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_csm.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/contributed.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/esmf/ESMF_regridding.ncl"
-load "/glade/p/work/aherring/CESM2/arh-git-scripts/ncl/se_func_lib.ncl"
+;;load "/glade/p/work/aherring/CESM2/arh-git-scripts/ncl/se_func_lib.ncl"
+load "/home/aherring/arh-git-scripts/ncl/se_func_lib.ncl"
 ;**************************************
 begin
 ;****************************************
@@ -254,9 +255,6 @@ begin
    print("CellFill on")
    ncol = dimsizes(lat1d)
    vpath = get_vertices(ncol)
-if (n.eq.1) then
-   vpath = "/glade/p/work/aherring/grids/grid_files/ne20pg3_scrip_180605.nc"
-end if
 
    sf = addfile(vpath,"r")
    latvert = sf->grid_corner_lat

@@ -1,19 +1,22 @@
 #!/bin/tcsh
-setenv proj "P93300642"
-setenv src "cesm2_0_alpha10f" #"physgrid_180515"
-setenv res "ne20pg3_ne20pg3_mg17"
+#setenv proj "P93300642"
+setenv src "physgrid_180606" #"cesm2_0_alpha10f"
+setenv res "ne30pg3_ne30pg3_mg17"
 setenv comp "FKESSLER"
-setenv wall "00:30:00"
-setenv pes "1800" # note that pes=192 crashes on hobart
-setenv caze ${src}_${comp}_${res}_pe${pes}_`date '+%y%m%d'`
+setenv wall "00:45:00"
+setenv pes "192" # note that pes=192 crashes on hobart
+setenv caze ${src}_${comp}_${res}_pe${pes}_`date '+%y%m%d'`_tt
 
-/glade/u/home/$USER/$src/cime/scripts/create_newcase --case /glade/scratch/$USER/$caze --compset $comp --res $res --walltime $wall --mach cheyenne --pecount $pes --compiler intel --queue regular --project $proj --run-unsupported
-cd /glade/scratch/$USER/$caze
+/home/$USER/src/$src/cime/scripts/create_newcase --case /scratch/cluster/$USER/$caze --compset $comp --res $res --walltime $wall --mach hobart --pecount $pes --compiler intel --queue monster --run-unsupported
+cd /scratch/cluster/$USER/$caze
 
 # no threading
 ./xmlchange NTHRDS=1
 ./xmlchange STOP_OPTION=ndays,STOP_N=15
 ./xmlchange DOUT_S=FALSE
+
+# test tracers on
+./xmlchange --append CAM_CONFIG_OPTS="-nadv_tt=6"
 
 ./xmlchange ATM_NCPL=48
 echo "se_nsplit = 2">>user_nl_cam
@@ -27,15 +30,16 @@ echo "se_rsplit = 3">>user_nl_cam
 ./xmlchange --append CAM_CONFIG_OPTS="-analytic_ic"
 
 # grids still need to be hacked
-./xmlchange --append CAM_CONFIG_OPTS="-hgrid ne20np4.pg3"
-./xmlchange ATM_DOMAIN_FILE="domain.lnd.ne20np4.pg3_gx1v7.180605.nc"
-./xmlchange OCN_DOMAIN_FILE="domain.ocn.ne20np4.pg3_gx1v7.180605.nc"
-./xmlchange ICE_DOMAIN_FILE="domain.ocn.ne20np4.pg3_gx1v7.180605.nc"
+#./xmlchange --append CAM_CONFIG_OPTS="-hgrid ne20np4.pg3"
+#./xmlchange ATM_DOMAIN_FILE="domain.lnd.ne20np4.pg3_gx1v7.180605.nc"
+#./xmlchange OCN_DOMAIN_FILE="domain.ocn.ne20np4.pg3_gx1v7.180605.nc"
+#./xmlchange ICE_DOMAIN_FILE="domain.ocn.ne20np4.pg3_gx1v7.180605.nc"
+#echo "ncdata = '/fs/cgd/csm/inputdata/atm/cam/inic/cam_vcoords_L30_c180105.nc'">> user_nl_cam
 
-#./xmlchange --append CAM_CONFIG_OPTS="-hgrid ne30np4.pg2"
-#./xmlchange ATM_DOMAIN_FILE="domain.lnd.ne30np4.pg2_gx1v7.170628.nc"
-#./xmlchange OCN_DOMAIN_FILE="domain.ocn.ne30np4.pg2_gx1v7.170628.nc"
-#./xmlchange ICE_DOMAIN_FILE="domain.ocn.ne30np4.pg2_gx1v7.170628.nc"
+#./xmlchange --append CAM_CONFIG_OPTS="-hgrid ne40np4.pg3"
+#./xmlchange ATM_DOMAIN_FILE="domain.lnd.ne40np4.pg3_gx1v7.180605.nc"
+#./xmlchange OCN_DOMAIN_FILE="domain.ocn.ne40np4.pg3_gx1v7.180605.nc"
+#./xmlchange ICE_DOMAIN_FILE="domain.ocn.ne40np4.pg3_gx1v7.180605.nc"
 
 #./xmlchange --append CAM_CONFIG_OPTS="-hgrid ne30np4.pg4"
 #./xmlchange ATM_DOMAIN_FILE="domain.lnd.ne30np4.pg4_gx1v7.170628.nc"
@@ -95,11 +99,13 @@ echo "fincl1 = 'Q','CLDLIQ','RAINQM','T','U','V','iCLy','iCL','iCL2','OMEGA',   
 echo "          'CL','CL2','PTTEND','PS','PSDRY','PSDRY_gll','PRECL'              ">> user_nl_cam
 echo "fincl2 = 'Q','CLDLIQ','RAINQM','T','U','V','iCLy','iCL','iCL2','OMEGA',     ">> user_nl_cam
 echo "          'CL','CL2','PTTEND','PS','PSDRY','PSDRY_gll','PRECL'              ">> user_nl_cam
-echo "nhtfrq         = -6,-6                                                      ">> user_nl_cam
-echo "mfilt          = 61,61                                                      ">> user_nl_cam
+echo "fincl3 = 'TT_SLOT','TT_GBALL','TT_TANH','TT_EM8','TT_Y2_2','TT_Y32_16'	  ">> user_nl_cam
+echo "nhtfrq         = -6,-6,-6                                                   ">> user_nl_cam
+echo "mfilt          = 61,61,61                                                   ">> user_nl_cam
 echo "avgflag_pertape(1) = 'I'"                                                    >> user_nl_cam
 echo "avgflag_pertape(2) = 'I'"                                                    >> user_nl_cam
-echo "interpolate_output = .true.,.false."					   >> user_nl_cam
+echo "avgflag_pertape(3) = 'I'"                                                    >> user_nl_cam
+echo "interpolate_output = .true.,.false.,.false."				   >> user_nl_cam
 
 # iwidth
 #cp /home/aherring/src/$src/components/cam/usr_src/iwidth/fvm_mapping.F90 /scratch/cluster/$USER/$caze/SourceMods/src.cam/
@@ -114,5 +120,6 @@ echo "interpolate_output = .true.,.false."					   >> user_nl_cam
 #cp /glade/u/home/aherring/$src/components/cam/usr_src/ifdefs/fvm_mapping.F90 /glade/scratch/$USER/$caze/SourceMods/src.cam/
 
 ./case.setup
-qcmd -- ./case.build --skip-provenance-check
+./case.build # --skip-provenance-check
+#qcmd -- ./case.build --skip-provenance-check
 ./case.submit

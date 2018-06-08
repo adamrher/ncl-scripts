@@ -585,7 +585,7 @@ begin
 end
 
 ;;; find vertex file
-function get_vertices(ncol)
+function get_vertices(ncol,ncol_d)
 ;;;
 
 local ncol,root,vpath,host
@@ -599,23 +599,28 @@ begin
     root = "/glade/p/work/aherring/grids/grid_files/"
   end if
 
-  if (ncol.eq.21600) then
-    vpath = root + "ne30pg2_scrip_170608.nc" 
-    ;;vpath = root + "ne20pg3_scrip_180605.nc"
-  else if (ncol.eq.48600) then
+  if (ncol.eq.21600 .and. ncol_d.eq.21602) then
+    vpath = root + "ne20pg3_scrip_180605.nc"
+  else if (ncol.eq.21600 .and. ncol_d.eq.48602) then
+    vpath = root + "ne30pg2_scrip_170608.nc"
+  else if (ncol.eq.48600 .and. ncol_d.eq.48602) then
     vpath = root + "ne30pg3_scrip_170611.nc"
-  else if (ncol.eq.86400) then  
+  else if (ncol.eq.86400 .and. ncol_d.eq.48602) then  
     vpath = root + "ne30pg4_scrip_170609.nc" 
-  else if (ncol.eq.48602) then
+  else if (ncol.eq.48602 .and. ncol_d.eq.0) then
     vpath = root + "ne30np4_091226_pentagons.nc"
-  else if (ncol.eq.194402) then
-    vpath = root + "ne60np4_pentagons_100408.nc"
-  else if (ncol.eq.86400) then
+  else if (ncol.eq.86400 .and. ncol_d.eq.86402) then
+    vpath = root + "ne40pg3_scrip_180605.nc"
+  else if (ncol.eq.86400 .and. ncol_d.eq.194402) then
     vpath = root + "ne60pg2_scrip_170612.nc"
-  else if (ncol.eq.194400) then
+  else if (ncol.eq.194400 .and. ncol_d.eq.194402) then
     vpath = root + "ne60pg3_scrip_170611.nc"
-  else if (ncol.eq.345600) then
+  else if (ncol.eq.345600 .and. ncol_d.eq.194402) then
     vpath = root + "ne60pg4_scrip_170611.nc"
+  else if (ncol.eq.194402 .and. ncol_d.eq.0) then
+    vpath = root + "ne60np4_pentagons_100408.nc"
+  end if
+  end if
   end if
   end if
   end if
