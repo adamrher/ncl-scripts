@@ -455,10 +455,10 @@ begin
 end
 
 ;;; find wgt_path from ncol
-function get_wgt_path(ncol,opt)
+function get_wgt_path(ncol,ncol_d,opt)
 ;;;
 
-local ncol,wgtpath,root,host,opt
+local ncol,ncol_d,wgtpath,root,host,opt
 
 begin
 
@@ -471,23 +471,40 @@ begin
 
 if (opt.eq.0) then
 
-  if (ncol.eq.13826) then
+  if (ncol.eq.13826 .and. ncol_d.eq.13826) then
     wgtpath = root + "ne16_2_latlon.nc"
-  else if (ncol.eq.48602) then
+  else if (ncol.eq.48602 .and. ncol_d.eq.48602) then
     wgtpath = root + "ne30_2_latlon.nc"
-  else if (ncol.eq.194402) then
+  else if (ncol.eq.194402 .and. ncol_d.eq.194402) then
     wgtpath = root + "ne60_2_latlon.nc"
-  else if (ncol.eq.777602) then
+  else if (ncol.eq.777602 .and. ncol_d.eq.777602) then
     wgtpath = root + "ne120_2_latlon.nc"
-  else if (ncol.eq.21600) then
+  else if (ncol.eq.21600 .and. ncol_d.eq.21602) then
+    wgtpath = root + "ne20pg3_2_latlon.nc"
+  else if (ncol.eq.21600 .and. ncol_d.eq.48602) then
     wgtpath = root + "ne30pg2_2_latlon.nc"
-    ;;;wgtpath = root + "ne20pg3_2_latlon.nc"
-  else if (ncol.eq.48600) then
+  else if (ncol.eq.48600 .and. ncol_d.eq.48602) then
     wgtpath = root + "ne30pg3_2_latlon.nc"
-  else if (ncol.eq.86400) then
+  else if (ncol.eq.86400 .and. ncol_d.eq.48602) then
     wgtpath = root + "ne30pg4_2_latlon.nc"
-  else if (ncol.eq.194400) then
+  else if (ncol.eq.86400 .and. ncol_d.eq.86402) then
+    wgtpath = root + "ne40pg3_2_latlon.nc"
+  else if (ncol.eq.86400 .and. ncol_d.eq.194402) then
+    wgtpath = root + "ne60pg2_2_latlon.nc"
+  else if (ncol.eq.194400 .and. ncol_d.eq.194402) then
     wgtpath = root + "ne60pg3_2_latlon.nc"
+  else if (ncol.eq.345600 .and. ncol_d.eq.194402) then
+    wgtpath = root + "ne60pg4_2_latlon.nc"
+  else if (ncol.eq.345600 .and. ncol_d.eq.777602) then
+    wgtpath = root + "ne120pg2_2_latlon.nc"
+  else if (ncol.eq.777600 .and. ncol_d.eq.777602) then
+    wgtpath = root + "ne120pg3_2_latlon.nc"
+  end if
+  end if
+  end if
+  end if
+  end if
+  end if
   end if
   end if
   end if
@@ -499,25 +516,32 @@ if (opt.eq.0) then
 
 else if (opt.eq.1) then
 
-  if (ncol.eq.48602) then
+  if (ncol.eq.21600 .and. ncol_d.eq.21602) then
+    wgtpath = root + "cnsrv/ne20pg3_2_09375deg-cnsrv.nc"
+  else if (ncol.eq.48602 .and. ncol_d.eq.48602) then
     wgtpath = root + "cnsrv/ne30np4_2_0703125deg_cnsrv.nc"
-  else if (ncol.eq.21600) then
+  else if (ncol.eq.21600 .and. ncol_d.eq.48602) then
     wgtpath = root + "cnsrv/ne30pg2_2_0703125deg_cnsrv.nc"
-    ;wgtpath = root + "cnsrv/ne20pg3_2_0703125deg-cnsrv.nc"
-  else if (ncol.eq.48600) then
+  else if (ncol.eq.48600 .and. ncol_d.eq.48602) then
     wgtpath = root + "cnsrv/ne30pg3_2_0703125deg_cnsrv.nc"
-  else if (ncol.eq.194402) then
+  else if (ncol.eq.86400 .and. ncol_d.eq.86402) then
+    wgtpath = root + "cnsrv/ne40pg3_2_046875deg-cnsrv.nc"
+  else if (ncol.eq.194402 .and. ncol_d.eq.194402) then
     wgtpath = root + "cnsrv/ne60np4_2_03515625deg_cnsrv.nc"
-  else if (ncol.eq.86400) then
+  else if (ncol.eq.86400 .and. ncol_d.eq.194402) then
     wgtpath = root + "cnsrv/ne60pg2_2_03515625deg_cnsrv.nc"
-  else if (ncol.eq.194400) then
+  else if (ncol.eq.194400 .and. ncol_d.eq.194402) then
     wgtpath = root + "cnsrv/ne60pg3_2_03515625deg_cnsrv.nc"
-  else if (ncol.eq.777602) then
+  else if (ncol.eq.194400 .and. ncol_d.eq.194402) then
+    wgtpath = root + "cnsrv/ne80pg3_2_0234375deg-cnsrv.nc"
+  else if (ncol.eq.777602 .and. ncol_d.eq.777602) then
     wgtpath = root + "cnsrv/ne120np4_2_03515625deg_cnsrv.nc"
-  else if (ncol.eq.345600) then
+  else if (ncol.eq.345600 .and. ncol_d.eq.777602) then
     wgtpath = root + "cnsrv/ne120pg2_2_017578125deg_cnsrv.nc"
-  else if (ncol.eq.777600) then
+  else if (ncol.eq.777600 .and. ncol_d.eq.777602) then
     wgtpath = root + "cnsrv/ne120pg3_2_017578125deg_cnsrv.nc"
+  end if
+  end if
   end if
   end if
   end if
@@ -558,18 +582,26 @@ begin
     wgtpath = root + "ne120latlon_2_ne16latlon_cnsrv.nc"
   else if (nlat.eq.2052 .and. nlat0.eq.128) then
     wgtpath = root + "ne240latlon_2_ne16latlon_cnsrv.nc"
+  else if (nlat.eq.257 .and. nlat0.eq.193) then
+    wgtpath = root + "cnsrv/0703125deg_2_09375deg-cnsrv.nc"
+  else if (nlat.eq.513 .and. nlat0.eq.385) then
+    wgtpath = root + "cnsrv/03515625deg_2_046875deg-cnsrv.nc"
   else if (nlat.eq.513 .and. nlat0.eq.257) then
     wgtpath = root + "cnsrv/03515625deg_2_0703125deg_cnsrv.nc"
   else if (nlat.eq.1025 .and. nlat0.eq.257) then
     wgtpath = root + "cnsrv/017578125deg_2_0703125deg_cnsrv.nc"
   else if (nlat.eq.1025 .and. nlat0.eq.513) then
     wgtpath = root + "cnsrv/017578125deg_2_03515625deg_cnsrv.nc"
+  else if (nlat.eq.1025 .and. nlat0.eq.769) then
+    wgtpath = root + "cnsrv/017578125deg_2_0234375deg-cnsrv.nc"
   else if (nlat.eq.1026 .and. nlat0.eq.513) then
     wgtpath = root + "ne120latlon_2_ne60latlon_cnsrv.nc"
   else if (nlat.eq.2052 .and. nlat0.eq.1026) then
     wgtpath = root + "ne240latlon_2_ne120latlon_cnsrv.nc"
   else
     wgtpath = "none"
+  end if
+  end if
   end if
   end if
   end if
@@ -596,7 +628,7 @@ begin
   if (host.eq."hobart.cgd.ucar.edu") then
     root = "/home/aherring/grids/"
   else
-    root = "/glade/p/work/aherring/grids/grid_files/"
+    root = "/glade/p/work/aherring/grids/physgrids/SCRIP_files/"
   end if
 
   if (ncol.eq.21600 .and. ncol_d.eq.21602) then
@@ -607,7 +639,7 @@ begin
     vpath = root + "ne30pg3_scrip_170611.nc"
   else if (ncol.eq.86400 .and. ncol_d.eq.48602) then  
     vpath = root + "ne30pg4_scrip_170609.nc" 
-  else if (ncol.eq.48602 .and. ncol_d.eq.0) then
+  else if (ncol.eq.48602 .and. ncol_d.eq.48602) then
     vpath = root + "ne30np4_091226_pentagons.nc"
   else if (ncol.eq.86400 .and. ncol_d.eq.86402) then
     vpath = root + "ne40pg3_scrip_180605.nc"
@@ -617,8 +649,20 @@ begin
     vpath = root + "ne60pg3_scrip_170611.nc"
   else if (ncol.eq.345600 .and. ncol_d.eq.194402) then
     vpath = root + "ne60pg4_scrip_170611.nc"
-  else if (ncol.eq.194402 .and. ncol_d.eq.0) then
+  else if (ncol.eq.194402 .and. ncol_d.eq.194402) then
     vpath = root + "ne60np4_pentagons_100408.nc"
+  else if (ncol.eq.345600 .and. ncol_d.eq.345602) then
+    vpath = root + "ne80pg3_scrip_180608.nc"
+  else if (ncol.eq.777602 .and. ncol_d.eq.777602) then
+    vpath = root + "ne120_scrip_180608.nc"
+  else if (ncol.eq.345600 .and. ncol_d.eq.777602) then
+    vpath = root + "ne120pg2_scrip_170629.nc"
+  else if (ncol.eq.777600 .and. ncol_d.eq.777602) then
+    vpath = root + "ne120pg3_scrip_170628.nc"
+  end if
+  end if
+  end if
+  end if
   end if
   end if
   end if

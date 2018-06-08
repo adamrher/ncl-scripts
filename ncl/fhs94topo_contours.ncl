@@ -139,20 +139,21 @@ begin
    exit
  end if
 
- if (isfilevardim(f[0],"OMEGA_gll","ncol_d")) then
-   dims = getfilevardimsizes(f[0],"OMEGA_gll") 
-   ncol_d = dims(2)
-   delete(dims)
- else
-   ncol_d = 0
- end if
- print("ncol_d " + ncol_d)
-
  print("Grab var...")
  ntime = dimsizes(f[:]->time)
 
  lat1d = f[0]->$LAT(n)$
  lon1d = f[0]->$LON(n)$
+ ncol = dimsizes(lat1d)
+
+ if (isfilevardim(f[0],"OMEGA_gll","ncol_d")) then
+   dims = getfilevardimsizes(f[0],"OMEGA_gll") 
+   ncol_d = dims(2)
+   delete(dims)
+ else
+   ncol_d = ncol
+ end if
+ print("ncol_d " + ncol_d)
 
  var1 = f[:]->$VAR(n)$(:,varlev(0),:)
  var2 = f[:]->$VAR(n)$(:,varlev(1),:)
@@ -173,7 +174,6 @@ begin
 
  if (cellfill) then
    print("CellFill on")
-   ncol = dimsizes(lat1d)
    vpath = get_vertices(ncol,ncol_d)
    sf = addfile(vpath,"r")
    latvert = sf->grid_corner_lat 

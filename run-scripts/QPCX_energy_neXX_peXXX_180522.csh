@@ -1,11 +1,11 @@
 #!/bin/tcsh
 setenv proj "P93300642"
 setenv src "physgrid_180607" #"physgrid_180607" "cesm2_0_alpha10f"
-setenv res "ne40pg3_ne40pg3_mg17"
+setenv res "ne30pg2_ne30pg2_mg17"
 setenv comp "QPC6"
-setenv wall "05:00:00"
-setenv pes "3840"
-setenv caze ${src}_${comp}zmcin5_${res}_`date '+%y%m%d'`
+setenv wall "02:00:00"
+setenv pes "1800"
+setenv caze ${src}_${comp}_${res}_`date '+%y%m%d'`
 
 ## ne30 - pe1800 - QPC6 (1.09 hrs/sy)
 ## ne60pg3 - pe3840 - QPC6 (4.07 hrs/sy)
@@ -25,17 +25,17 @@ cd /glade/scratch/$USER/$caze
 #echo "micro_mg_nccons = .false.">>user_nl_cam
 #echo "micro_mg_nicons = .false.">>user_nl_cam
 #echo "flux_max_iteration = 2">>user_nl_cam
-echo "zmconv_num_cin = 5">> user_nl_cam
+#echo "zmconv_num_cin = 5">> user_nl_cam
 #echo "cld_macmic_num_steps = 1">> user_nl_cam
 #echo "se_ftype=1">> user_nl_cam
 #echo "se_qsize_condensate_loading = 1">> user_nl_cam
 
 #------dependent on resolution-------
 
-## ne30=48, ne60=96, ne120=192,384?
-./xmlchange ATM_NCPL=96
+## ne30=48, ne60=96, ne120=192
+./xmlchange ATM_NCPL=48
 
-## for ATM_NCPL = 384, nsplit = 1
+## for ne120 and ATM_NCPL = 384, set nsplit = 1
 echo "se_nsplit = 2">>user_nl_cam
 echo "se_rsplit = 3">>user_nl_cam
 
@@ -44,7 +44,7 @@ echo "se_rsplit = 3">>user_nl_cam
 #echo "se_nu_div          =   1.0e15  ">> user_nl_cam
 #echo "se_nu_p            =   1.0e15  ">> user_nl_cam
 
-#echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne30np4_L32_c170509.nc'">>user_nl_cam
+echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne30np4_L32_c170509.nc'">>user_nl_cam
 #echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne60np4_L32_c170908.nc'">>user_nl_cam
 #echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne120np4_L32_c170908.nc'">>user_nl_cam
 
@@ -57,18 +57,18 @@ echo "se_rsplit = 3">>user_nl_cam
 #./xmlchange OCN_DOMAIN_FILE="domain.ocn.ne20np4.pg3_gx1v7.180605.nc"
 #./xmlchange ICE_DOMAIN_FILE="domain.ocn.ne20np4.pg3_gx1v7.180605.nc"
 
-echo "ncdata = '/glade/p/work/aherring/cesm_inputfiles/ncdata/ape_cam6_ne40np4_L32_c180606.nc'">>user_nl_cam
-./xmlchange --append CAM_CONFIG_OPTS="-hgrid ne40np4.pg3"
-./xmlchange ATM_DOMAIN_FILE="domain.lnd.ne40np4.pg3_gx1v7.180605.nc"
-./xmlchange OCN_DOMAIN_FILE="domain.ocn.ne40np4.pg3_gx1v7.180605.nc"
-./xmlchange ICE_DOMAIN_FILE="domain.ocn.ne40np4.pg3_gx1v7.180605.nc"
+#echo "ncdata = '/glade/p/work/aherring/cesm_inputfiles/ncdata/ape_cam6_ne40np4_L32_c180606.nc'">>user_nl_cam
+#./xmlchange --append CAM_CONFIG_OPTS="-hgrid ne40np4.pg3"
+#./xmlchange ATM_DOMAIN_FILE="domain.lnd.ne40np4.pg3_gx1v7.180605.nc"
+#./xmlchange OCN_DOMAIN_FILE="domain.ocn.ne40np4.pg3_gx1v7.180605.nc"
+#./xmlchange ICE_DOMAIN_FILE="domain.ocn.ne40np4.pg3_gx1v7.180605.nc"
 
 # colin hack for non-standard grids
-echo "drydep_srf_file = '/glade/p/cesmdata/cseg/inputdata/atm/cam/chem/trop_mam/atmsrf_ne120np4_110920.nc'">> user_nl_cam
+#echo "drydep_srf_file = '/glade/p/cesmdata/cseg/inputdata/atm/cam/chem/trop_mam/atmsrf_ne120np4_110920.nc'">> user_nl_cam
 
 #mental note - U850 causes a weird error (removed)
 #--------------------------------------history----------------------------------------------
-echo "inithist          = 'MONTHLY'                                          ">> user_nl_cam
+echo "inithist          = 'NONE'                                             ">> user_nl_cam
 echo "se_statefreq      = 144                                                ">> user_nl_cam
 echo "empty_htapes      = .true.                                             ">> user_nl_cam
 echo "fincl1 =   'PS','T','Q','Z3','U','V','OMEGA','PRECL','PRECC','FREQZM', ">> user_nl_cam

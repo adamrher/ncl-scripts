@@ -1,24 +1,24 @@
 #!/bin/tcsh
-#setenv proj "P93300642"
-setenv src "physgrid_180606" #"cesm2_0_alpha10f"
-setenv res "ne30pg3_ne30pg3_mg17"
+setenv proj "P93300642"
+setenv src "physgrid_180607" #"cesm2_0_alpha10f"
+setenv res "ne80pg3_ne80pg3_mg17"
 setenv comp "FKESSLER"
-setenv wall "00:45:00"
-setenv pes "192" # note that pes=192 crashes on hobart
-setenv caze ${src}_${comp}_${res}_pe${pes}_`date '+%y%m%d'`_tt
+setenv wall "01:00:00"
+setenv pes "1800" # note that pes=192 crashes on hobart
+setenv caze ${src}_${comp}_${res}_pe${pes}_`date '+%y%m%d'`_test
 
-/home/$USER/src/$src/cime/scripts/create_newcase --case /scratch/cluster/$USER/$caze --compset $comp --res $res --walltime $wall --mach hobart --pecount $pes --compiler intel --queue monster --run-unsupported
-cd /scratch/cluster/$USER/$caze
+/glade/u/home/$USER/$src/cime/scripts/create_newcase --case /glade/scratch/$USER/$caze --compset $comp --res $res --walltime $wall --mach cheyenne --pecount $pes --compiler intel --queue regular -project $proj --run-unsupported
+cd /glade/scratch/$USER/$caze
 
 # no threading
 ./xmlchange NTHRDS=1
-./xmlchange STOP_OPTION=ndays,STOP_N=15
+./xmlchange STOP_OPTION=ndays,STOP_N=7
 ./xmlchange DOUT_S=FALSE
 
 # test tracers on
 ./xmlchange --append CAM_CONFIG_OPTS="-nadv_tt=6"
 
-./xmlchange ATM_NCPL=48
+./xmlchange ATM_NCPL=192
 echo "se_nsplit = 2">>user_nl_cam
 echo "se_rsplit = 3">>user_nl_cam
 
@@ -35,6 +35,13 @@ echo "se_rsplit = 3">>user_nl_cam
 #./xmlchange OCN_DOMAIN_FILE="domain.ocn.ne20np4.pg3_gx1v7.180605.nc"
 #./xmlchange ICE_DOMAIN_FILE="domain.ocn.ne20np4.pg3_gx1v7.180605.nc"
 #echo "ncdata = '/fs/cgd/csm/inputdata/atm/cam/inic/cam_vcoords_L30_c180105.nc'">> user_nl_cam
+
+./xmlchange --append CAM_CONFIG_OPTS="-hgrid ne80np4.pg3"
+./xmlchange ATM_DOMAIN_FILE="domain.lnd.ne80np4.pg3_gx1v7.180608.nc"
+./xmlchange OCN_DOMAIN_FILE="domain.ocn.ne80np4.pg3_gx1v7.180608.nc"
+./xmlchange ICE_DOMAIN_FILE="domain.ocn.ne80np4.pg3_gx1v7.180608.nc"
+#echo "ncdata = '/fs/cgd/csm/inputdata/atm/cam/inic/cam_vcoords_L30_c180105.nc'">> user_nl_cam
+echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/cam_vcoords_L30_c180105.nc'">> user_nl_cam
 
 #./xmlchange --append CAM_CONFIG_OPTS="-hgrid ne40np4.pg3"
 #./xmlchange ATM_DOMAIN_FILE="domain.lnd.ne40np4.pg3_gx1v7.180605.nc"

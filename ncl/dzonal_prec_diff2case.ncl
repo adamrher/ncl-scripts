@@ -91,13 +91,21 @@ print("Begin case " +n)
   ListSetType(f,"cat")
   delete(files)
 
-  if (isfilevardim(f[0],"PRECC","ncol")) then
+  if (isfilevardim(f[0],"PS","ncol")) then
     print("*history fields are on native grid")
     latlon = False
-    dims = getfilevardimsizes(f[0],"PRECC")
+
+    dims = getfilevardimsizes(f[0],"PS")
     ncol = dims(1)
-    wgtpath = get_wgt_path(ncol,1)
     delete(dims)
+
+    dims = getfilevardimsizes(f[0],"PSDRY_gll")
+    ncol_d = dims(1)
+    delete(dims)
+
+    wgtpath = get_wgt_path(ncol,ncol_d,1)
+    print("wgt path " + wgtpath)
+
   else
     print("*history fields are on lat-lon grid")
     latlon = True

@@ -31,5 +31,5 @@ endif
 
 ncl 'dir="'$data_dir'"' 'fname1="'$case1'"' 'fname2="'$case2'"' 'fincl1="'$fincl1'"' 'fincl2="'$fincl2'"' $ncl_dir/dzonal_prec_diff2case.ncl
 
-#ncl 'dir="'$data_dir'"' 'fname1="'$case1'"' 'fname2="'$case2'"' 'fincl1="'$fincl1'"' 'fincl2="'$fincl2'"' $ncl_dir/dzonal_hgt_diff2case.ncl
+ncl 'dir="'$data_dir'"' 'fname1="'$case1'"' 'fname2="'$case2'"' 'fincl1="'$fincl1'"' 'fincl2="'$fincl2'"' $ncl_dir/dzonal_hgt_diff2case.ncl
 

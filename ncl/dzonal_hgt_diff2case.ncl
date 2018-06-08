@@ -231,14 +231,21 @@ if (.not.loadncdf) then
 
   time = in[:]->time
 
-  if (isfilevardim(in[0],"U","ncol")) then
+  if (isfilevardim(in[0],"PS","ncol")) then
     print("  *history fields are on native grid")
     latlon = False
-    dims = getfilevardimsizes(in[0],"U")
-    ncol = dims(2)
-    wgtpath = get_wgt_path(ncol,1)
-    print("wgt path " + wgtpath)
+
+    dims = getfilevardimsizes(in[0],"PS")
+    ncol = dims(1)
     delete(dims)
+
+    dims = getfilevardimsizes(in[0],"PSDRY_gll")
+    ncol_d = dims(1)
+    delete(dims)
+
+    wgtpath = get_wgt_path(ncol,ncol_d,1)
+    print("wgt path " + wgtpath)
+    
   else
     print("  *history fields are on lat-lon grid")
     latlon = True
@@ -389,9 +396,7 @@ if (n.eq.0) then
 		pmtmp = ESMF_regrid_with_weights(pm,wgtpath,False)
 		int_etatmp = ESMF_regrid_with_weights(int_eta,wgtpath,False)
 		rhtmp = ESMF_regrid_with_weights(rh,wgtpath,False)
-printVarSummary(pmtmp)
-printVarSummary(rhtmp)
-printVarSummary(pm0)
+
         	rh_c = int2p_n(pmtmp,rhtmp,pm0,linlog,1)
 	        int_eta_c = int2p_n(pmtmp,int_etatmp,pm0,2,1)
                 delete([/rhtmp,int_etatmp/])
