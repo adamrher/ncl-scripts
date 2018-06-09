@@ -25,16 +25,16 @@ begin
   onemnth = False
   nstart = 0
 
-  VAR = (/"OMEGA","OMEGA"/)
+  VAR = (/"OMEGA_gll","OMEGA_gll"/)
   varlev = (/22,19/) ;;23-1 And, 20-1 Him
   factor = secpday/100.
-  LAT = (/"lat","lat"/)
-  LON = (/"lon","lon"/)
+  LAT = (/"lat_d","lat_d"/)
+  LON = (/"lon_d","lon_d"/)
 
   manlevs = True
   mag = 1.
-  cmin = (/-150. /)*mag
-  cmax = (/ 150. /)*mag
+  cmin = (/-100. /)*mag
+  cmax = (/ 100. /)*mag
   cspc = (/   4. /)*mag
 
   cellfill = True
@@ -54,11 +54,12 @@ begin
   lon2 = (/  50.,110./) ; 60.,120.
 
   writencdf = True
-  fname_out = "fhstopo-contours.nc"
+  fname_out = fname(0)+"-2-"+fname(1) + ".fhstopo-contours.nc"
   andnams = (/"and1","and2"/)
   hindnams = (/"hind1","hind2"/)
-  latnams = (/"lat1","lat2"/)
-  lonnams = (/"lon1","lon2"/)
+  latnams = (/"LAT1","LAT2"/)
+  lonnams = (/"LON1","LON2"/)
+  latatt  = (/"ncol1","ncol2"/)
 
   pltNam = "temp_fhstopo"
 
@@ -76,6 +77,7 @@ begin
   end setvalues
 
   plot = new( (/2*nfiles/), graphic)
+
    res             = True
    res@gsnMaximize = False
    res@gsnDraw     = False      ; Will draw later, after overlaying
@@ -123,7 +125,7 @@ begin
  if (onemnth) then
    nfinish = nstart
  else
-   nfinish = 10;;;nf-1
+   nfinish = nf-1
  end if
 
  print("load files...")
@@ -154,6 +156,7 @@ begin
    ncol_d = ncol
  end if
  print("ncol_d " + ncol_d)
+ print("ncol " + ncol)
 
  var1 = f[:]->$VAR(n)$(:,varlev(0),:)
  var2 = f[:]->$VAR(n)$(:,varlev(1),:)
@@ -168,16 +171,18 @@ begin
  delete(var2)
 
  print("plotting...")
- 
+
  res@sfXArray = lon1d
  res@sfYArray = lat1d
-
+ 
  if (cellfill) then
    print("CellFill on")
    vpath = get_vertices(ncol,ncol_d)
+   print("vpath " + vpath)
    sf = addfile(vpath,"r")
    latvert = sf->grid_corner_lat 
    lonvert = sf->grid_corner_lon 
+
    res@sfXCellBounds = lonvert
    res@sfYCellBounds = latvert
    delete([/sf,latvert,lonvert,vpath/])
@@ -212,13 +217,13 @@ begin
      system("/bin/rm -f "+fname_out)
      ncdf = addfile(fname_out , "c")
    end if
+   bar1!0 = latatt(n)
+   bar2!0 = latatt(n)
+   lat1d!0 = latatt(n)
+   lon1d!0 = latatt(n)
+
    ncdf->$andnams(n)$ = bar1
    ncdf->$hindnams(n)$ = bar2
-   if (n.eq.nfiles-1) then
-     ;;attribute name ncol conflicts with other cases
-     lat1d!0 = "ncl6"
-     lon1d!0 = "ncl6"
-   end if
    ncdf->$latnams(n)$ = lat1d(:)
    ncdf->$lonnams(n)$ = lon1d(:)
  end if
@@ -227,10 +232,12 @@ begin
  delete(bar2)
  delete(lat1d)
  delete(lon1d)
- delete(res@sfXArray)
- delete(res@sfYArray)
- delete([/res@sfXCellBounds,res@sfYCellBounds/])
+ delete([/res@sfXArray,res@sfYArray/])
 
+ if (cellfill) then
+   delete([/res@sfXCellBounds,res@sfYCellBounds/])
+ end if
+ 
  gsn_text_ndc(wks,titles(n),xx(n),yy(n),txres)
 
 end do ;nfiles

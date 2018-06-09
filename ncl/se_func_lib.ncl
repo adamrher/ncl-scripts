@@ -551,6 +551,7 @@ else if (opt.eq.1) then
   end if
   end if
   end if 
+  end if
 
 end if 
 end if
@@ -611,6 +612,7 @@ begin
   end if
   end if
   end if
+  end if
 
   return(wgtpath)
 
@@ -633,6 +635,8 @@ begin
 
   if (ncol.eq.21600 .and. ncol_d.eq.21602) then
     vpath = root + "ne20pg3_scrip_180605.nc"
+  else if (ncol.eq.21602 .and. ncol_d.eq.21602) then
+    vpath = root + "ne20_scrip_180606.nc"
   else if (ncol.eq.21600 .and. ncol_d.eq.48602) then
     vpath = root + "ne30pg2_scrip_170608.nc"
   else if (ncol.eq.48600 .and. ncol_d.eq.48602) then
@@ -659,6 +663,7 @@ begin
     vpath = root + "ne120pg2_scrip_170629.nc"
   else if (ncol.eq.777600 .and. ncol_d.eq.777602) then
     vpath = root + "ne120pg3_scrip_170628.nc"
+  end if
   end if
   end if
   end if
