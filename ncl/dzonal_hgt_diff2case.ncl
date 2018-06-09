@@ -531,9 +531,9 @@ end if
 
 	plot(2)  = gsn_csm_contour(wks,dzrh,res1)
 	;;;stream function contours
-	;;res@cnMinLevelValF  = psimin(2)
-	;;res@cnMaxLevelValF  = psimax(2)
-	res@cnLevelSpacingF = psispace(2)
+	res@cnMinLevelValF  = -2.e11
+	res@cnMaxLevelValF  =  2.e11
+	res@cnLevelSpacingF =  0.5e11
 
 	tmp = gsn_csm_contour(wks,dpsi,res)
 	overlay(plot(2),tmp)
