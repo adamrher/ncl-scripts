@@ -28,5 +28,6 @@ else
   echo "NCL directory is "$ncl_dir
 endif
 
-ncl 'dir="'$data_dir'"' 'fname1="'$case1'"' 'fname2="'$case2'"' 'fincl1="'$fincl1'"' 'fincl2="'$fincl2'"' $ncl_dir/fhs94topo_contours.ncl
+#ncl 'dir="'$data_dir'"' 'fname1="'$case1'"' 'fname2="'$case2'"' 'fincl1="'$fincl1'"' 'fincl2="'$fincl2'"' $ncl_dir/fhs94topo_contours.ncl
 
+ncl 'dir="'$data_dir'"' 'fname1="'$case1'"' 'fname2="'$case2'"' 'fincl1="'$fincl1'"' 'fincl2="'$fincl2'"' $ncl_dir/fhs94topo_contours2.ncl
