@@ -38,7 +38,7 @@ begin
   cmax = (/ 100. /)*mag
   cspc = (/   4. /)*mag
 
-  cellfill = True
+  cellfill = False
 
   labels = new( (/2*nfiles/), string)
   do i = 0,nfiles-1
@@ -54,13 +54,14 @@ begin
   lat2 = (/   0., 60./) ;;Him 0.,55.
   lon2 = (/  50.,110./) ; 60.,120.
 
-  writencdf = True
+  writencdf = False
   fname_out = fname(0)+"-2-"+fname(1) + ".fhstopo-contours.nc"
   andnams = (/"and1","and2"/)
   hindnams = (/"hind1","hind2"/)
   latnams = (/"LAT1","LAT2"/)
   lonnams = (/"LON1","LON2"/)
   latatt  = (/"ncol1","ncol2"/)
+  lonatt  = (/"mcol1","mcol2"/)
 
   transect = True
 
@@ -151,9 +152,11 @@ begin
  delete(files)
 
  if (isfilevardim(f[0],"OMEGA","lon")) then
-   print("*history fields must be on native se-grid*")
-   print("exiting...")
-   exit
+   print("History fields on lat-lon grid")
+   latlon = True
+ else
+   print("History fields on native se-grid")
+   latlon = False
  end if
 
  print("Grab var...")
@@ -161,6 +164,9 @@ begin
 
  lat1d = f[0]->$LAT(n)$
  lon1d = f[0]->$LON(n)$
+
+if (.not.latlon) then
+
  ncol = dimsizes(lat1d)
 
  if (isfilevardim(f[0],"OMEGA_gll","ncol_d")) then
@@ -185,11 +191,31 @@ begin
  delete(var1)
  delete(var2)
 
- print("plotting...")
-
  res@sfXArray = lon1d
  res@sfYArray = lat1d
- 
+
+else
+
+ var1 = f[:]->$VAR(n)$(:,varlev(0),:,:)
+ var2 = f[:]->$VAR(n)$(:,varlev(1),:,:)
+ var1 = factor*var1
+ var2 = factor*var2
+ delete(f)
+
+ print("dim_avg_0...")
+ bar1 = dim_avg_0_lowmem(var1,3)
+ bar2 = dim_avg_0_lowmem(var2,3)
+
+ copy_VarCoords(var1(0,:,:),bar1)
+ copy_VarCoords(var2(0,:,:),bar2)
+
+ delete(var1)
+ delete(var2)
+
+end if
+
+ print("plotting...")
+
  if (cellfill) then
    print("CellFill on")
    vpath = get_vertices(ncol,ncol_d)
@@ -235,7 +261,12 @@ begin
    bar1!0 = latatt(n)
    bar2!0 = latatt(n)
    lat1d!0 = latatt(n)
-   lon1d!0 = latatt(n)
+   lon1d!0 = lonatt(n)
+
+   if (latlon) then
+     bar1!1 = lonatt(n)
+     bar2!1 = lonatt(n)
+   end if
 
    ncdf->$andnams(n)$ = bar1
    ncdf->$hindnams(n)$ = bar2
@@ -257,7 +288,10 @@ begin
  delete(bar2)
  delete(lat1d)
  delete(lon1d)
- delete([/res@sfXArray,res@sfYArray/])
+
+ if (.not.latlon) then
+   delete([/res@sfXArray,res@sfYArray/])
+ end if
 
  if (cellfill) then
    delete([/res@sfXCellBounds,res@sfYCellBounds/])
