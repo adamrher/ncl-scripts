@@ -30,12 +30,12 @@ wcStrt     = systemfunc("date")
   VAR = "PTTEND"
   factor = 1.
 
-  plotnlat = 165
+  plotnlat = 165 ;;;override with nlat
   klev = 18  ;;;19-1:379hPa 23-1:691hPa
 
   writencdf = True
   loadncdf = False
-  fname_out = fname(0)+".spectra-ft.nc"
+  fname_out = fname(0)+".spectra-ft-lev+"+(klev+1)+".nc"
   fname_in  = fname_out
   varnams1 = (/"specbar1","specbar2"/)
   varnams2 = (/"xbar1","xbar2"/)
@@ -140,7 +140,7 @@ if (.not.loadncdf) then
     print("wgt path " + wgtpath)
   end if
 
-  var = f[:]->$VAR$
+  var = f[:]->$VAR$(:,klev,:)
   var = var*factor
 
   ntime = dimsizes(f[:]->time)
@@ -152,7 +152,7 @@ if (.not.loadncdf) then
   print("Starting spectra")
 
   ;;;create arrays
-  tmp = ESMF_regrid_with_weights(var(0,:,:),wgtpath,False)
+  tmp = ESMF_regrid_with_weights(var(0,:),wgtpath,False)
   nlat = dimsizes(tmp&lat)
   delete(tmp)
 
@@ -166,10 +166,7 @@ if (.not.loadncdf) then
   do t=0,ntime-1
 
     print("t = " + t + "/" + (ntime-1) )
-    var_regrid = ESMF_regrid_with_weights(var(t,:,:),wgtpath,False)
-
-    varlev = var_regrid(klev-1,:,:)
-    delete(var_regrid)
+    varlev = ESMF_regrid_with_weights(var(t,:),wgtpath,False)
 
     ab_var = shaeC(varlev)
     delete(varlev)
@@ -178,6 +175,7 @@ if (.not.loadncdf) then
     delete(ab_var)
 
   end do
+  delete(var)
 
   specbar = dim_avg_0_lowmem(spectra,2)
 
@@ -194,15 +192,19 @@ else
 
 end if
 
+;;;;CAREFUL
+plotnlat = nlat
+;;;;
+
    print("Plotting...")
    res@xyLineColors       = colors(n)
    if (n.eq.0) then
      res@tiYAxisString          = yaxis
      res@tiXAxisString          = xaxis
-     plot  = gsn_csm_xy(wks,xbar(1:plotnlat),specbar(1:plotnlat),res)
+     plot  = gsn_csm_xy(wks,xbar(1:plotnlat-1),specbar(1:plotnlat-1),res)
      delete(res@tiYAxisString)
    else 
-     tmp = gsn_csm_xy(wks,xbar(1:plotnlat),specbar(1:plotnlat),res)
+     tmp = gsn_csm_xy(wks,xbar(1:plotnlat-1),specbar(1:plotnlat-1),res)
      overlay(plot,tmp)
      delete(tmp)
    end if
