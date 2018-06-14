@@ -19,6 +19,7 @@ begin
   p0 = 1.d5    ;Pa
   rhow = 1000. ;kg/m3
   L = 2.501e6 ;J/kg
+  ktrop = 10
 
   rdir  = "/run/"
   fname = fname1
@@ -39,6 +40,8 @@ begin
   PhiPE    = (/ "PhiPENH", "PhiPESH"/)
   PhiUSF   = (/"PhiUSFNH","PhiUSFSH"/)
 
+  UMAX     = (/    "UMtr",    "UMgl"/)
+
 ;************
 ;main
 ;************
@@ -58,13 +61,18 @@ begin
  ListSetType(f,"cat")
  delete(files)
 
- if (isfilevardim(f[0],"U","ncol")) then
+ if (isfilevardim(f[0],"PS","ncol")) then
    print("NETCDF on native grid")
    latlon = False
-   dims = getfilevardimsizes(f[0],"U")
-   ncol = dims(2)
-   wgtpath = get_wgt_path(ncol,1)
+   dims = getfilevardimsizes(f[0],"PS")
+   ncol = dims(1)
    delete(dims)
+
+   dims = getfilevardimsizes(f[0],"PSDRY_gll")
+   ncol_d = dims(1)
+   delete(dims)
+
+   wgtpath = get_wgt_path(ncol,ncol_d,1)
  else
    print("NETCDF on lat-lon grid")
    latlon = True
@@ -83,6 +91,7 @@ begin
  hyai= f[0]->hyai
  hybi= f[0]->hybi
  lat = f[0]->lat
+ nlevs = dimsizes(f[0]->hyam)
  delete(f)
 
  print("Compute pressure")
@@ -161,6 +170,11 @@ begin
      hilim = -15.d
    end if
    phiedj = get_maxlat(u850,latreg,lolim,hilim)
+
+;********************
+;  Subtropical Jet
+;********************
+   umax = max(ureg(ktrop:nlevs-1,:))
 
 ;********************
 ;  Maximum PSL
@@ -252,6 +266,7 @@ begin
      ncdf->$PhiPSI(n)$ = phipsi
      ncdf->$PhiPE(n)$  = phipe
      ncdf->$PhiUSF(n)$ = phiusf
+     ncdf->$UMAX(n)$ = umax
    end if
 
   print("  ")
@@ -262,6 +277,7 @@ begin
   print("  Phi-PSI          " + phipsi + " (degrees)")
   print("  Phi-PE           " + phipe  + " (degrees)")
   print("  Phi-USF          " + phiusf + " (degrees)")
+  print("  UMAX             " + umax   + " (m/s)")
   print("  ")
   delete([/u850,dpreg,pmreg,psreg,ureg,vreg,pereg,latreg,indx,indreg,psi500/])
 

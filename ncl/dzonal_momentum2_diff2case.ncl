@@ -19,7 +19,7 @@ begin
   nstart = 1
   dtag = ""
 
-  plotvar = 3 ; 0 = psie
+  plotvar = 4 ; 0 = psie
 	      ; 1 = psit
 	      ; 2 = Ro
 	      ; 3 = psim
@@ -27,13 +27,13 @@ begin
 	      ; 5 = EMFC
 
   plotang = True
-  skip = (/8,16/)
+  skip = (/32,32/) ;;8;;16;;32
 
   zeromiss = False ;zero missing values?
 
-  writencdf = True
-  writediag = True
-  loadncdf = False
+  writencdf = False
+  writediag = False
+  loadncdf = True
 
   VAR1  = (/"PSIE1","PSIE2"/)
   VAR2  = (/"PSIT1","PSIT2"/)
@@ -163,14 +163,20 @@ if (.not.loadncdf) then
     print("*history fields are on native grid")
     dims = getfilevardimsizes(f[0],"PS")
     ncol = dims(1)
-    wgtpath = get_wgt_path(ncol,cnsrv)
+    delete(dims)
+
+    dims = getfilevardimsizes(f[0],"PSDRY_gll")
+    ncol_d = dims(1)
+    delete(dims)
+
+    wgtpath = get_wgt_path(ncol,ncol_d,cnsrv)
     print("wgtpath " + wgtpath)
+
   else
     print("*history fields are on lat-lon grid")
     print("Lat-lon grid not supported. Exiting ...")
     exit
   end if
-  delete(dims)
 
   print("grabbing vars...")
   ;******************************************************

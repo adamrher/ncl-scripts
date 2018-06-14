@@ -1,5 +1,8 @@
 #!/bin/tcsh
 # compute omega diagnostics
+# ne30 is about 20-30 min using 200 GB
+# ne60 is about 1.5 hrs at 500 GB (can use 350GB)
+# ne120 only works for the tropics before getting killed (at 800GB) 
 
 if ( "$#argv" != 2) then
   echo "Wrong number of arguments specified:"

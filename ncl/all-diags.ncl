@@ -15,6 +15,7 @@ begin
   g = 9.80616  ;m/s2
   Re = 6371.22 ;km
   p0 = 1.d5    ;Pa
+  ktrop = 10
 
   rdir  = "/run/"
   fname = fname1
@@ -41,6 +42,7 @@ begin
   gTS   =  (/    "TStr",    "TSgl"/)
   gTL   =  (/    "TLtr",    "TLgl"/)
   gUL   =  (/    "ULtr",    "ULgl"/)
+  gUM   =  (/    "UMtr",    "UMgl"/)
 
 ;************
 ;main
@@ -74,7 +76,7 @@ begin
  PRECC = PRECC*secpday*1000.
  PRECL = f[:]->PRECL
  PRECL = PRECL*secpday*1000.
- FREQZM = f[:]->PRECL;;;FREQZM
+ FREQZM = f[:]->FREQZM
 ;; FREQL = f[:]->FREQL
 ;; FREQI = f[:]->FREQI
  PBLH  = f[:]->PBLH
@@ -88,6 +90,7 @@ begin
  if (latlon) then
    TL  = f[:]->T(:,nlevs-1,:,:)
    UL  = f[:]->U(:,nlevs-1,:,:)
+   delete(Utmp)
  else
    TL  = f[:]->T(:,nlevs-1,:)
    UL  = f[:]->U(:,nlevs-1,:)
@@ -206,7 +209,7 @@ begin
      end if
      ncdf->$gPRECC(n)$  = gprecc
      ncdf->$gPRECL(n)$  = gprecl
-;     ncdf->$gFREQZM(n)$ = gfrqzm
+     ncdf->$gFREQZM(n)$ = gfrqzm
 ;;     ncdf->$gFREQL(n)$  = gfrql
 ;;     ncdf->$gFREQI(n)$  = gfrqi
      ncdf->$gPBLH(n)$   = gpblh

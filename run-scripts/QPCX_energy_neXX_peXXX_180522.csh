@@ -1,20 +1,20 @@
 #!/bin/tcsh
-setenv proj "P93300642"
-setenv src "physgrid_180607" #"physgrid_180607" "cesm2_0_alpha10f"
-setenv res "ne30pg2_ne30pg2_mg17"
+setenv proj "P03010039" #"P93300642"
+setenv src "cesm2_0_alpha10f" #"physgrid_180607" "cesm2_0_alpha10f"
+setenv res "ne120pg3_ne120pg3_mg17"
 setenv comp "QPC6"
-setenv wall "02:00:00"
+setenv wall "00:45:00"
 setenv pes "1800"
-setenv caze ${src}_${comp}_${res}_`date '+%y%m%d'`
+setenv caze ${src}_${comp}_${res}_`date '+%y%m%d'`_test
 
 ## ne30 - pe1800 - QPC6 (1.09 hrs/sy)
 ## ne60pg3 - pe3840 - QPC6 (4.07 hrs/sy)
 ## ne120pg3 - pe7680 - QPC6 (14.12 hrs/sy)
 
-/glade/u/home/$USER/$src/cime/scripts/create_newcase --case /glade/scratch/$USER/$caze --compset $comp --res $res --walltime $wall --pecount $pes --project $proj --compiler intel --queue regular --run-unsupported
+/glade/u/home/$USER/$src/cime/scripts/create_newcase --case /glade/scratch/$USER/$caze --compset $comp --res $res --walltime $wall --pecount $pes --project $proj --compiler intel --queue standby --run-unsupported
 cd /glade/scratch/$USER/$caze
 
-./xmlchange STOP_OPTION=nmonths,STOP_N=12
+./xmlchange STOP_OPTION=ndays,STOP_N=1
 ./xmlchange NTHRDS=1
 ./xmlchange DOUT_S=FALSE
 ./xmlchange RESUBMIT=0
@@ -33,7 +33,7 @@ cd /glade/scratch/$USER/$caze
 #------dependent on resolution-------
 
 ## ne30=48, ne60=96, ne120=192
-./xmlchange ATM_NCPL=48
+./xmlchange ATM_NCPL=192
 
 ## for ne120 and ATM_NCPL = 384, set nsplit = 1
 echo "se_nsplit = 2">>user_nl_cam
@@ -44,9 +44,9 @@ echo "se_rsplit = 3">>user_nl_cam
 #echo "se_nu_div          =   1.0e15  ">> user_nl_cam
 #echo "se_nu_p            =   1.0e15  ">> user_nl_cam
 
-echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne30np4_L32_c170509.nc'">>user_nl_cam
+#echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne30np4_L32_c170509.nc'">>user_nl_cam
 #echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne60np4_L32_c170908.nc'">>user_nl_cam
-#echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne120np4_L32_c170908.nc'">>user_nl_cam
+echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne120np4_L32_c170908.nc'">>user_nl_cam
 
 #------non-standard grids-------
 # grids need to be hacked
@@ -121,5 +121,6 @@ cp /glade/u/home/aherring/$src/components/cam/usr_src/omega_gll/stepon.F90 /glad
 #cp /glade/u/home/aherring/$src/components/cam/usr_src/lcpmoist/dyn_comp.F90 /glade/scratch/$USER/$caze/SourceMods/src.cam/
 
 ./case.setup
-qcmd -- ./case.build # --skip-provenance-check
+#qcmd -- ./case.build --skip-provenance-check
+./case.build --skip-provenance-check
 ./case.submit

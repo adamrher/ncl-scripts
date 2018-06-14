@@ -2,6 +2,7 @@
 
 #1 year of ne30 takes about 1 hour
 #1 year of ne60 takes about 4 hours
+#1 year of ne120 takes 12 hours?
 
 if ( "$#argv" != 2) then
   echo "Wrong number of arguments specified:"
