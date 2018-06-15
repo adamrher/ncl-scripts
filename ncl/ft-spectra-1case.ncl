@@ -24,10 +24,10 @@ wcStrt     = systemfunc("date")
   label = fname
   nfiles = dimsizes(fname)
 
-  onemnth = True
+  onemnth = False
   nstart = 0
 
-  VAR = "PTTEND"
+  VAR = var1 ;;;;"FT"
   factor = 1.
 
   plotnlat = 165 ;;;override with nlat
@@ -35,7 +35,7 @@ wcStrt     = systemfunc("date")
 
   writencdf = True
   loadncdf = False
-  fname_out = fname(0)+".spectra-ft-lev+"+(klev+1)+".nc"
+  fname_out = fname(0)+".spectra-"+VAR+"-lev"+(klev+1)+".nc"
   fname_in  = fname_out
   varnams1 = (/"specbar1","specbar2"/)
   varnams2 = (/"xbar1","xbar2"/)
@@ -128,7 +128,7 @@ if (.not.loadncdf) then
     print("exiting...")
     exit
   else
-    dims = getfilevardimsizes(f[0],"PTTEND")
+    dims = getfilevardimsizes(f[0],VAR)
     ncol = dims(2)
     delete(dims)
 
@@ -193,7 +193,7 @@ else
 end if
 
 ;;;;CAREFUL
-plotnlat = nlat
+plotnlat = nlat-1
 ;;;;
 
    print("Plotting...")
@@ -201,10 +201,10 @@ plotnlat = nlat
    if (n.eq.0) then
      res@tiYAxisString          = yaxis
      res@tiXAxisString          = xaxis
-     plot  = gsn_csm_xy(wks,xbar(1:plotnlat-1),specbar(1:plotnlat-1),res)
+     plot  = gsn_csm_xy(wks,xbar(1:plotnlat),specbar(1:plotnlat),res)
      delete(res@tiYAxisString)
    else 
-     tmp = gsn_csm_xy(wks,xbar(1:plotnlat-1),specbar(1:plotnlat-1),res)
+     tmp = gsn_csm_xy(wks,xbar(1:plotnlat),specbar(1:plotnlat),res)
      overlay(plot,tmp)
      delete(tmp)
    end if

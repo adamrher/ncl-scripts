@@ -1,23 +1,23 @@
 #!/bin/tcsh
-setenv proj "P03010039" #"P93300642"
-setenv src "cesm2_0_alpha10f" #"physgrid_180607" "cesm2_0_alpha10f"
-setenv res "ne120pg3_ne120pg3_mg17"
+setenv proj "P93300642" #"P93300642"
+setenv src "physgrid_180607" #"physgrid_180607" "cesm2_0_alpha10f"
+setenv res "ne120pg2_ne120pg2_mg17"
 setenv comp "QPC6"
-setenv wall "00:45:00"
-setenv pes "1800"
-setenv caze ${src}_${comp}_${res}_`date '+%y%m%d'`_test
+setenv wall "08:00:00"
+setenv pes "7680"
+setenv caze ${src}_${comp}_${res}_`date '+%y%m%d'`_zmcin1
 
 ## ne30 - pe1800 - QPC6 (1.09 hrs/sy)
 ## ne60pg3 - pe3840 - QPC6 (4.07 hrs/sy)
 ## ne120pg3 - pe7680 - QPC6 (14.12 hrs/sy)
 
-/glade/u/home/$USER/$src/cime/scripts/create_newcase --case /glade/scratch/$USER/$caze --compset $comp --res $res --walltime $wall --pecount $pes --project $proj --compiler intel --queue standby --run-unsupported
+/glade/u/home/$USER/$src/cime/scripts/create_newcase --case /glade/scratch/$USER/$caze --compset $comp --res $res --walltime $wall --pecount $pes --project $proj --compiler intel --queue regular --run-unsupported
 cd /glade/scratch/$USER/$caze
 
 ./xmlchange STOP_OPTION=ndays,STOP_N=1
 ./xmlchange NTHRDS=1
 ./xmlchange DOUT_S=FALSE
-./xmlchange RESUBMIT=0
+./xmlchange RESUBMIT=1
 
 #-----independent of resolution-----
 
@@ -25,7 +25,7 @@ cd /glade/scratch/$USER/$caze
 #echo "micro_mg_nccons = .false.">>user_nl_cam
 #echo "micro_mg_nicons = .false.">>user_nl_cam
 #echo "flux_max_iteration = 2">>user_nl_cam
-#echo "zmconv_num_cin = 5">> user_nl_cam
+echo "zmconv_num_cin = 1">> user_nl_cam
 #echo "cld_macmic_num_steps = 1">> user_nl_cam
 #echo "se_ftype=1">> user_nl_cam
 #echo "se_qsize_condensate_loading = 1">> user_nl_cam
@@ -97,8 +97,9 @@ echo "          'WV_dAH','WL_dAH','WI_dAH','SE_dAH','KE_dAH',  		     ">> user_n
 echo "          'WV_PDC','WL_PDC','WI_PDC','TT_PDC','EFIX',      	     ">> user_nl_cam
 echo "          'WV_p2d','WL_p2d','WI_p2d','SE_p2d','KE_p2d',		     ">> user_nl_cam
 echo "          'U','V','PS'						     ">> user_nl_cam
-echo "fincl4 =   'PSDRY','PS','T','Q','Z3','U','V','OMEGA','OMEGA_gll',      ">> user_nl_cam
-echo "	  	 'CLDLIQ','CLDICE'				             ">> user_nl_cam
+echo "fincl4 =   'PSDRY','PS','T','Q','Z3','U','V','OMEGA','OMEGA_gll'       ">> user_nl_cam
+#echo "fincl4 =   'PSDRY','PS','T','Q','Z3','U','V','OMEGA','OMEGA_gll',      ">> user_nl_cam
+#echo "	  	 'CLDLIQ','CLDICE'				             ">> user_nl_cam
 echo "fincl5 =   'PRECL','PRECC','Q850','OMEGA850','TMQ','FLNT',	     ">> user_nl_cam
 echo "		 'PTTEND','FT','PTEQ','FQ_fvm'				     ">> user_nl_cam
 echo "avgflag_pertape(1) = 'A'"                                               >> user_nl_cam
@@ -121,6 +122,6 @@ cp /glade/u/home/aherring/$src/components/cam/usr_src/omega_gll/stepon.F90 /glad
 #cp /glade/u/home/aherring/$src/components/cam/usr_src/lcpmoist/dyn_comp.F90 /glade/scratch/$USER/$caze/SourceMods/src.cam/
 
 ./case.setup
-#qcmd -- ./case.build --skip-provenance-check
-./case.build --skip-provenance-check
+#qcmd -- ./case.build # --skip-provenance-check
+./case.build # --skip-provenance-check
 ./case.submit

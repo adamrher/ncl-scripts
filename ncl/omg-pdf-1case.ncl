@@ -30,7 +30,7 @@ wcStrt     = systemfunc("date")
 
   scale = True
   sfactor = 1.
-  dtag = "-scale"
+  dtag = "";"-scale32"
 
   nbins  = 200
   optpdf = True  ;;;If False, do pdfx w/ automatic bins
@@ -134,8 +134,12 @@ if (.not.loadncdf) then
     print("exiting...")
     exit
   else
-    dims = getfilevardimsizes(f[0],"OMEGA")
+    dims = getfilevardimsizes(f[0],VAR)
     ncol = dims(2)
+    delete(dims)
+
+    dims = getfilevardimsizes(f[0],"OMEGA_gll")
+    ncol_d = dims(2)
     delete(dims)
   end if
 
@@ -160,8 +164,8 @@ if (.not.loadncdf) then
   if (optpdf) then
     print("do pdfx_lowmem with specified bins")
 
-    optpdf@bin_min  = -15.
-    ;;optpdf@bin_min  = get_binmin_omg(ncol)
+    ;;optpdf@bin_min  = -15.
+    optpdf@bin_min  = get_binmin_omg(ncol,ncol_d)
 
     optpdf@bin_max  = 0.
     print("bin_min set to " + optpdf@bin_min)

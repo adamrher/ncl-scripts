@@ -473,6 +473,8 @@ if (opt.eq.0) then
 
   if (ncol.eq.13826 .and. ncol_d.eq.13826) then
     wgtpath = root + "ne16_2_latlon.nc"
+  else if (ncol.eq.21602 .and. ncol_d.eq.21602) then
+    wgtpath = root + "bilin/ne20np4_2_09375deg-bilin.nc"
   else if (ncol.eq.21600 .and. ncol_d.eq.21602) then
     wgtpath = root + "bilin/ne20pg3_2_09375deg-bilin.nc"
   else if (ncol.eq.48602 .and. ncol_d.eq.48602) then
@@ -481,6 +483,8 @@ if (opt.eq.0) then
     wgtpath = root + "bilin/ne30pg2_2_0703125deg-bilin.nc"
   else if (ncol.eq.48600 .and. ncol_d.eq.48602) then
     wgtpath = root + "bilin/ne30pg3_2_0703125deg-bilin.nc"
+  else if (ncol.eq.86402 .and. ncol_d.eq.86402) then
+    wgtpath = root + "bilin/ne40np4_2_046875deg-bilin.nc"
   else if (ncol.eq.86400 .and. ncol_d.eq.86402) then
     wgtpath = root + "bilin/ne40pg3_2_046875deg-bilin.nc"
   else if (ncol.eq.194402 .and. ncol_d.eq.194402) then
@@ -489,6 +493,8 @@ if (opt.eq.0) then
     wgtpath = root + "bilin/ne60pg2_2_03515625deg-bilin.nc"
   else if (ncol.eq.194400 .and. ncol_d.eq.194402) then
     wgtpath = root + "bilin/ne60pg3_2_03515625deg-bilin.nc"
+  else if (ncol.eq.194402 .and. ncol_d.eq.194402) then
+    wgtpath = root + "bilin/ne80np4_2_0234375deg-bilin.nc"
   else if (ncol.eq.194400 .and. ncol_d.eq.194402) then
     wgtpath = root + "bilin/ne80pg3_2_0234375deg-bilin.nc"
   else if (ncol.eq.777602 .and. ncol_d.eq.777602) then
@@ -497,6 +503,9 @@ if (opt.eq.0) then
     wgtpath = root + "bilin/ne120pg2_2_017578125deg-bilin.nc"
   else if (ncol.eq.777600 .and. ncol_d.eq.777602) then
     wgtpath = root + "bilin/ne120pg3_2_017578125deg-bilin.nc"
+  end if
+  end if
+  end if
   end if
   end if
   end if
@@ -678,41 +687,45 @@ begin
 end
 
 ;;; find omega bin-bounds for pdfx_lowmem
-function get_binmin_omg(ncol)
+function get_binmin_omg(ncol,ncol_d)
 ;;;
 ;;; binmin in Pa/s
 
-local ncol,binmin
+local ncol,ncol_d,binmin
 
 begin
 
-  if (ncol.eq.13826) then
+  if (ncol.eq.13826 .and. ncol_d.eq.13826) then
     ;;ne16np4
     binmin = -2.
-  else if (ncol.eq.48602) then
+  else if (ncol.eq.48602 .and. ncol_d.eq.48602) then
     ;;ne30np4
     binmin = -5.
-  else if (ncol.eq.194402) then
+  else if (ncol.eq.194402 .and. ncol_d.eq.194402) then
     ;;ne60np4
     binmin = -10.
-  else if (ncol.eq.777602) then
-    ;;ne120np4??
+  else if (ncol.eq.777602 .and. ncol_d.eq.777602) then
+    ;;ne120np4
     binmin = -15.
-  else if (ncol.eq.21600) then
+  else if (ncol.eq.21600 .and. ncol_d.eq.48602) then
     ;;ne30pg2
     binmin = -5.
-  else if (ncol.eq.48600) then
+  else if (ncol.eq.48600 .and. ncol_d.eq.48602) then
     ;;ne30pg3
     binmin = -5.
-  else if (ncol.eq.86400) then
-    ;;ne30pg4/ne60pg2, not unique!
+  else if (ncol.eq.86400 .and. ncol_d.eq.194402) then
+    ;;ne60pg2
     binmin = -10.
-  else if (ncol.eq.194400) then
+  else if (ncol.eq.194400 .and. ncol_d.eq.194402) then
     ;;ne60pg3
     binmin = -10.
-  else if (ncol.eq.777600) then
+  else if (ncol.eq.345600 .and. ncol_d.eq.777602) then
+    ;;ne120pg2
+    binmin = -15.
+  else if (ncol.eq.777600 .and. ncol_d.eq.777602) then
     ;;ne120pg3
-    binmin = -15. ;;-20
+    binmin = -15.
+  end if
   end if
   end if
   end if
