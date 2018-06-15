@@ -1,7 +1,7 @@
 #!/bin/tcsh
 setenv proj "P93300642" #"P93300642"
 setenv src "physgrid_180607" #"physgrid_180607" "cesm2_0_alpha10f"
-setenv res "ne120pg2_ne120pg2_mg17"
+setenv res "ne80pg3_ne80pg3_mg17"
 setenv comp "QPC6"
 setenv wall "08:00:00"
 setenv pes "7680"
@@ -46,7 +46,7 @@ echo "se_rsplit = 3">>user_nl_cam
 
 #echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne30np4_L32_c170509.nc'">>user_nl_cam
 #echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne60np4_L32_c170908.nc'">>user_nl_cam
-echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne120np4_L32_c170908.nc'">>user_nl_cam
+#echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne120np4_L32_c170908.nc'">>user_nl_cam
 
 #------non-standard grids-------
 # grids need to be hacked
@@ -63,8 +63,14 @@ echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne120n
 #./xmlchange OCN_DOMAIN_FILE="domain.ocn.ne40np4.pg3_gx1v7.180605.nc"
 #./xmlchange ICE_DOMAIN_FILE="domain.ocn.ne40np4.pg3_gx1v7.180605.nc"
 
+echo "ncdata = '/glade/p/work/aherring/cesm_inputfiles/ncdata/ape_cam6_ne80np4_L32_c180612.nc'">>user_nl_cam
+./xmlchange --append CAM_CONFIG_OPTS="-hgrid ne80np4.pg3"
+./xmlchange ATM_DOMAIN_FILE="domain.lnd.ne80np4.pg3_gx1v7.180608.nc"
+./xmlchange OCN_DOMAIN_FILE="domain.ocn.ne80np4.pg3_gx1v7.180608.nc"
+./xmlchange ICE_DOMAIN_FILE="domain.ocn.ne80np4.pg3_gx1v7.180608.nc"
+
 # colin hack for non-standard grids
-#echo "drydep_srf_file = '/glade/p/cesmdata/cseg/inputdata/atm/cam/chem/trop_mam/atmsrf_ne120np4_110920.nc'">> user_nl_cam
+echo "drydep_srf_file = '/glade/p/cesmdata/cseg/inputdata/atm/cam/chem/trop_mam/atmsrf_ne120np4_110920.nc'">> user_nl_cam
 
 #mental note - U850 causes a weird error (removed)
 #--------------------------------------history----------------------------------------------

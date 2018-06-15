@@ -522,7 +522,9 @@ if (opt.eq.0) then
 
 else if (opt.eq.1) then
 
-  if (ncol.eq.21600 .and. ncol_d.eq.21602) then
+  if (ncol.eq.21602 .and. ncol_d.eq.21602) then
+    wgtpath = root + "bilin/ne20np4_2_09375deg-cnsrv.nc"
+  else if (ncol.eq.21600 .and. ncol_d.eq.21602) then
     wgtpath = root + "cnsrv/ne20pg3_2_09375deg-cnsrv.nc"
   else if (ncol.eq.48602 .and. ncol_d.eq.48602) then
     wgtpath = root + "cnsrv/ne30np4_2_0703125deg_cnsrv.nc"
@@ -530,6 +532,8 @@ else if (opt.eq.1) then
     wgtpath = root + "cnsrv/ne30pg2_2_0703125deg_cnsrv.nc"
   else if (ncol.eq.48600 .and. ncol_d.eq.48602) then
     wgtpath = root + "cnsrv/ne30pg3_2_0703125deg_cnsrv.nc"
+  else if (ncol.eq.86402 .and. ncol_d.eq.86402) then
+    wgtpath = root + "bilin/ne40np4_2_046875deg-cnsrv.nc"
   else if (ncol.eq.86400 .and. ncol_d.eq.86402) then
     wgtpath = root + "cnsrv/ne40pg3_2_046875deg-cnsrv.nc"
   else if (ncol.eq.194402 .and. ncol_d.eq.194402) then
@@ -538,12 +542,17 @@ else if (opt.eq.1) then
     wgtpath = root + "cnsrv/ne60pg2_2_03515625deg_cnsrv.nc"
   else if (ncol.eq.194400 .and. ncol_d.eq.194402) then
     wgtpath = root + "cnsrv/ne60pg3_2_03515625deg_cnsrv.nc"
+  else if (ncol.eq.194402 .and. ncol_d.eq.194402) then
+    wgtpath = root + "bilin/ne80np4_2_0234375deg-cnsrv.nc"
   else if (ncol.eq.194400 .and. ncol_d.eq.194402) then
     wgtpath = root + "cnsrv/ne80pg3_2_0234375deg-cnsrv.nc"
   else if (ncol.eq.345600 .and. ncol_d.eq.777602) then
     wgtpath = root + "cnsrv/ne120pg2_2_017578125deg_cnsrv.nc"
   else if (ncol.eq.777600 .and. ncol_d.eq.777602) then
     wgtpath = root + "cnsrv/ne120pg3_2_017578125deg_cnsrv.nc"
+  end if
+  end if
+  end if
   end if
   end if
   end if
