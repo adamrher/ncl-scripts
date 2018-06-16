@@ -493,9 +493,9 @@ if (opt.eq.0) then
     wgtpath = root + "bilin/ne60pg2_2_03515625deg-bilin.nc"
   else if (ncol.eq.194400 .and. ncol_d.eq.194402) then
     wgtpath = root + "bilin/ne60pg3_2_03515625deg-bilin.nc"
-  else if (ncol.eq.194402 .and. ncol_d.eq.194402) then
+  else if (ncol.eq.345602 .and. ncol_d.eq.345602) then
     wgtpath = root + "bilin/ne80np4_2_0234375deg-bilin.nc"
-  else if (ncol.eq.194400 .and. ncol_d.eq.194402) then
+  else if (ncol.eq.345600 .and. ncol_d.eq.345602) then
     wgtpath = root + "bilin/ne80pg3_2_0234375deg-bilin.nc"
   else if (ncol.eq.777602 .and. ncol_d.eq.777602) then
     wgtpath = root + "ne120_2_latlon.nc"
@@ -542,9 +542,9 @@ else if (opt.eq.1) then
     wgtpath = root + "cnsrv/ne60pg2_2_03515625deg_cnsrv.nc"
   else if (ncol.eq.194400 .and. ncol_d.eq.194402) then
     wgtpath = root + "cnsrv/ne60pg3_2_03515625deg_cnsrv.nc"
-  else if (ncol.eq.194402 .and. ncol_d.eq.194402) then
+  else if (ncol.eq.345602 .and. ncol_d.eq.345602) then
     wgtpath = root + "bilin/ne80np4_2_0234375deg-cnsrv.nc"
-  else if (ncol.eq.194400 .and. ncol_d.eq.194402) then
+  else if (ncol.eq.345600 .and. ncol_d.eq.345602) then
     wgtpath = root + "cnsrv/ne80pg3_2_0234375deg-cnsrv.nc"
   else if (ncol.eq.345600 .and. ncol_d.eq.777602) then
     wgtpath = root + "cnsrv/ne120pg2_2_017578125deg_cnsrv.nc"

@@ -1,11 +1,11 @@
 #!/bin/tcsh
 setenv proj "P93300642" #"P93300642"
 setenv src "physgrid_180607" #"physgrid_180607" "cesm2_0_alpha10f"
-setenv res "ne80pg3_ne80pg3_mg17"
+setenv res "ne120pg2_ne120pg2_mg17"
 setenv comp "QPC6"
-setenv wall "08:00:00"
+setenv wall "09:00:00"
 setenv pes "7680"
-setenv caze ${src}_${comp}_${res}_`date '+%y%m%d'`_zmcin1
+setenv caze ${src}_${comp}_${res}_`date '+%y%m%d'`-zmcin1
 
 ## ne30 - pe1800 - QPC6 (1.09 hrs/sy)
 ## ne60pg3 - pe3840 - QPC6 (4.07 hrs/sy)
@@ -14,7 +14,7 @@ setenv caze ${src}_${comp}_${res}_`date '+%y%m%d'`_zmcin1
 /glade/u/home/$USER/$src/cime/scripts/create_newcase --case /glade/scratch/$USER/$caze --compset $comp --res $res --walltime $wall --pecount $pes --project $proj --compiler intel --queue regular --run-unsupported
 cd /glade/scratch/$USER/$caze
 
-./xmlchange STOP_OPTION=ndays,STOP_N=1
+./xmlchange STOP_OPTION=nmonths,STOP_N=6
 ./xmlchange NTHRDS=1
 ./xmlchange DOUT_S=FALSE
 ./xmlchange RESUBMIT=1
@@ -25,7 +25,7 @@ cd /glade/scratch/$USER/$caze
 #echo "micro_mg_nccons = .false.">>user_nl_cam
 #echo "micro_mg_nicons = .false.">>user_nl_cam
 #echo "flux_max_iteration = 2">>user_nl_cam
-echo "zmconv_num_cin = 1">> user_nl_cam
+#echo "zmconv_num_cin = 1">> user_nl_cam
 #echo "cld_macmic_num_steps = 1">> user_nl_cam
 #echo "se_ftype=1">> user_nl_cam
 #echo "se_qsize_condensate_loading = 1">> user_nl_cam
@@ -46,7 +46,7 @@ echo "se_rsplit = 3">>user_nl_cam
 
 #echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne30np4_L32_c170509.nc'">>user_nl_cam
 #echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne60np4_L32_c170908.nc'">>user_nl_cam
-#echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne120np4_L32_c170908.nc'">>user_nl_cam
+echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne120np4_L32_c170908.nc'">>user_nl_cam
 
 #------non-standard grids-------
 # grids need to be hacked
@@ -63,14 +63,14 @@ echo "se_rsplit = 3">>user_nl_cam
 #./xmlchange OCN_DOMAIN_FILE="domain.ocn.ne40np4.pg3_gx1v7.180605.nc"
 #./xmlchange ICE_DOMAIN_FILE="domain.ocn.ne40np4.pg3_gx1v7.180605.nc"
 
-echo "ncdata = '/glade/p/work/aherring/cesm_inputfiles/ncdata/ape_cam6_ne80np4_L32_c180612.nc'">>user_nl_cam
-./xmlchange --append CAM_CONFIG_OPTS="-hgrid ne80np4.pg3"
-./xmlchange ATM_DOMAIN_FILE="domain.lnd.ne80np4.pg3_gx1v7.180608.nc"
-./xmlchange OCN_DOMAIN_FILE="domain.ocn.ne80np4.pg3_gx1v7.180608.nc"
-./xmlchange ICE_DOMAIN_FILE="domain.ocn.ne80np4.pg3_gx1v7.180608.nc"
+#echo "ncdata = '/glade/p/work/aherring/cesm_inputfiles/ncdata/ape_cam6_ne80np4_L32_c180612.nc'">>user_nl_cam
+#./xmlchange --append CAM_CONFIG_OPTS="-hgrid ne80np4.pg3"
+#./xmlchange ATM_DOMAIN_FILE="domain.lnd.ne80np4.pg3_gx1v7.180608.nc"
+#./xmlchange OCN_DOMAIN_FILE="domain.ocn.ne80np4.pg3_gx1v7.180608.nc"
+#./xmlchange ICE_DOMAIN_FILE="domain.ocn.ne80np4.pg3_gx1v7.180608.nc"
 
 # colin hack for non-standard grids
-echo "drydep_srf_file = '/glade/p/cesmdata/cseg/inputdata/atm/cam/chem/trop_mam/atmsrf_ne120np4_110920.nc'">> user_nl_cam
+#echo "drydep_srf_file = '/glade/p/cesmdata/cseg/inputdata/atm/cam/chem/trop_mam/atmsrf_ne120np4_110920.nc'">> user_nl_cam
 
 #mental note - U850 causes a weird error (removed)
 #--------------------------------------history----------------------------------------------
@@ -126,6 +126,9 @@ cp /glade/u/home/aherring/$src/components/cam/usr_src/omega_gll/stepon.F90 /glad
 
 #cpdry
 #cp /glade/u/home/aherring/$src/components/cam/usr_src/lcpmoist/dyn_comp.F90 /glade/scratch/$USER/$caze/SourceMods/src.cam/
+
+#iwidth
+#cp /glade/u/home/aherring/$src/components/cam/usr_src/bilin/fvm_mapping.F90 /glade/scratch/$USER/$caze/SourceMods/src.cam/
 
 ./case.setup
 #qcmd -- ./case.build # --skip-provenance-check

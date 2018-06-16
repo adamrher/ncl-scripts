@@ -85,6 +85,9 @@ print("Begin case " +n)
     nfinish = nstart
   else
     nfinish = nhist-1
+    if (n.eq.0) then
+      nfinish = 11
+    end if
   end if
   print(files(nstart:nfinish))
   f  = addfiles (files(nstart:nfinish),"r")
