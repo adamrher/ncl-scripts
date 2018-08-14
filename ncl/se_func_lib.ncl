@@ -731,7 +731,7 @@ begin
     binmin = -10.
   else if (ncol.eq.777602 .and. ncol_d.eq.777602) then
     ;;ne120np4
-    binmin = -15.
+    binmin = -20.
   else if (ncol.eq.21600 .and. ncol_d.eq.21602) then
     ;;ne20pg3
     binmin = -5.
@@ -752,13 +752,13 @@ begin
     binmin = -10.
   else if (ncol.eq.345600 .and. ncol_d.eq.345602) then
     ;;ne80pg3
-    binmin = -15.
+    binmin = -20.
   else if (ncol.eq.345600 .and. ncol_d.eq.777602) then
     ;;ne120pg2
-    binmin = -15.
+    binmin = -20.
   else if (ncol.eq.777600 .and. ncol_d.eq.777602) then
     ;;ne120pg3
-    binmin = -15.
+    binmin = -20.
   end if
   end if
   end if

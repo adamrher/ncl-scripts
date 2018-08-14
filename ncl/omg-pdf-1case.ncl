@@ -5,7 +5,7 @@ load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_csm.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/contributed.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/shea_util.ncl" 
 load "$NCARG_ROOT/lib/ncarg/nclscripts/esmf/ESMF_regridding.ncl"
-load "/glade/p/work/aherring/CESM2/arh-git-scripts/ncl/se_func_lib.ncl"
+load "/home/aherring/arh-git-scripts/ncl/se_func_lib.ncl"
 ;**************************************
 begin
 ;****************************************
@@ -34,7 +34,7 @@ wcStrt     = systemfunc("date")
 
   nbins  = 200
   optpdf = True  ;;;If False, do pdfx w/ automatic bins
-  xmin = -15.     ;;;x-axis range (override by binmin)
+  xmin = -20.     ;;;x-axis range (override by binmin)
   ymin =  1.e-10 ;;;y-axis range
 
   writencdf = True

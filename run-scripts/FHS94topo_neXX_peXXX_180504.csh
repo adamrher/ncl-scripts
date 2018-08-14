@@ -1,26 +1,28 @@
 #!/bin/tcsh
 #setenv proj "P93300642"
-setenv src "physgrid_180606" #"cesm2_0_alpha10f"
+setenv src "camtrunk_180725" #"camtrunk_180305" #"physgrid_180606" #"cesm2_0_alpha10f"
 setenv res "ne30pg3_ne30pg3_mg17"
 setenv comp "FHS94"
-setenv wall "12:00:00"
-setenv pes "192" # note that pes=192 crashes on hobart
-setenv caze ${src}_${comp}topo_${res}_pe${pes}_`date '+%y%m%d'`_se-nu-default
+setenv wall "07:00:00"
+setenv pes "384" # note that pes=192 crashes on hobart
+setenv caze ${src}_${comp}topo_${res}_pe${pes}_`date '+%y%m%d'`
 
 # Hobart - 48 proc/node, 32 nodes
 /home/$USER/src/$src/cime/scripts/create_newcase --case /scratch/cluster/$USER/$caze --compset $comp --res $res --walltime $wall --mach hobart --compiler nag --queue monster --pecount $pes --run-unsupported
 cd /scratch/cluster/$USER/$caze
 
-./xmlchange STOP_OPTION=nyears,STOP_N=1
+./xmlchange STOP_OPTION=ndays,STOP_N=1200
 ./xmlchange DOUT_S=FALSE
 ./xmlchange NTHRDS=1
 ./xmlchange CAM_CONFIG_OPTS="-phys held_suarez"
 
 ./xmlchange ATM_NCPL=48
-#echo "se_nu              =   0.4e15  ">> user_nl_cam
+echo "se_nu              =   0.4e15  ">> user_nl_cam
 echo "se_nu_div          =   2.0e15  ">> user_nl_cam
-#echo "se_nu_p            =   1.0e15  ">> user_nl_cam
+echo "se_nu_p            =   1.0e15  ">> user_nl_cam
 echo "use_topo_file      =  .true.   ">>user_nl_cam
+
+#echo "se_hypervis_subcycle = 3">> user_nl_cam
 
 #echo "bnd_topo = '/home/aherring/cesm_inputfiles/topo/ne30np4_nc3000_Co092_Fi001_MulG_PF_nullRR_Nsw064_20170510.nc'">> user_nl_cam
 #echo "bnd_topo = '/home/aherring/cesm_inputfiles/topo/ne30np4_nc3000_Co060_Fi001_PF_nullRR_Nsw042_20171020.nc'" >>user_nl_cam
@@ -54,9 +56,9 @@ echo "inithist          = 'NONE'                                                
 echo "se_statefreq      = 144                                                    ">> user_nl_cam
 echo "se_statediag_numtrac = 99							 ">> user_nl_cam
 echo "empty_htapes      = .true.                                                 ">> user_nl_cam
-echo "fincl1            = 'PS','PSDRY_fvm','PSDRY_gll','T','Z3','U','V','OMEGA','OMEGA_gll','PHIS' ">> user_nl_cam
-echo "fincl2            = 'PS','PSDRY_fvm','PSDRY_gll','T','Z3','U','V','OMEGA','OMEGA_gll','PHIS' ">> user_nl_cam
-echo "fincl3            = 'PS','PSDRY_fvm','PSDRY_gll','T','Z3','U','V','OMEGA','OMEGA_gll','PHIS' ">> user_nl_cam
+echo "fincl1            = 'PS','T','Z3','U','V','OMEGA','OMEGA_gll','PHIS' ">> user_nl_cam
+echo "fincl2            = 'PS','T','Z3','U','V','OMEGA','OMEGA_gll','PHIS' ">> user_nl_cam
+echo "fincl3            = 'PS','T','Z3','U','V','OMEGA','OMEGA_gll','PHIS' ">> user_nl_cam
 echo "avgflag_pertape(1) = 'A'"                                                   >> user_nl_cam
 echo "avgflag_pertape(2) = 'A'"                                                   >> user_nl_cam
 echo "avgflag_pertape(3) = 'I'"                                                   >> user_nl_cam

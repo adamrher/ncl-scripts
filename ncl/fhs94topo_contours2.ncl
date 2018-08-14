@@ -22,6 +22,7 @@ begin
   fdate = (/".cam."+fincl1+"*",".cam."+fincl2+"*"/)
   nfiles = dimsizes(fname)
   titles = fname
+  ;titles = (/"ne20pg3-C138topo","ne30pg2-C138topo"/)
 
   onemnth = False
   nstart = 0
@@ -33,12 +34,12 @@ begin
   LON = (/"lon","lon"/)
 
   manlevs = True
-  mag = 1.
+  mag = 1.;;;0.75
   cmin = (/-100. /)*mag
   cmax = (/ 100. /)*mag
   cspc = (/   4. /)*mag
 
-  cellfill = False
+  cellfill = True
 
   labels = new( (/2*nfiles/), string)
   do i = 0,nfiles-1
@@ -54,8 +55,8 @@ begin
   lat2 = (/   0., 60./) ;;Him 0.,55.
   lon2 = (/  50.,110./) ; 60.,120.
 
-  writencdf = False
-  fname_out = fname(0)+"-2-"+fname(1) + ".fhstopo-contours.nc"
+  writencdf = True
+  fname_out = fname(0)+"-2-"+fname(1) + ".fhstopo-contours-"+VAR(0)+".nc"
   andnams = (/"and1","and2"/)
   hindnams = (/"hind1","hind2"/)
   latnams = (/"LAT1","LAT2"/)
@@ -63,7 +64,7 @@ begin
   latatt  = (/"ncol1","ncol2"/)
   lonatt  = (/"mcol1","mcol2"/)
 
-  transect = True
+  transect = False
 
   ;;;transect boundaries
   leftlat  = (/ -10., 10./)
@@ -123,7 +124,7 @@ begin
 
   ;;add titles
   txres = True
-  txres@txFontHeightF = 0.010
+  txres@txFontHeightF = 0.020
   txres@txJust = "CenterCenter"
   yy = (/ 0.915,0.915 /)
   xx = (/ 0.325,0.705 /)

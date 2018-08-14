@@ -16,7 +16,8 @@ set case1 = "$argv[$n]"
 set n = 2
 set fincl1 = "$argv[$n]"
 if (`hostname` == "hobart.cgd.ucar.edu") then
-  set data_dir = "/scratch/cluster/$USER/"
+  #set data_dir = "/scratch/cluster/$USER/"
+  set data_dir = "/project/amp/$USER/"
   set ncl_dir = "/home/$USER/arh-git-scripts/ncl/"
   echo "You are on Hobart"
   echo "NCL directory is "$ncl_dir
