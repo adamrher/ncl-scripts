@@ -4,6 +4,21 @@ load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_csm.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/contributed.ncl"
 ;****************************************
 
+  ;;;;SHARED CONSTANTS
+  ;;; "Any variable declared/defined outside of the scope of a 
+  ;;   procedure/function/outer-begin-end block will be in the global scope."
+  ;
+  secpday = 60.*60.*24;
+;;  pi = 3.14159265358979
+;;  p0 = 1.d5 ;Pa
+;;  Re = 6.37122d6
+;;  g = 9.80616 ;m/s2
+;;  cpd = 1.00464d3
+;;  Rd = 2.870423d2 ;J/kg/K
+;;  Lv  = 2.501d6
+;;  Lf  = 3.337d5
+;;  rhow = 1000. ;;;<--from shr_const_mod.F90 in cime/src/share/utils/
+
 ;;; computes pressure field on native se grid	
 function se_pressure(PS,P0,hya,hyb,topt)
 ;;;
@@ -466,7 +481,7 @@ begin
   if (host.eq."hobart.cgd.ucar.edu") then
     root = "/home/aherring/grids/"
   else
-    root = "/glade/p/work/aherring/grids/grid_files/"
+    root = "/glade/work/aherring/grids/grid_files/"
   end if
 
 if (opt.eq.0) then
@@ -483,6 +498,7 @@ if (opt.eq.0) then
     wgtpath = root + "bilin/ne30pg2_2_0703125deg-bilin.nc"
   else if (ncol.eq.48600 .and. ncol_d.eq.48602) then
     wgtpath = root + "bilin/ne30pg3_2_0703125deg-bilin.nc"
+    ;;;wgtpath = root + "ne30pg3_2_latlon.nc"
   else if (ncol.eq.86402 .and. ncol_d.eq.86402) then
     wgtpath = root + "bilin/ne40np4_2_046875deg-bilin.nc"
   else if (ncol.eq.86400 .and. ncol_d.eq.86402) then
@@ -584,7 +600,7 @@ begin
   if (host.eq."hobart.cgd.ucar.edu") then
     root = "/home/aherring/grids/"
   else
-    root = "/glade/p/work/aherring/grids/grid_files/"
+    root = "/glade/work/aherring/grids/grid_files/"
   end if
 
   if (nlat.eq.257 .and. nlat0.eq.128) then
@@ -642,7 +658,7 @@ begin
   if (host.eq."hobart.cgd.ucar.edu") then
     root = "/home/aherring/grids/"
   else
-    root = "/glade/p/work/aherring/grids/physgrids/SCRIP_files/"
+    root = "/glade/work/aherring/grids/physgrids/SCRIP_files/"
   end if
 
   if (ncol.eq.21600 .and. ncol_d.eq.21602) then
@@ -716,24 +732,36 @@ begin
   else if (ncol.eq.777602 .and. ncol_d.eq.777602) then
     ;;ne120np4
     binmin = -15.
+  else if (ncol.eq.21600 .and. ncol_d.eq.21602) then
+    ;;ne20pg3
+    binmin = -5.
   else if (ncol.eq.21600 .and. ncol_d.eq.48602) then
     ;;ne30pg2
     binmin = -5.
   else if (ncol.eq.48600 .and. ncol_d.eq.48602) then
     ;;ne30pg3
     binmin = -5.
+  else if (ncol.eq.86400 .and. ncol_d.eq.86402) then
+    ;;ne40pg3
+    binmin = -10.
   else if (ncol.eq.86400 .and. ncol_d.eq.194402) then
     ;;ne60pg2
     binmin = -10.
   else if (ncol.eq.194400 .and. ncol_d.eq.194402) then
     ;;ne60pg3
     binmin = -10.
+  else if (ncol.eq.345600 .and. ncol_d.eq.345602) then
+    ;;ne80pg3
+    binmin = -15.
   else if (ncol.eq.345600 .and. ncol_d.eq.777602) then
     ;;ne120pg2
     binmin = -15.
   else if (ncol.eq.777600 .and. ncol_d.eq.777602) then
     ;;ne120pg3
     binmin = -15.
+  end if
+  end if
+  end if
   end if
   end if
   end if

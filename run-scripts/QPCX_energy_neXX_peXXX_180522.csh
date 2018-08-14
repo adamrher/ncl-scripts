@@ -1,11 +1,11 @@
 #!/bin/tcsh
 setenv proj "P93300642" #"P93300642"
 setenv src "physgrid_180607" #"physgrid_180607" "cesm2_0_alpha10f"
-setenv res "ne120pg2_ne120pg2_mg17"
+setenv res "ne30_ne30_mg17"
 setenv comp "QPC6"
-setenv wall "09:00:00"
-setenv pes "7680"
-setenv caze ${src}_${comp}_${res}_`date '+%y%m%d'`-zmcin1
+setenv wall "02:00:00"
+setenv pes "1800"
+setenv caze ${src}_${comp}_${res}_`date '+%y%m%d'`
 
 ## ne30 - pe1800 - QPC6 (1.09 hrs/sy)
 ## ne60pg3 - pe3840 - QPC6 (4.07 hrs/sy)
@@ -14,10 +14,13 @@ setenv caze ${src}_${comp}_${res}_`date '+%y%m%d'`-zmcin1
 /glade/u/home/$USER/$src/cime/scripts/create_newcase --case /glade/scratch/$USER/$caze --compset $comp --res $res --walltime $wall --pecount $pes --project $proj --compiler intel --queue regular --run-unsupported
 cd /glade/scratch/$USER/$caze
 
-./xmlchange STOP_OPTION=nmonths,STOP_N=6
+./xmlchange STOP_OPTION=nyears,STOP_N=1
 ./xmlchange NTHRDS=1
 ./xmlchange DOUT_S=FALSE
-./xmlchange RESUBMIT=1
+./xmlchange RESUBMIT=0
+
+#--------timings----------
+#./xmlchange TIMER_LEVEL=10
 
 #-----independent of resolution-----
 
@@ -33,20 +36,20 @@ cd /glade/scratch/$USER/$caze
 #------dependent on resolution-------
 
 ## ne30=48, ne60=96, ne120=192
-./xmlchange ATM_NCPL=192
+./xmlchange ATM_NCPL=48
 
 ## for ne120 and ATM_NCPL = 384, set nsplit = 1
 echo "se_nsplit = 2">>user_nl_cam
 echo "se_rsplit = 3">>user_nl_cam
 
 ## ne30 E15, ne60 E14, ne120 E13
-#echo "se_nu              =   0.2e15  ">> user_nl_cam
-#echo "se_nu_div          =   1.0e15  ">> user_nl_cam
-#echo "se_nu_p            =   1.0e15  ">> user_nl_cam
+#echo "se_nu              =   1.5e15  ">> user_nl_cam
+#echo "se_nu_div          =   3.8e15  ">> user_nl_cam
+#echo "se_nu_p            =   3.8e15  ">> user_nl_cam
 
-#echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne30np4_L32_c170509.nc'">>user_nl_cam
+echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne30np4_L32_c170509.nc'">>user_nl_cam
 #echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne60np4_L32_c170908.nc'">>user_nl_cam
-echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne120np4_L32_c170908.nc'">>user_nl_cam
+#echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne120np4_L32_c170908.nc'">>user_nl_cam
 
 #------non-standard grids-------
 # grids need to be hacked
@@ -106,8 +109,9 @@ echo "          'U','V','PS'						     ">> user_nl_cam
 echo "fincl4 =   'PSDRY','PS','T','Q','Z3','U','V','OMEGA','OMEGA_gll'       ">> user_nl_cam
 #echo "fincl4 =   'PSDRY','PS','T','Q','Z3','U','V','OMEGA','OMEGA_gll',      ">> user_nl_cam
 #echo "	  	 'CLDLIQ','CLDICE'				             ">> user_nl_cam
-echo "fincl5 =   'PRECL','PRECC','Q850','OMEGA850','TMQ','FLNT',	     ">> user_nl_cam
-echo "		 'PTTEND','FT','PTEQ','FQ_fvm'				     ">> user_nl_cam
+echo "fincl5 =   'PRECL','PRECC','Q850','OMEGA850','TMQ','FLNT'	     ">> user_nl_cam
+echo "           'PTTEND','FT','PTEQ'                                ">> user_nl_cam
+#echo "		 'PTTEND','FT','PTEQ','FQ_fvm'				     ">> user_nl_cam
 echo "avgflag_pertape(1) = 'A'"                                               >> user_nl_cam
 echo "avgflag_pertape(2) = 'A'"                                               >> user_nl_cam
 echo "avgflag_pertape(3) = 'A'"                                               >> user_nl_cam
@@ -127,10 +131,10 @@ cp /glade/u/home/aherring/$src/components/cam/usr_src/omega_gll/stepon.F90 /glad
 #cpdry
 #cp /glade/u/home/aherring/$src/components/cam/usr_src/lcpmoist/dyn_comp.F90 /glade/scratch/$USER/$caze/SourceMods/src.cam/
 
-#iwidth
+#iwidth,PCoM
 #cp /glade/u/home/aherring/$src/components/cam/usr_src/bilin/fvm_mapping.F90 /glade/scratch/$USER/$caze/SourceMods/src.cam/
 
 ./case.setup
-#qcmd -- ./case.build # --skip-provenance-check
+qcmd -- ./case.build # --skip-provenance-check
 ./case.build # --skip-provenance-check
 ./case.submit

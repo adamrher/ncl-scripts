@@ -6,8 +6,8 @@ load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_code.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_csm.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/contributed.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/esmf/ESMF_regridding.ncl"
-;;load "/glade/p/work/aherring/CESM2/arh-git-scripts/ncl/se_func_lib.ncl"
-load "/home/aherring/arh-git-scripts/ncl/se_func_lib.ncl"
+load "/glade/work/aherring/CESM2/arh-git-scripts/ncl/se_func_lib.ncl"
+;;load "/home/aherring/arh-git-scripts/ncl/se_func_lib.ncl"
 ;**************************************
 begin
 ;****************************************
@@ -28,8 +28,8 @@ begin
   doglobal = False
   onemnth = False
 
-  t0 = 40 ;6-hourly indices: 36 = day9, 40 = day10, 60 = day15
-  labels = (/"day10","day10"/)
+  t0 = 60 ;6-hourly indices: 36 = day9, 40 = day10, 60 = day15
+  labels = (/"day15","day15"/)
 
   VAR = (/plotvar,plotvar,plotvar/)
   LAT = (/"lat","lat","lat"/)
@@ -60,9 +60,9 @@ begin
     varNam = (/"iCL2 (kg/kg)"/)
   else if (VAR(0).eq."iCLy") then
     doglobal = True
-    cmin = 2.7e-6
-    cmax = 4.8e-6
-    cspc = 0.1e-6
+    cmin = 3.e-6;;;2.7e-6
+    cmax = 4.e-6;;;4.8e-6
+    cspc = 0.05e-6;;;0.1e-6
     factor = 1.
     varNam = (/"iCLy (kg/kg)"/)
   else if (VAR(0).eq."PRECL") then
@@ -136,7 +136,7 @@ begin
   gsn_define_colormap(wks,"gui_default");;"gui_default");;"MPL_gist_rainbow")
   plot = new( (/nfiles/), graphic)
   ;wkstype@wkBackgroundOpacityF    = 0.
-  ;gsn_reverse_colormap(wks)
+  gsn_reverse_colormap(wks)
 
    res             = True
    res@gsnMaximize = False
@@ -246,7 +246,6 @@ begin
 
  lat1d = f[0]->$LAT(n)$
  lon1d = f[0]->$LON(n)$
- delete(f)
 
  print("Plotting...")
 
@@ -254,7 +253,12 @@ begin
    res@cnFillMode = "CellFill"
    print("CellFill on")
    ncol = dimsizes(lat1d)
-   vpath = get_vertices(ncol)
+
+   dims = getfilevardimsizes(f[0],"PSDRY_gll")
+   ncol_d = dims(1)
+   delete(dims)
+
+   vpath = get_vertices(ncol,ncol_d)
 
    sf = addfile(vpath,"r")
    latvert = sf->grid_corner_lat
@@ -265,6 +269,7 @@ begin
  else
    res@cnFillMode = "AreaFill"
  end if
+ delete(f)
 
  delete(var@units)
  var@long_name = tname(n)

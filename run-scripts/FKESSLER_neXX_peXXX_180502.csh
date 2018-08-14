@@ -1,31 +1,31 @@
 #!/bin/tcsh
 setenv proj "P93300642"
-setenv src "physgrid_180607" #"cesm2_0_alpha10f"
-setenv res "ne80pg3_ne80pg3_mg17"
+setenv src "physgrid_180607" #"physgrid_180607" #"cesm2_0_alpha10f"
+setenv res "ne30pg2_ne30pg2_mg17"
 setenv comp "FKESSLER"
-setenv wall "01:00:00"
+setenv wall "00:30:00"
 setenv pes "1800" # note that pes=192 crashes on hobart
-setenv caze ${src}_${comp}_${res}_pe${pes}_`date '+%y%m%d'`_test
+setenv caze ${src}_${comp}_${res}_pe${pes}_`date '+%y%m%d'`_skipho
 
 /glade/u/home/$USER/$src/cime/scripts/create_newcase --case /glade/scratch/$USER/$caze --compset $comp --res $res --walltime $wall --mach cheyenne --pecount $pes --compiler intel --queue regular -project $proj --run-unsupported
 cd /glade/scratch/$USER/$caze
 
 # no threading
 ./xmlchange NTHRDS=1
-./xmlchange STOP_OPTION=ndays,STOP_N=7
+./xmlchange STOP_OPTION=ndays,STOP_N=15
 ./xmlchange DOUT_S=FALSE
 
 # test tracers on
 ./xmlchange --append CAM_CONFIG_OPTS="-nadv_tt=6"
 
-./xmlchange ATM_NCPL=192
+./xmlchange ATM_NCPL=48
 echo "se_nsplit = 2">>user_nl_cam
 echo "se_rsplit = 3">>user_nl_cam
 
 ## ne30 E15, ne60 E14, ne120 E13
-#echo "se_nu              =   0.2e14  ">> user_nl_cam
-#echo "se_nu_div          =   1.0e14  ">> user_nl_cam
-#echo "se_nu_p            =   1.0e14  ">> user_nl_cam
+echo "se_nu              =   0.2e15  ">> user_nl_cam
+echo "se_nu_div          =   1.0e15  ">> user_nl_cam
+echo "se_nu_p            =   1.0e15  ">> user_nl_cam
 
 ./xmlchange --append CAM_CONFIG_OPTS="-analytic_ic"
 
@@ -36,12 +36,12 @@ echo "se_rsplit = 3">>user_nl_cam
 #./xmlchange ICE_DOMAIN_FILE="domain.ocn.ne20np4.pg3_gx1v7.180605.nc"
 #echo "ncdata = '/fs/cgd/csm/inputdata/atm/cam/inic/cam_vcoords_L30_c180105.nc'">> user_nl_cam
 
-./xmlchange --append CAM_CONFIG_OPTS="-hgrid ne80np4.pg3"
-./xmlchange ATM_DOMAIN_FILE="domain.lnd.ne80np4.pg3_gx1v7.180608.nc"
-./xmlchange OCN_DOMAIN_FILE="domain.ocn.ne80np4.pg3_gx1v7.180608.nc"
-./xmlchange ICE_DOMAIN_FILE="domain.ocn.ne80np4.pg3_gx1v7.180608.nc"
+#./xmlchange --append CAM_CONFIG_OPTS="-hgrid ne80np4.pg3"
+#./xmlchange ATM_DOMAIN_FILE="domain.lnd.ne80np4.pg3_gx1v7.180608.nc"
+#./xmlchange OCN_DOMAIN_FILE="domain.ocn.ne80np4.pg3_gx1v7.180608.nc"
+#./xmlchange ICE_DOMAIN_FILE="domain.ocn.ne80np4.pg3_gx1v7.180608.nc"
 #echo "ncdata = '/fs/cgd/csm/inputdata/atm/cam/inic/cam_vcoords_L30_c180105.nc'">> user_nl_cam
-echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/cam_vcoords_L30_c180105.nc'">> user_nl_cam
+#echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/cam_vcoords_L30_c180105.nc'">> user_nl_cam
 
 #./xmlchange --append CAM_CONFIG_OPTS="-hgrid ne40np4.pg3"
 #./xmlchange ATM_DOMAIN_FILE="domain.lnd.ne40np4.pg3_gx1v7.180605.nc"
@@ -124,9 +124,9 @@ echo "interpolate_output = .true.,.false.,.false."				   >> user_nl_cam
 #cp /home/aherring/src/$src/components/cam/usr_src/cpdry/dyn_comp.F90 /scratch/cluster/$USER/$caze/SourceMods/src.cam/
 
 #ifdefs
-#cp /glade/u/home/aherring/$src/components/cam/usr_src/ifdefs/fvm_mapping.F90 /glade/scratch/$USER/$caze/SourceMods/src.cam/
+cp /glade/u/home/aherring/$src/components/cam/usr_src/ifdef/fvm_mapping.F90 /glade/scratch/$USER/$caze/SourceMods/src.cam/
 
 ./case.setup
-./case.build # --skip-provenance-check
-#qcmd -- ./case.build --skip-provenance-check
+#./case.build # --skip-provenance-check
+qcmd -- ./case.build # --skip-provenance-check
 ./case.submit

@@ -29,8 +29,8 @@ wcStrt     = systemfunc("date")
   factor = 1.;;;secpday/100.
 
   scale = True
-  sfactor = 1.
-  dtag = "";"-scale32"
+  sfactor = 1.;;;3./2.
+  dtag = ""   ;;;"-scale32"
 
   nbins  = 200
   optpdf = True  ;;;If False, do pdfx w/ automatic bins
