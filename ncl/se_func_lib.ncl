@@ -148,7 +148,6 @@ begin
 
         in = addfile(files(n),"r")
         ntime = dimsizes(in->time)
-
         do t = 0,ntime-1
 
                 if (rank.eq.2)
@@ -161,6 +160,9 @@ begin
                 end if
                 end if
 
+		tmp@_FillValue = default_fillvalue("float")
+		tmp = where(tmp.lt.0.,tmp,tmp@_FillValue)
+
                 if (n.eq.0 .and. t.eq.0) then
   			pdfvar = pdfx(tmp,nbins,opt)
   			pdfvar = 0.
@@ -168,7 +170,10 @@ begin
                 end if
 
         	pdfvar = pdfvar + pdfx(tmp,nbins,opt)
-	        print("t="+t)
+
+	        tt = ntime*n+t
+		nntime = nfiles*ntime
+	        print("t="+t+"/"+nntime)
 	        nrecords = nrecords + 1
 
         end do
@@ -381,11 +386,11 @@ end
 
 
 ;;; overlays panel boundaries of cubed sphere on contour plot
-procedure overlay_se_grid(wks,plot)
+procedure overlay_se_grid(wks,plot,opt)
 ;;;
 
 local coordx,coordy,coordz,xlon,xlat,lat,lon,map,f,fvars,fdims,num_el_blk, \ 
-	pi,dimnames,dimsz,nelem,count,fcnt,j1,j2,n,i,j,host 
+	pi,dimnames,dimsz,nelem,count,fcnt,j1,j2,n,i,j,host,opt 
 
 begin
 
@@ -396,11 +401,18 @@ begin
   if (host.eq."hobart.cgd.ucar.edu") then
     dirn = "/home/aherring/grids/"
   else
-    dirn = "/glade/p/work/aherring/grids/grid_files/"
+    dirn = "/glade/work/aherring/grids/grid_files/"
+    ;;dirn = "/gpfs/fs1/work/aherring/grids/var-res/exodus_files/"
   end if
 
-  f = addfile(dirn+"uniform_30.g.nc","r")
-  ;;f = addfile(dirn+"uniform_1.g.nc","r")
+  if (.not.opt) then
+    ;;f = addfile(dirn+"uniform_30.g.nc","r")
+    f = addfile(dirn+"uniform_1.g.nc","r")
+  else if (opt)
+    f = addfile(dirn+"VR_Greenland_111-55-28.g","r")
+    ;;f = addfile(dirn+"VR_Greenland_111-55.g","r")
+  end if
+  end if
 
   fvars = getvardims(f)
   fdims = getfiledimsizes(f)
@@ -441,8 +453,8 @@ begin
   xlon = new ( (/5/), "double")
   xlat = new ( (/5/), "double")
 
-  res_p@gsLineThicknessF = 1.;2.
-  res_p@gsLineColor   = "grey43"
+  res_p@gsLineThicknessF = 5.
+  res_p@gsLineColor   = "black";;"DarkSlateGray";;"black";;"grey43"
 
   do i=0,nelem-1
     if ( mod(i,500).eq.0) then
@@ -487,18 +499,20 @@ begin
 if (opt.eq.0) then
 
   if (ncol.eq.13826 .and. ncol_d.eq.13826) then
-    wgtpath = root + "ne16_2_latlon.nc"
+    wgtpath = root + "bilin/ne16_2_1.40625deg-bilin.nc"
   else if (ncol.eq.21602 .and. ncol_d.eq.21602) then
     wgtpath = root + "bilin/ne20np4_2_09375deg-bilin.nc"
   else if (ncol.eq.21600 .and. ncol_d.eq.21602) then
     wgtpath = root + "bilin/ne20pg3_2_09375deg-bilin.nc"
   else if (ncol.eq.48602 .and. ncol_d.eq.48602) then
     wgtpath = root + "bilin/ne30np4_2_0703125deg-bilin.nc"
+    ;;wgtpath = root + "bilin/ne30np4_2_09375deg-bilin.nc"
   else if (ncol.eq.21600 .and. ncol_d.eq.48602) then
     wgtpath = root + "bilin/ne30pg2_2_0703125deg-bilin.nc"
+    ;;;wgtpath = root + "bilin/ne30pg2_2_09375deg-bilin.nc"
   else if (ncol.eq.48600 .and. ncol_d.eq.48602) then
     wgtpath = root + "bilin/ne30pg3_2_0703125deg-bilin.nc"
-    ;;;wgtpath = root + "ne30pg3_2_latlon.nc"
+    ;;;wgtpath = root + "bilin/ne30pg3_2_09375deg-bilin.nc"
   else if (ncol.eq.86402 .and. ncol_d.eq.86402) then
     wgtpath = root + "bilin/ne40np4_2_046875deg-bilin.nc"
   else if (ncol.eq.86400 .and. ncol_d.eq.86402) then
@@ -514,11 +528,14 @@ if (opt.eq.0) then
   else if (ncol.eq.345600 .and. ncol_d.eq.345602) then
     wgtpath = root + "bilin/ne80pg3_2_0234375deg-bilin.nc"
   else if (ncol.eq.777602 .and. ncol_d.eq.777602) then
-    wgtpath = root + "ne120_2_latlon.nc"
+    wgtpath = root + "bilin/ne120np4_2_017578125deg-bilin.nc"
   else if (ncol.eq.345600 .and. ncol_d.eq.777602) then
     wgtpath = root + "bilin/ne120pg2_2_017578125deg-bilin.nc"
   else if (ncol.eq.777600 .and. ncol_d.eq.777602) then
     wgtpath = root + "bilin/ne120pg3_2_017578125deg-bilin.nc"
+  else if (ncol.eq.69887 .and. ncol_d.eq.69887) then
+    wgtpath = root + "bilin/ne0G30-60-120_2_017578125deg-bilin.nc"
+  end if
   end if
   end if
   end if
@@ -658,10 +675,12 @@ begin
   if (host.eq."hobart.cgd.ucar.edu") then
     root = "/home/aherring/grids/"
   else
-    root = "/glade/work/aherring/grids/physgrids/SCRIP_files/"
+    root = "/glade/work/aherring/grids/SCRIP_files/"
   end if
 
-  if (ncol.eq.21600 .and. ncol_d.eq.21602) then
+  if (ncol.eq.13826 .and. ncol_d.eq.13826) then
+    vpath = root + "ne16np4_110512_pentagons.nc"
+  else if (ncol.eq.21600 .and. ncol_d.eq.21602) then
     vpath = root + "ne20pg3_scrip_180605.nc"
   else if (ncol.eq.21602 .and. ncol_d.eq.21602) then
     vpath = root + "ne20_scrip_180606.nc"
@@ -706,6 +725,7 @@ begin
   end if
   end if
   end if
+  end if
 
   return(vpath)
 
@@ -723,6 +743,9 @@ begin
   if (ncol.eq.13826 .and. ncol_d.eq.13826) then
     ;;ne16np4
     binmin = -2.
+  else if (ncol.eq.21602 .and. ncol_d.eq.21602) then
+    ;;ne20np4
+    binmin = -5.
   else if (ncol.eq.48602 .and. ncol_d.eq.48602) then
     ;;ne30np4
     binmin = -5.
@@ -753,12 +776,17 @@ begin
   else if (ncol.eq.345600 .and. ncol_d.eq.345602) then
     ;;ne80pg3
     binmin = -20.
+  else if (ncol.eq.345602 .and. ncol_d.eq.345602) then
+    ;;ne80np4
+    binmin = -20.
   else if (ncol.eq.345600 .and. ncol_d.eq.777602) then
     ;;ne120pg2
     binmin = -20.
   else if (ncol.eq.777600 .and. ncol_d.eq.777602) then
     ;;ne120pg3
     binmin = -20.
+  end if
+  end if
   end if
   end if
   end if
@@ -810,6 +838,10 @@ begin
   else if (ncol.eq.194400) then
     ;;ne60pg3
     binmax = 800.
+  else if (ncol.eq.777600) then
+    ;;ne120pg3
+    binmax = 2000.
+  end if
   end if
   end if
   end if

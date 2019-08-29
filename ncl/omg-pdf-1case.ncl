@@ -5,7 +5,7 @@ load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_csm.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/contributed.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/shea_util.ncl" 
 load "$NCARG_ROOT/lib/ncarg/nclscripts/esmf/ESMF_regridding.ncl"
-load "/home/aherring/arh-git-scripts/ncl/se_func_lib.ncl"
+load "/gpfs/fs1/work/aherring/CESM2/arh-git-scripts/ncl/se_func_lib.ncl"
 ;**************************************
 begin
 ;****************************************
@@ -28,9 +28,12 @@ wcStrt     = systemfunc("date")
   onemnth = False
   factor = 1.;;;secpday/100.
 
-  scale = True
-  sfactor = 1.;;;3./2.
-  dtag = ""   ;;;"-scale32"
+  scale = False
+  sfactor = 1.
+  ;;;dtag = "_ne120-scale"
+  ;;;dtag = "_gll"
+  dtag = ""
+
 
   nbins  = 200
   optpdf = True  ;;;If False, do pdfx w/ automatic bins
@@ -113,7 +116,8 @@ print("Begin case "+n)
 
 if (.not.loadncdf) then
 
-  files = systemfunc ("ls " + dir + fname(n) + rdir(n) + fname(n) + fdate(n))
+  ;;files = systemfunc ("ls " + dir + fname(n) + rdir(n) + fname(n) + fdate(n))
+  files = systemfunc ("ls " + dir + fname(n) + fdate(n))
   nhist = dimsizes(files)
 
   if (onemnth) then
@@ -163,10 +167,8 @@ if (.not.loadncdf) then
   var = where(var.lt.0.,var,var@_FillValue)
   if (optpdf) then
     print("do pdfx_lowmem with specified bins")
-
-    ;;optpdf@bin_min  = -15.
-    optpdf@bin_min  = get_binmin_omg(ncol,ncol_d)
-
+    ;;optpdf@bin_min  = get_binmin_omg(ncol,ncol_d)
+    optpdf@bin_min  = xmin
     optpdf@bin_max  = 0.
     print("bin_min set to " + optpdf@bin_min)
     optpdf@bin_spacing = (optpdf@bin_max-optpdf@bin_min)/nbins

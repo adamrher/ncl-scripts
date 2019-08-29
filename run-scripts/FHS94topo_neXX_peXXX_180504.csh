@@ -1,15 +1,15 @@
 #!/bin/tcsh
-#setenv proj "P93300642"
-setenv src "camtrunk_180725" #"camtrunk_180305" #"physgrid_180606" #"cesm2_0_alpha10f"
-setenv res "ne30pg3_ne30pg3_mg17"
+setenv proj "P05010048" #"P03010039"
+setenv src "camtrunk_190510" #"camtrunk_180305" #"physgrid_180606" #"cesm2_0_alpha10f"
+setenv res "ne30pg2_ne30pg2_mg17"
 setenv comp "FHS94"
-setenv wall "07:00:00"
-setenv pes "384" # note that pes=192 crashes on hobart
-setenv caze ${src}_${comp}topo_${res}_pe${pes}_`date '+%y%m%d'`
+setenv wall "06:00:00"
+setenv pes "1800" # note that pes=192 crashes on hobart
+setenv caze ${src}_${comp}topo_${res}_pe${pes}_`date '+%y%m%d'`_nu2E14_nup2E15_1200days
 
 # Hobart - 48 proc/node, 32 nodes
-/home/$USER/src/$src/cime/scripts/create_newcase --case /scratch/cluster/$USER/$caze --compset $comp --res $res --walltime $wall --mach hobart --compiler nag --queue monster --pecount $pes --run-unsupported
-cd /scratch/cluster/$USER/$caze
+/gpfs/u/home/$USER/$src/cime/scripts/create_newcase --case /glade/scratch/$USER/$caze --compset $comp --res $res --walltime $wall --mach cheyenne --compiler intel --queue regular --pecount $pes --run-unsupported
+cd /glade/scratch/$USER/$caze
 
 ./xmlchange STOP_OPTION=ndays,STOP_N=1200
 ./xmlchange DOUT_S=FALSE
@@ -17,27 +17,38 @@ cd /scratch/cluster/$USER/$caze
 ./xmlchange CAM_CONFIG_OPTS="-phys held_suarez"
 
 ./xmlchange ATM_NCPL=48
-echo "se_nu              =   0.4e15  ">> user_nl_cam
+echo "se_nu              =   0.2e15  ">> user_nl_cam
 echo "se_nu_div          =   2.0e15  ">> user_nl_cam
-echo "se_nu_p            =   1.0e15  ">> user_nl_cam
+echo "se_nu_p            =   2.0e15  ">> user_nl_cam
 echo "use_topo_file      =  .true.   ">>user_nl_cam
 
-#echo "se_hypervis_subcycle = 3">> user_nl_cam
+echo "se_hypervis_subcycle = 5">> user_nl_cam
 
 #echo "bnd_topo = '/home/aherring/cesm_inputfiles/topo/ne30np4_nc3000_Co092_Fi001_MulG_PF_nullRR_Nsw064_20170510.nc'">> user_nl_cam
 #echo "bnd_topo = '/home/aherring/cesm_inputfiles/topo/ne30np4_nc3000_Co060_Fi001_PF_nullRR_Nsw042_20171020.nc'" >>user_nl_cam
-echo "bnd_topo = '/home/aherring/cesm_inputfiles/topo/ne30pg3_nc3000_Co092_Fi001_MulG_PF_nullRR_Nsw065_20180204.nc'" >>user_nl_cam
+#echo "bnd_topo = '/home/aherring/cesm_inputfiles/topo/ne30pg3_nc3000_Co092_Fi001_MulG_PF_nullRR_Nsw065_20180204.nc'" >>user_nl_cam
 #echo "bnd_topo = '/home/aherring/cesm_inputfiles/topo/ne30pg3_nc3000_Co060_Fi001_PF_nullRR_Nsw042_20171014.nc'" >>user_nl_cam
 #echo "bnd_topo = '/home/aherring/cesm_inputfiles/topo/ne30pg2_nc3000_Co060_Fi001_PF_nullRR_Nsw042_20171014.nc'">>user_nl_cam
 #echo "bnd_topo = '/home/aherring/cesm_inputfiles/topo/ne30pg2_nc3000_Co092_Fi001_MulG_PF_nullRR_Nsw065_20180606.nc'">>user_nl_cam
 #echo "bnd_topo = '/home/aherring/cesm_inputfiles/topo/ne30pg2_nc3000_Co138_Fi001_MulG_PF_nullRR_NoAniso_20180608.nc'">>user_nl_cam
-#echo "bnd_topo  = '/glade/p/work/aherring/cesm_inputfiles/topo/ne30pg2_nc3000_Co060_Fi001_PF_nullRR_Nsw042_20171014.nc'">>user_nl_cam
-#echo "bnd_topo = '/fs/cgd/csm/inputdata/atm/cam/topo/fv_0.9x1.25_nc3000_Nsw042_Nrs008_Co060_Fi001_ZR_sgh30_24km_GRNL_c170103.nc'" >>user_nl_cam
+#echo "bnd_topo = '/gpfs/fs1/work/aherring/cesm_inputfiles/topo/ne30pg3_nc3000_Co092_Fi001_MulG_PF_nullRR_Nsw065_20180204.nc'" >>user_nl_cam
 
-echo "ncdata = '/fs/cgd/csm/inputdata/atm/cam/inic/se/ape_topo_cam4_ne30np4_L30_c171020.nc'" >>user_nl_cam
+echo "bnd_topo = '/gpfs/fs1/work/aherring/cesm_inputfiles/topo/ne30pg2_nc3000_Co092_Fi001_MulG_PF_nullRR_Nsw065_20180606.nc'" >>user_nl_cam
+
+#echo "bnd_topo = '/gpfs/fs1/work/aherring/cesm_inputfiles/topo/ne30pg2_nc3000_Co138_Fi001_MulG_PF_nullRR_NoAniso_20180608.nc'" >>user_nl_cam
+
+#echo "bnd_topo = '/gpfs/fs1/work/aherring/cesm_inputfiles/topo/ne30np4_nc3000_Co092_Fi001_MulG_PF_nullRR_Nsw064_20170510.nc'" >>user_nl_cam
+
+#echo "ncdata = '/fs/cgd/csm/inputdata/atm/cam/inic/se/ape_topo_cam4_ne30np4_L30_c171020.nc'" >>user_nl_cam
 #echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_topo_cam4_ne30np4_L30_c171020.nc'" >>user_nl_cam
 #echo "ncdata = '/fs/cgd/csm/inputdata/atm/cam/inic/se/ape_topo_cam4_ne60np4_L30_c171020.nc'" >>user_nl_cam
 #echo "ncdata = '/fs/cgd/csm/inputdata/atm/cam/inic/fv/cami-mam3_0000-01-01_0.9x1.25_L30_c100618.nc'" >>user_nl_cam
+
+echo "ncdata = '/gpfs/fs1/work/aherring/cesm_inputfiles/ncdata/camtrunk_190509_FHS94topo_ne30pg3_ne30pg3_mg17_pe192_190509_1200days_10Xnudiv.cam.i.0004-04-01-00000.nc'" >>user_nl_cam
+
+#echo "ncdata = '/gpfs/fs1/scratch/aherring/camtrunk_190510_FHS94topo_ne30pg3_ne30pg3_mg17_pe1800_190511_nu2E14_nup2E15_1200days/run/camtrunk_190510_FHS94topo_ne30pg3_ne30pg3_mg17_pe1800_190511_nu2E14_nup2E15_1200days.cam.i.0003-06-01-00000.nc'" >>user_nl_cam
+
+#echo "ncdata = '/gpfs/fs1/scratch/aherring/camtrunk_190510_FHS94topo_ne30pg2_ne30pg2_mg17_pe1800_190511_nu2E14_nup2E15_nudiv1E16_1200days/run/camtrunk_190510_FHS94topo_ne30pg2_ne30pg2_mg17_pe1800_190511_nu2E14_nup2E15_nudiv1E16_1200days.cam.i.0003-04-01-00000.nc'" >>user_nl_cam
 
 # grids still need to be hacked
 #./xmlchange --append CAM_CONFIG_OPTS="-hgrid ne20np4.pg3"
@@ -52,7 +63,7 @@ echo "ncdata = '/fs/cgd/csm/inputdata/atm/cam/inic/se/ape_topo_cam4_ne30np4_L30_
 #echo "se_nu_p            =   3.8e15  ">> user_nl_cam
 
 ##history
-echo "inithist          = 'NONE'                                                 ">> user_nl_cam
+echo "inithist          = 'MONTHLY'                                                 ">> user_nl_cam
 echo "se_statefreq      = 144                                                    ">> user_nl_cam
 echo "se_statediag_numtrac = 99							 ">> user_nl_cam
 echo "empty_htapes      = .true.                                                 ">> user_nl_cam
@@ -69,14 +80,13 @@ echo "interpolate_type = 1                                                      
 echo "interpolate_output = .true.,.false.,.false."	                          >> user_nl_cam
 
 #omega_gll
-#cp /home/aherring/src/$src/components/cam/usr_src/omega_gll/stepon.F90 /glade/scratch/$USER/$caze/SourceMods/src.cam/
-cp /home/aherring/src/$src/components/cam/usr_src/omega_gll/stepon.F90 /scratch/cluster/$USER/$caze/SourceMods/src.cam/
+cp /gpfs/u/home/aherring/$src/components/cam/usr_src/omega_gll/stepon.F90 /glade/scratch/$USER/$caze/SourceMods/src.cam/
 
 #ifdefs
 #cp /glade/u/home/aherring/$src/components/cam/usr_src/ifdefs/fvm_mapping.F90 /glade/scratch/$USER/$caze/SourceMods/src.cam/
 
 ./case.setup
-#qcmd -- ./case.build --skip-provenance-check
-./case.build # --skip-provenance-check
+qcmd -- ./case.build
+#./case.build # --skip-provenance-check
 ./case.submit
 

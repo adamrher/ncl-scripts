@@ -1,11 +1,11 @@
 #!/bin/tcsh
-setenv proj "P93300642" #"P93300642"
-setenv src "physgrid_180607" #"physgrid_180607" "cesm2_0_alpha10f"
-setenv res "ne30_ne30_mg17"
+setenv proj "P03010039" ##"P03010039" ##"UNSB0017"
+setenv src "physgrid_190201" ##"physgrid_180607"
+setenv res "ne16pg3_ne16pg3_mg17"
 setenv comp "QPC6"
-setenv wall "02:00:00"
+setenv wall "01:30:00"
 setenv pes "1800"
-setenv caze ${src}_${comp}_${res}_`date '+%y%m%d'`
+setenv caze ${src}_${comp}-energy_${res}_`date '+%y%m%d'`
 
 ## ne30 - pe1800 - QPC6 (1.09 hrs/sy)
 ## ne60pg3 - pe3840 - QPC6 (4.07 hrs/sy)
@@ -28,7 +28,7 @@ cd /glade/scratch/$USER/$caze
 #echo "micro_mg_nccons = .false.">>user_nl_cam
 #echo "micro_mg_nicons = .false.">>user_nl_cam
 #echo "flux_max_iteration = 2">>user_nl_cam
-#echo "zmconv_num_cin = 1">> user_nl_cam
+echo "zmconv_num_cin = 5">> user_nl_cam
 #echo "cld_macmic_num_steps = 1">> user_nl_cam
 #echo "se_ftype=1">> user_nl_cam
 #echo "se_qsize_condensate_loading = 1">> user_nl_cam
@@ -39,15 +39,15 @@ cd /glade/scratch/$USER/$caze
 ./xmlchange ATM_NCPL=48
 
 ## for ne120 and ATM_NCPL = 384, set nsplit = 1
-echo "se_nsplit = 2">>user_nl_cam
-echo "se_rsplit = 3">>user_nl_cam
+#echo "se_nsplit = 2">>user_nl_cam
+#echo "se_rsplit = 3">>user_nl_cam
 
 ## ne30 E15, ne60 E14, ne120 E13
 #echo "se_nu              =   1.5e15  ">> user_nl_cam
 #echo "se_nu_div          =   3.8e15  ">> user_nl_cam
 #echo "se_nu_p            =   3.8e15  ">> user_nl_cam
 
-echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne30np4_L32_c170509.nc'">>user_nl_cam
+#echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne30np4_L32_c170509.nc'">>user_nl_cam
 #echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne60np4_L32_c170908.nc'">>user_nl_cam
 #echo "ncdata = '/glade/p/cesmdata/cseg/inputdata/atm/cam/inic/se/ape_cam6_ne120np4_L32_c170908.nc'">>user_nl_cam
 
@@ -134,7 +134,10 @@ cp /glade/u/home/aherring/$src/components/cam/usr_src/omega_gll/stepon.F90 /glad
 #iwidth,PCoM
 #cp /glade/u/home/aherring/$src/components/cam/usr_src/bilin/fvm_mapping.F90 /glade/scratch/$USER/$caze/SourceMods/src.cam/
 
+#fvm_mapping
+#cp /glade/u/home/aherring/$src/components/cam/usr_src/ifdef/fvm_mapping.F90 /glade/scratch/$USER/$caze/SourceMods/src.cam/
+
 ./case.setup
 qcmd -- ./case.build # --skip-provenance-check
-./case.build # --skip-provenance-check
+#./case.build # --skip-provenance-check
 ./case.submit

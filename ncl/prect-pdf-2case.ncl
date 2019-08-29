@@ -5,7 +5,7 @@ load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_csm.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/contributed.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/shea_util.ncl" 
 load "$NCARG_ROOT/lib/ncarg/nclscripts/esmf/ESMF_regridding.ncl"
-load "/glade/p/work/aherring/CESM2/arh-git-scripts/ncl/se_func_lib.ncl"
+load "/glade/work/aherring/CESM2/arh-git-scripts/ncl/se_func_lib.ncl"
 ;**************************************
 begin
 ;****************************************
@@ -34,11 +34,12 @@ begin
 
   writencdf = True
   loadncdf = False
-  fname_out = fname(0)+"-2-"+fname(1)+".pdf-prect.nc"
+  fname_out = fname(0)+"-2-"+fname(1)+".pdf-precl.nc"
   varnams = (/"pdfvar1","pdfvar2"/)
   fname_in  = fname_out
 
   xaxis = "Total Precipitation Rate (mm/day)"
+  xaxis = "PRECL (mm/day)"
 
   pltNam = "temp_pdf-prect"
   colors = (/"green","magenta"/)
@@ -133,7 +134,8 @@ if (.not.loadncdf) then
 
   print("Grabbing Vars...")
 
-  var = (f[:]->$VAR1$) + (f[:]->$VAR2$)
+  var = (f[:]->$VAR2$)
+  ;;var = (f[:]->$VAR1$) + (f[:]->$VAR2$)
   var = var*factor
   ntime = dimsizes(f[:]->time)
   delete(f)

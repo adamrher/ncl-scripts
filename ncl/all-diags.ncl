@@ -6,7 +6,7 @@ load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_csm.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/contributed.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/esmf/ESMF_regridding.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/shea_util.ncl"
-load "/glade/p/work/aherring/se_func_lib.ncl"
+load "/glade/work/aherring/CESM2/arh-git-scripts/ncl/se_func_lib.ncl"
 ;**************************************
 begin
 ;****************************************
@@ -90,7 +90,6 @@ begin
  if (latlon) then
    TL  = f[:]->T(:,nlevs-1,:,:)
    UL  = f[:]->U(:,nlevs-1,:,:)
-   delete(Utmp)
  else
    TL  = f[:]->T(:,nlevs-1,:)
    UL  = f[:]->U(:,nlevs-1,:)
@@ -99,7 +98,8 @@ begin
  lat   = f[0]->lat
 
  if (latlon) then
-   AREA = f[0]->w
+   ;;AREA = f[0]->w
+   AREA = f[0]->gw
  else
    AREA = f[0]->area
  end if

@@ -5,7 +5,7 @@ load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_csm.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/contributed.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/shea_util.ncl" 
 load "$NCARG_ROOT/lib/ncarg/nclscripts/esmf/ESMF_regridding.ncl"
-load "/glade/p/work/aherring/CESM2/arh-git-scripts/ncl/se_func_lib.ncl"
+load "/glade/work/aherring/CESM2/arh-git-scripts/ncl/se_func_lib.ncl"
 ;**************************************
 begin
 ;****************************************
@@ -27,11 +27,11 @@ wcStrt     = systemfunc("date")
   onemnth = False
   nstart = 0
 
-  VAR = var1 ;;;;"FT"
+  VAR = var1
   factor = 1.
 
   plotnlat = 165 ;;;override with nlat
-  klev = 18  ;;;19-1:379hPa 23-1:691hPa
+  klev = 20  ;;;19-1:379hPa 21-1:525hPa 23-1:691hPa
 
   writencdf = True
   loadncdf = False
@@ -142,7 +142,6 @@ if (.not.loadncdf) then
 
   var = f[:]->$VAR$(:,klev,:)
   var = var*factor
-
   ntime = dimsizes(f[:]->time)
   delete(f)
 
@@ -173,6 +172,11 @@ if (.not.loadncdf) then
 
     spectra(t,0:nlat-1) = dim_sum( ab_var(0,:,:)^2 + ab_var(1,:,:)^2 )*0.5
     delete(ab_var)
+
+    ;;;this gives identical results
+    ;spectra(t,0:nlat-1) = wave_number_spc (varlev, "F")
+    ;delete(varlev)
+    ;;;
 
   end do
   delete(var)

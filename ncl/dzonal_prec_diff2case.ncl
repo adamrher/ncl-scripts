@@ -5,7 +5,7 @@ load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_code.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_csm.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/contributed.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/esmf/ESMF_regridding.ncl"
-load "/glade/p/work/aherring/CESM2/arh-git-scripts/ncl/se_func_lib.ncl"
+load "/glade/work/aherring/CESM2/arh-git-scripts/ncl/se_func_lib.ncl"
 ;**************************************
 begin
 ;****************************************
@@ -85,9 +85,6 @@ print("Begin case " +n)
     nfinish = nstart
   else
     nfinish = nhist-1
-    if (n.eq.0) then
-      nfinish = 11
-    end if
   end if
   print(files(nstart:nfinish))
   f  = addfiles (files(nstart:nfinish),"r")
@@ -106,7 +103,7 @@ print("Begin case " +n)
     ncol_d = dims(1)
     delete(dims)
 
-    wgtpath = get_wgt_path(ncol,ncol_d,1)
+    wgtpath = get_wgt_path(ncol,ncol_d,0)
     print("wgt path " + wgtpath)
 
   else

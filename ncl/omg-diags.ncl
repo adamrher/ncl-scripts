@@ -6,7 +6,7 @@ load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_csm.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/contributed.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/esmf/ESMF_regridding.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/shea_util.ncl"
-load "/glade/p/work/aherring/se_func_lib.ncl"
+load "/glade/work/aherring/se_func_lib.ncl"
 ;**************************************
 begin
 ;****************************************
@@ -39,7 +39,8 @@ begin
 ;main
 ;************
  
- files = systemfunc ("ls " + dir + fname + rdir + fname + fdate)
+ ;;;files = systemfunc ("ls " + dir + fname + rdir + fname + fdate)
+ files = systemfunc ("ls " + dir + fname + fdate)
  nf = dimsizes(files)
  if (onemnth) then
    nfinish = nstart

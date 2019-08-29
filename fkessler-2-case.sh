@@ -22,13 +22,12 @@ set n = 5
 set plotvar = "$argv[$n]"
 if (`hostname` == "hobart.cgd.ucar.edu") then
   set data_dir = "/scratch/cluster/$USER/"
-  set ncl_dir = "/home/$USER/arh-git-scripts/ncl/"
+  set ncl_dir = "/home/aherring/arh-git-scripts/ncl/"
   echo "You are on Hobart"
   echo "NCL directory is "$ncl_dir
 else
-  set data_dir = "/glade2/scratch2/$USER/"
-  #set ncl_dir = "/glade/work/$USER/CESM2/arh-git-scripts/ncl/"
-  set ncl_dir = "/glade/work/aherring/CESM2/temp/"
+  set data_dir = "/glade/scratch/$USER/"
+  set ncl_dir = "/glade/work/aherring/CESM2/arh-git-scripts/ncl/"
   echo "You are on Glade"
   echo "NCL directory is "$ncl_dir
 endif

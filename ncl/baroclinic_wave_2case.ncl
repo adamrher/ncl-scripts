@@ -28,8 +28,8 @@ begin
   doglobal = False
   onemnth = False
 
-  t0 = 60 ;6-hourly indices: 36 = day9, 40 = day10, 60 = day15
-  labels = (/"day15","day15"/)
+  t0 = 40 ;6-hourly indices: 36 = day9, 40 = day10, 60 = day15
+  labels = (/"day10","day10"/)
 
   VAR = (/plotvar,plotvar,plotvar/)
   LAT = (/"lat","lat","lat"/)
@@ -60,8 +60,8 @@ begin
     varNam = (/"iCL2 (kg/kg)"/)
   else if (VAR(0).eq."iCLy") then
     doglobal = True
-    cmin = 3.e-6;;;2.7e-6
-    cmax = 4.e-6;;;4.8e-6
+    cmin = 3.1e-6;;;2.7e-6
+    cmax = 4.1e-6;;;4.8e-6
     cspc = 0.05e-6;;;0.1e-6
     factor = 1.
     varNam = (/"iCLy (kg/kg)"/)
@@ -212,7 +212,7 @@ begin
  ListSetType(f,"cat")
  delete(files)
 
- if (isfilevardim(f[0],"PS","lat")) then
+ if (isfilevardim(f[0],"T","lat")) then
    print("NETCDF is on lat-lon grid")
    latlon = True
    cellfill = False
@@ -243,6 +243,8 @@ begin
  end if
 
  var = factor*var
+
+ print("maxdiff " + min(var))
 
  lat1d = f[0]->$LAT(n)$
  lon1d = f[0]->$LON(n)$
@@ -294,7 +296,7 @@ begin
  plot(n) = gsn_csm_contour_map(wks,var,res)
 
 if (seover) then
-  overlay_se_grid(wks,plot(n))
+  overlay_se_grid(wks,plot(n),False)
 end if
 
 delete(var)

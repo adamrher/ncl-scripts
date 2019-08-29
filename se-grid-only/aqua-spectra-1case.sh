@@ -24,8 +24,8 @@ if (`hostname` == "hobart.cgd.ucar.edu") then
   echo "You are on Hobart"
   echo "NCL directory is "$ncl_dir
 else
-  set data_dir = "/glade2/scratch2/$USER/"
-  set ncl_dir = "/glade/p/work/$USER/CESM2/arh-git-scripts/ncl/"
+  set data_dir = "/glade/scratch/$USER/"
+  set ncl_dir = "/glade/work/$USER/CESM2/arh-git-scripts/ncl/"
   echo "You are on Glade"
   echo "NCL directory is "$ncl_dir
 endif
