@@ -20,21 +20,25 @@ setenv alias "ne0EQUATOR-LOWne30x4_mt12"
 #setenv alias "ne0ARCTIC-GrISne30x8_mt12"
 
 setenv comp "FKESSLER"
-setenv wall "00:40:00"
+setenv wall "00:20:00"
 setenv pes "1800"
-setenv caze ${src}_${comp}-steady_${alias}_`date '+%y%m%d'`
+setenv caze ${src}_${comp}-bubble_${alias}_`date '+%y%m%d'`
 
 /glade/u/home/$USER/src/$src/cime/scripts/create_newcase --case /glade/scratch/$USER/$caze --compset $comp --res $res --walltime $wall --pecount $pes --project $proj --compiler intel --queue premium --run-unsupported
 cd /glade/scratch/$USER/$caze
 
-./xmlchange STOP_OPTION=ndays,STOP_N=30
+./xmlchange STOP_OPTION=ndays,STOP_N=5
 ./xmlchange RESUBMIT=0
 ./xmlchange NTHRDS=2
 ./xmlchange DOUT_S=FALSE
 #./xmlchange TIMER_LEVEL=10
 
-# test tracers on
-./xmlchange --append CAM_CONFIG_OPTS="-nadv_tt=6"
+#----bubble stuff----
+./xmlchange CAM_CONFIG_OPTS="-phys kessler -nadv_tt=6"
+
+echo "use_topo_file      = .false.   ">>user_nl_cam
+echo "analytic_ic_type   = 'none'    ">>user_nl_cam
+echo "ncdata = '/gpfs/fs1/work/aherring/RCE_world_initial/no_SICTHK/moistplume/moist_adiabat/vr-kessler/initial_data.cam.ne0EQUATOR-LO.L30.homme_r87rz2zc3moistadiab80_3K120rh.nc'">>user_nl_cam
 
 #-----time stepping-----
 ./xmlchange ATM_NCPL=192
@@ -114,21 +118,22 @@ echo "se_statediag_numtrac      = 99     ">>user_nl_cam
 echo "se_statefreq              = 244    ">>user_nl_cam
 echo "empty_htapes       = .true.                                                ">> user_nl_cam
 
-echo "fincl1 = 'Q','CLDLIQ','RAINQM','T','U','V','iCLy','iCL','iCL2','OMEGA',     ">> user_nl_cam
-echo "          'CL','CL2','PTTEND','PS','PSDRY','PRECL','PSDRY_gll'              ">> user_nl_cam
-echo "fincl2 = 'Q','CLDLIQ','RAINQM','T','U','V','iCLy','iCL','iCL2','OMEGA',     ">> user_nl_cam
-echo "          'CL','CL2','PTTEND','PS','PSDRY','PRECL','PSDRY_gll'              ">> user_nl_cam
+echo "fincl1 = 'Q','CLDLIQ','RAINQM','T','U','V','OMEGA','OMEGA500'               ">> user_nl_cam
+echo "          'PTTEND','PS','PSDRY','PRECL'                                     ">> user_nl_cam
+echo "fincl1 = 'Q','CLDLIQ','RAINQM','T','U','V','OMEGA','OMEGA500'               ">> user_nl_cam
+echo "          'PTTEND','PS','PSDRY','PRECL'                                     ">> user_nl_cam
 echo "fincl3 = 'TT_SLOT','TT_GBALL','TT_TANH','TT_EM8','TT_Y2_2','TT_Y32_16'      ">> user_nl_cam
 echo "fincl4 = 'TT_SLOT','TT_GBALL','TT_TANH','TT_EM8','TT_Y2_2','TT_Y32_16'      ">> user_nl_cam
-echo "nhtfrq         = -6,-6,-6,-6                                                ">> user_nl_cam
-echo "mfilt          = 121,121,121,121                                            ">> user_nl_cam
+echo "nhtfrq         = -3,-3,-3,-3                                                ">> user_nl_cam
+echo "mfilt          = 241,241,241,241                                            ">> user_nl_cam
 echo "avgflag_pertape(1) = 'I'"                                                    >> user_nl_cam
 echo "avgflag_pertape(2) = 'I'"                                                    >> user_nl_cam
 echo "avgflag_pertape(3) = 'I'"                                                    >> user_nl_cam
 echo "avgflag_pertape(4) = 'I'"                                                    >> user_nl_cam
 echo "interpolate_output = .true.,.false.,.true.,.false."                          >> user_nl_cam
 
-cp /glade/u/home/$USER/src/$src/components/cam/usr_src/steady-jet/ic_baroclinic.F90 /glade/scratch/$USER/$caze/SourceMods/src.cam/
+# no rotation
+cp /gpfs/u/home/$USER/src/$src/components/cam/usr_src/norotate/physconst.F90 /glade/scratch/$USER/$caze/SourceMods/src.cam/
 
 ./case.setup
 qcmd -- ./case.build
