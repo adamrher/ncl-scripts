@@ -402,15 +402,17 @@ begin
     dirn = "/home/aherring/grids/"
   else
     dirn = "/glade/work/aherring/grids/grid_files/"
-    ;;dirn = "/gpfs/fs1/work/aherring/grids/var-res/exodus_files/"
+    ;dirn = "/gpfs/fs1/work/aherring/grids/var-res/exodus_files/"
   end if
 
   if (.not.opt) then
+    dirn = "/glade/work/aherring/grids/grid_files/"
     ;;f = addfile(dirn+"uniform_30.g.nc","r")
     f = addfile(dirn+"uniform_1.g.nc","r")
   else if (opt)
-    f = addfile(dirn+"VR_Greenland_111-55-28.g","r")
-    ;;f = addfile(dirn+"VR_Greenland_111-55.g","r")
+    dirn = "/gpfs/fs1/work/aherring/grids/var-res/exodus_files/"
+    ;;f = addfile(dirn+"VR_Greenland_111-55-28.g","r")
+    f = addfile(dirn+"equator-lowerconn_ne30_4x_ne120.g","r")
   end if
   end if
 
@@ -453,10 +455,11 @@ begin
   xlon = new ( (/5/), "double")
   xlat = new ( (/5/), "double")
 
-  res_p@gsLineThicknessF = 5.
-  res_p@gsLineColor   = "black";;"DarkSlateGray";;"black";;"grey43"
+  res_p@gsLineThicknessF = 8.
+  res_p@gsLineColor   = "white";;"DarkSlateGray";;"black";;"grey43"
 
-  do i=0,nelem-1
+  do i=0,0;;nelem-1
+  ;;do i=5876,nelem-1
     if ( mod(i,500).eq.0) then
       ;print ("i = "+i+"/"+(nelem-1))
     end if
@@ -710,6 +713,9 @@ begin
     vpath = root + "ne120pg2_scrip_170629.nc"
   else if (ncol.eq.777600 .and. ncol_d.eq.777602) then
     vpath = root + "ne120pg3_scrip_170628.nc"
+  else if (ncol.eq.3110402 .and. ncol_d.eq.3110402) then
+    vpath = root + "ne240np4_091227_pentagons.nc"
+  end if
   end if
   end if
   end if

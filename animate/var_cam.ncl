@@ -32,14 +32,14 @@ begin
 
   ;;cell fill
   ;;*for non-standard se grids, set vpath to SCRIP grid file
-  cellfill = False
+  cellfill = True
 
   ;;regrid to lat-lon (for se grids only)
   ;;*for non-standard se grids, set wgtpath to the ESMF weight file
   regrid = False
 
   ;;number of contour levels
-  cnlevs = 50.
+  cnlevs = 25.
 
   ;;set explicit contour levels
   explcn = False
@@ -142,10 +142,11 @@ do t0 = 0,ntime-1
 
     time = TIME(t0)
     print("t = " + t0 + "/" + (ntime-1))
-    wks = gsn_open_wks(wkstype,sprinti("%0.3i", t0))
-    gsn_define_colormap(wks,"BkBlAqGrYeOrReViWh200")
+    wks = gsn_open_wks(wkstype,sprinti("%0.4i", t0))
+    ;;gsn_define_colormap(wks,"BkBlAqGrYeOrReViWh200")
+    gsn_define_colormap(wks,"MPL_Greys")
     plot = new( (/1/), graphic)
-    gsn_reverse_colormap(wks)
+    ;;gsn_reverse_colormap(wks)
 
     res             = True
     res@gsnMaximize = False

@@ -1,31 +1,31 @@
 #!/bin/tcsh
-setenv proj "P93300642"
-setenv src "camtrunk_190219" ##"camtrunk_190219" ##"physgrid_190201" #"physgrid_190201" #"physgrid_180607"
-setenv res "ne30pg2_ne30pg2_mg17"
+setenv proj "P54048000"
+setenv src "camtrunk_190912" ##"camtrunk_190219" ##"physgrid_190201" #"physgrid_190201" #"physgrid_180607"
+setenv res "ne30_ne30_mg17"
 setenv comp "FKESSLER"
 setenv wall "00:10:00"
-setenv pes "1800" # note that pes=192 crashes on hobart
-setenv caze ${src}_${comp}_${res}_pe${pes}_`date '+%y%m%d'`_test
+setenv pes "1800"
+setenv caze ${src}_${comp}-steady_${res}_pe${pes}_`date '+%y%m%d'`
 
-/glade/u/home/$USER/$src/cime/scripts/create_newcase --case /glade/scratch/$USER/$caze --compset $comp --res $res --walltime $wall --mach cheyenne --pecount $pes --compiler intel --queue regular -project $proj --run-unsupported
+/glade/u/home/$USER/src/$src/cime/scripts/create_newcase --case /glade/scratch/$USER/$caze --compset $comp --res $res --walltime $wall --mach cheyenne --pecount $pes --compiler intel --queue premium -project $proj --run-unsupported
 cd /glade/scratch/$USER/$caze
 
 # no threading
 ./xmlchange NTHRDS=1
-./xmlchange STOP_OPTION=ndays,STOP_N=1
+./xmlchange STOP_OPTION=ndays,STOP_N=15
 ./xmlchange DOUT_S=FALSE
 
 # test tracers on
-#./xmlchange --append CAM_CONFIG_OPTS="-nadv_tt=6"
+./xmlchange --append CAM_CONFIG_OPTS="-nadv_tt=6"
 
-#./xmlchange ATM_NCPL=48
-#echo "se_nsplit = 2">>user_nl_cam
-#echo "se_rsplit = 3">>user_nl_cam
+./xmlchange ATM_NCPL=48
+echo "se_nsplit = 2">>user_nl_cam
+echo "se_rsplit = 3">>user_nl_cam
 
 ## ne30 E15, ne60 E14, ne120 E13
-#echo "se_nu              =   0.4e15  ">> user_nl_cam
-#echo "se_nu_div          =   1.0e15  ">> user_nl_cam
-#echo "se_nu_p            =   1.0e15  ">> user_nl_cam
+cho "se_nu              =   0.4e15  ">> user_nl_cam
+cho "se_nu_div          =   1.0e15  ">> user_nl_cam
+cho "se_nu_p            =   1.0e15  ">> user_nl_cam
 
 #./xmlchange --append CAM_CONFIG_OPTS="-analytic_ic"
 
@@ -106,27 +106,19 @@ echo "fincl1 = 'Q','CLDLIQ','RAINQM','T','U','V','iCLy','iCL','iCL2','OMEGA',   
 echo "          'CL','CL2','PTTEND','PS','PSDRY','PRECL','PSDRY_gll'              ">> user_nl_cam
 echo "fincl2 = 'Q','CLDLIQ','RAINQM','T','U','V','iCLy','iCL','iCL2','OMEGA',     ">> user_nl_cam
 echo "          'CL','CL2','PTTEND','PS','PSDRY','PRECL','PSDRY_gll'              ">> user_nl_cam
-#echo "fincl3 = 'TT_SLOT','TT_GBALL','TT_TANH','TT_EM8','TT_Y2_2','TT_Y32_16'	  ">> user_nl_cam
-echo "nhtfrq         = -6,-6                                                      ">> user_nl_cam
-echo "mfilt          = 61,61                                                      ">> user_nl_cam
+echo "fincl3 = 'TT_SLOT','TT_GBALL','TT_TANH','TT_EM8','TT_Y2_2','TT_Y32_16'	  ">> user_nl_cam
+echo "fincl4 = 'TT_SLOT','TT_GBALL','TT_TANH','TT_EM8','TT_Y2_2','TT_Y32_16'      ">> user_nl_cam
+echo "nhtfrq         = -6,-6,-6,-6                                                ">> user_nl_cam
+echo "mfilt          = 121,121,121,121                                            ">> user_nl_cam
 echo "avgflag_pertape(1) = 'I'"                                                    >> user_nl_cam
 echo "avgflag_pertape(2) = 'I'"                                                    >> user_nl_cam
-#echo "avgflag_pertape(3) = 'I'"                                                    >> user_nl_cam
-echo "interpolate_output = .true.,.false."					   >> user_nl_cam
+echo "avgflag_pertape(3) = 'I'"                                                    >> user_nl_cam
+echo "avgflag_pertape(4) = 'I'"                                                    >> user_nl_cam
+echo "interpolate_output = .true.,.false.,.true.,.false."       		   >> user_nl_cam
 
-# iwidth
-#cp /home/aherring/src/$src/components/cam/usr_src/iwidth/fvm_mapping.F90 /scratch/cluster/$USER/$caze/SourceMods/src.cam/
+cp /glade/u/home/$USER/src/$src/components/cam/usr_src/steady-jet/ic_baroclinic.F90 /glade/scratch/$USER/$caze/SourceMods/src.cam/
 
-# piecewise linear
-#cp /home/aherring/src/$src/components/cam/usr_src/piecelin/fvm_mapping.F90 /scratch/cluster/$USER/$caze/SourceMods/src.cam/
-
-# cpdry
-#cp /home/aherring/src/$src/components/cam/usr_src/cpdry/dyn_comp.F90 /scratch/cluster/$USER/$caze/SourceMods/src.cam/
-
-#ifdefs
-#cp /glade/u/home/aherring/$src/components/cam/usr_src/ifdef/fvm_mapping.F90 /glade/scratch/$USER/$caze/SourceMods/src.cam/
 
 ./case.setup
-#./case.build # --skip-provenance-check
-qcmd -- ./case.build # --skip-provenance-check
+qcmd -- ./case.build
 ./case.submit

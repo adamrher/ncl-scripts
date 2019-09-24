@@ -28,9 +28,9 @@ wcStrt     = systemfunc("date")
   onemnth = False
   factor = 1.;;;secpday/100.
 
-  scale = False
+  scale = True
   sfactor = 1.
-  ;;;dtag = "_ne120-scale"
+  dtag = "_ne120-scale"
   ;;;dtag = "_gll"
   dtag = ""
 
